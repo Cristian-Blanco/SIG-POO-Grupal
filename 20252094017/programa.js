@@ -1,7 +1,7 @@
 // Crear el mapa
-const mapa = L.map('mapa').setView([4.5981, -74.0760], 15);
+const mapa = L.map('mapa').setView([4.5981, -74.0760], 17);
 
-// Agregar capa base
+// Capa base
 const capaBase = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 });
@@ -35,7 +35,7 @@ imagenes.forEach(img => {
     const marcador = L.marker([img.lat, img.lon]).addTo(mapa);
     marcador.bindPopup(`
         <strong>${img.descripcion}</strong><br/>
-        <img src="${img.archivo}" alt="${img.descripcion}" />
+        <src="imagen/imagen/${img.archivo}"
     `);
 });
 
