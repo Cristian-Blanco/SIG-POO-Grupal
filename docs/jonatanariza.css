@@ -1,11 +1,70 @@
-/* Estilos básicos para el mapa */
-html, body, #viewDiv {
+/* Estilos generales de la página */
+html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
+    background-color: #000000; /* Fondo negro */
+    color: #ffffff; /* Texto blanco para legibilidad */
+    font-family: Arial, sans-serif;
 }
 
 #viewDiv {
-    background-color: #f4f4f4;
+    height: 70vh; /* 70% de la altura de la ventana */
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: #ff0000; /* Título en color rojo */
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 1.2em;
+    color: #cccccc;
+}
+
+/* Estilos para el contenedor de estadísticas */
+#stats-container {
+    padding: 20px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+#stats-container h2 {
+    text-align: center;
+    border-bottom: 2px solid #ff0000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#total-stats, #localidad-stats {
+    margin-bottom: 15px;
+}
+
+#localidad-stats ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#localidad-stats li {
+    background-color: #333333;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
