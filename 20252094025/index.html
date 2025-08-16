@@ -1,33 +1,30 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- Declaramos HTML5 -->
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mapa Barrio Potosí</title>
+  <meta charset="UTF-8" /> <!-- Codificación UTF-8 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Diseño responsive -->
+  <title>Mapa de Municipios de Colombia</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-  <!-- Tu CSS -->
-  <link rel="stylesheet" href="estilosU.css" />
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
-  <!-- Contenedor general para integrar en una página -->
   <section class="seccion-mapa">
-  <h2>Ubicación del Barrio Potosí</h2>
-  
-  <div class="map-container">
+    <h2>Mapa de Municipios de Colombia</h2>
+    <p class="descripcion-mapa">
+      Mapa interactivo que muestra todos los municipios de Colombia usando un archivo GeoJSON. 
+      Al pasar el cursor sobre un municipio, se resaltará y mostrará su nombre.
+    </p>
     <div id="map"></div>
-  </div>
+  </section>
 
-  <!-- Botón para volver a abrir el recuadro -->
-  <button id="btn-abrir-info" style="margin-top: 10px; padding: 8px 16px; font-size: 14px;">Mostrar información</button>
-</section>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Tu programa -->
+  <script src="programa.js"></script>
 </body>
-
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<!-- Tu JS -->
-<script src="proyectoU.js"></script>
 </html>
