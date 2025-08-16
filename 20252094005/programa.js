@@ -29,10 +29,30 @@ function cerrarPanel() {
 }
 
 // Cargar GeoJSON
-fetch('Parques-Marichuela.geojson')
-    .then(response => response.json())
+fetch('./Parques-Marichuela.geojson')
+  .then(response => response.json())
+  .then(data => {
+      console.log("GeoJSON cargado:", data); 
+      L.geoJSON(data, {
+          style: {
+              color: "red",
+              weight: 2,
+              fillColor: "yellow",
+              fillOpacity: 0.5
+          }
+      }).addTo(map);
+  })
+  .catch(error => console.error("Error al cargar el GeoJSON:", error))
     .then(data => {
-        console.log("GeoJSON cargado:", data); // Validación
-        L.geoJSON(data).addTo(map);
+        console.log("GeoJSON cargado:", data); 
+        const capa = L.geoJSON(data, {
+            style: {
+                color: "red",
+                weight: 2,
+                fillColor: "yellow",
+                fillOpacity: 0.5
+            }
+        }).addTo(map);
+
+        map.fitBounds(capa.getBounds()); // 👈 centra el mapa en los polígonos
     })
-    .catch(error => console.error("Error al cargar el GeoJSON:", error));
