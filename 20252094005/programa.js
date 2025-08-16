@@ -1,16 +1,11 @@
-// Inicializar mapa
-var map = L.map('map').setView([-74.11888097912265, 4.5111155476835965], 14);
+var map = L.map('map').setView([-74.11905546704762, 4.511947469569499 ], 14); // Bogotá
 
 // Capa base
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
-}).addTo(mapa);
-
-
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19
 }).addTo(map);
+
 // Elementos de la interfaz
 const infoDiv = document.getElementById('info');
 const mapaDiv = document.getElementById('map');
@@ -37,7 +32,7 @@ function cerrarPanel() {
 fetch('Parques-Marichuela.geojson')
     .then(response => response.json())
     .then(data => {
-        console.log("GeoJSON cargado:", data); // 👈 verificar aquí
+        console.log("GeoJSON cargado:", data); // Validación
         L.geoJSON(data).addTo(map);
     })
     .catch(error => console.error("Error al cargar el GeoJSON:", error));
