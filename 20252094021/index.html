@@ -91,10 +91,32 @@
       Cesium es una plataforma de código abierto para crear mapas y visualizaciones 3D interactivas en la web. Permite explorar datos geoespaciales de manera realista y dinámica, facilitando la visualización de ciudades, terrenos y edificios en tres dimensiones desde cualquier navegador.
     </p>
   </div>
+  <div class="info-box">
+    <h2>Ejemplo</h2>
+    <p>
+      A partir de un archivo GeoJSON correspondiente a la capa de construcciones, obtenido desde los datos abiertos de Bogotá, fue posible visualizar en 3D las edificaciones del barrio La Macarena. Este barrio, de carácter colonial y ubicado en el centro de la ciudad, se representa tridimensionalmente en la plataforma Cesium gracias a la información geoespacial contenida en dicho archivo. El proceso incluyó la carga del GeoJSON en el visor de Cesium, donde cada polígono correspondiente a una edificación fue extruido en altura según sus atributos, permitiendo así una exploración realista y detallada de la morfología urbana del sector.
+    </p>
+  </div>
+  <div class="info-box">
+    <h2>Aplicaciones de Cesium</h2>
+    <ul style="margin-top:0;">
+      <li><strong>Medio ambiente</strong>
+        <ul>
+          <li>Monitoreo de áreas naturales, deforestación, calidad del aire, etc.</li>
+          <li>Simulación de desastres naturales (inundaciones, terremotos).</li>
+        </ul>
+      </li>
+      <li><strong>Planificación urbana y arquitectura</strong>
+        <ul>
+          <li>Visualización de ciudades en 3D.</li>
+          <li>Simulación de impacto visual de nuevas construcciones.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
   <div class="cesium-box">
     <div id="cesiumContainer"></div>
   </div>
-
   <script type="module">
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0OTU5NWZjNC0wNzg1LTRjMjQtOTEzNS0xOTk2NDNhNjIwNTQiLCJpZCI6MzMxMzY5LCJpYXQiOjE3NTUwNDI1ODl9.bfQ2JufdXQOAiJn31JyUiKEHGJF5iooMHHus7wyAvSg';
 
@@ -183,6 +205,17 @@
     viewer.camera.flyTo({
       destination: Cesium.Cartesian3.fromDegrees(-74.17653, 4.59027, 2600),
       orientation: { heading: 0, pitch: Cesium.Math.toRadians(-25) }
+    });
+
+    // Después de agregar las capas y configurar sus estilos
+
+    // Haz zoom a la capa de construcciones (predios)
+    await viewer.flyTo(predios, {
+      offset: new Cesium.HeadingPitchRange(
+        0, // heading
+        Cesium.Math.toRadians(-25), // pitch
+        900 // distancia (más cerca que antes)
+      )
     });
   </script>
 </body>
