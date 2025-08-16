@@ -1,30 +1,18 @@
-<!DOCTYPE html> <!-- Declaramos HTML5 -->
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" /> <!-- Codificación UTF-8 -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Diseño responsive -->
-  <title>Mapa de Municipios de Colombia</title>
-
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-  <!-- Estilos personalizados -->
-  <link rel="stylesheet" href="estilos.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Municipios - Antioquia / Caldas</title>
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-  <section class="seccion-mapa">
-    <h2>Mapa de Municipios de Colombia</h2>
-    <p class="descripcion-mapa">
-      Mapa interactivo que muestra todos los municipios de Colombia usando un archivo GeoJSON. 
-      Al pasar el cursor sobre un municipio, se resaltará y mostrará su nombre.
-    </p>
+    <h1>Municipio de Caldas - Antioquia</h1>
+    <p>Visualización filtrada desde el GeoJSON de municipios de Colombia.</p>
     <div id="map"></div>
-  </section>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <!-- Tu programa -->
-  <script src="programa.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="programa.js"></script>
 </body>
 </html>

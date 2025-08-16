@@ -1,47 +1,14 @@
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
-.seccion-mapa {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 16px;
-}
-
-.descripcion-mapa {
-  margin-bottom: 12px;
-  font-size: 16px;
-  color: #333;
+h1 {
+    text-align: center;
+    margin: 10px 0;
 }
 
 #map {
-  width: 100%;
-  height: 600px; /* Sin altura no se ve el mapa */
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-/* Estilo del cuadro de información */
-.info {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: white;
-  padding: 6px 8px;
-  border-radius: 4px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.3);
-}
-
-.legend {
-  line-height: 18px;
-  color: #555;
-}
-
-.legend i {
-  width: 18px;
-  height: 18px;
-  float: left;
-  margin-right: 8px;
-  opacity: 0.7;
+    width: 100%;
+    height: 90vh;
 }
