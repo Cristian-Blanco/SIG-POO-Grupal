@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calidad del Aire Bogotá</title>
+  <link rel="stylesheet" href="estilos.css">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div id="contenedor">
+    <!-- Panel izquierdo -->
+    <div id="panel-izquierdo">
+      <h2>Históricos de Contaminantes</h2>
+      <canvas id="graficoCO"></canvas>
+      <canvas id="graficoO3"></canvas>
+
+      <h3>Análisis Estadístico</h3>
+      <textarea id="analisis" readonly></textarea>
+    </div>
+
+    <!-- Panel derecho -->
+    <div id="panel-derecho">
+      <div id="mapa"></div>
+    </div>
+  </div>
+
+  <script src="programa.js"></script>
+</body>
+</html>
