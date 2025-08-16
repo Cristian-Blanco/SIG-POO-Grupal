@@ -1,0 +1,58 @@
+/*
+ * Este es un estilo básico para que la página sea limpia y el mapa se vea bien.
+ */
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Estilo para las secciones de texto (introducción y conclusión) */
+.section {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #0056b3;
+    text-align: center;
+}
+
+p {
+    text-align: justify;
+}
+
+/* Contenedor del mapa, importante para definir el tamaño */
+#map-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* El mapa necesita una altura definida para ser visible */
+#map {
+    height: 70vh; /* 70% de la altura de la ventana */
+    width: 100%;
+}
+
+/* Media Queries para ajustar el diseño en pantallas más pequeñas */
+@media (max-width: 768px) {
+    .section {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+    
+    #map {
+        height: 50vh; /* Altura reducida en móviles */
+    }
+}
