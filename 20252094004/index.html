@@ -2,28 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mapa y Tutorial Interactivo</title>
+    <title>Mapa de Distancias desde Bogotá</title>
+    <link rel="stylesheet" href="estilo.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="estilo.css" />
 </head>
 <body>
     <div id="contenedor">
-        <!-- Mapa -->
-        <div id="map"></div>
-
-        <!-- Panel explicativo -->
-        <div id="tutorial">
-            <h2>📚 Paso a paso</h2>
+        <div id="mapa"></div>
+        <div id="panel">
+            <h2>Explicación paso a paso</h2>
             <div id="explicacion"></div>
             <div id="botones">
-                <button id="prev">⬅ Anterior</button>
-                <button id="next">Siguiente ➡</button>
+                <button id="prev">Anterior</button>
+                <button id="next">Siguiente</button>
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
     <script src="programa.js"></script>
 </body>
 </html>

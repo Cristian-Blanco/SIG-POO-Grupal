@@ -1,81 +1,63 @@
-// PASOS DEL TUTORIAL
-const pasos = [
-    {
-        titulo: "Cargar librerías",
-        texto: "Usamos Leaflet para mostrar mapas y Turf.js para cálculos geográficos. Leaflet trabaja con datos tipo 'coordenadas' y Turf usa geometrías GeoJSON."
-    },
-    {
-        titulo: "Mostrar el mapa",
-        texto: "Creamos un mapa centrado en Bogotá (latitud 4.7110, longitud -74.0721) con un nivel de zoom 2 para ver el mundo completo."
-    },
-    {
-        titulo: "Añadir marcador de Bogotá",
-        texto: "Ponemos un marcador rojo en Bogotá para tener un punto de referencia fijo. No desaparecerá aunque interactúes con el mapa."
-    },
-    {
-        titulo: "Cargar países",
-        texto: "Usamos datos GeoJSON de todos los países para poder calcular distancias desde Bogotá al centro de cada país."
-    },
-    {
-        titulo: "Calcular distancias",
-        texto: "Turf calcula la distancia en kilómetros desde Bogotá al centroide de cada país usando coordenadas geográficas."
-    },
-    {
-        titulo: "Mostrar resultados",
-        texto: "Coloreamos los países según la distancia y al hacer clic mostramos un popup con la distancia desde Bogotá y el nombre del país."
-    }
-];
+// ----- Configuración del mapa -----
+const mapa = L.map('mapa').setView([4.711, -74.072], 2);
 
-let pasoActual = 0;
-const explicacionDiv = document.getElementById("explicacion");
+// Basemap oscuro de Carto
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+}).addTo(mapa);
 
-function mostrarPaso() {
-    const paso = pasos[pasoActual];
-    explicacionDiv.innerHTML = `<h3>${paso.titulo}</h3><p>${paso.texto}</p>`;
-}
-document.getElementById("prev").addEventListener("click", () => {
-    if (pasoActual > 0) pasoActual--;
-    mostrarPaso();
-});
-document.getElementById("next").addEventListener("click", () => {
-    if (pasoActual < pasos.length - 1) pasoActual++;
-    mostrarPaso();
-});
-mostrarPaso();
+// Coordenadas de Bogotá
+const bogota = turf.point([-74.072, 4.711]);
 
-// MAPA
-const map = L.map('map').setView([4.7110, -74.0721], 2);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-}).addTo(map);
+// Marcador fijo en Bogotá
+L.marker([4.711, -74.072]).addTo(mapa)
+    .bindPopup("Bogotá, Colombia");
 
-// MARCADOR FIJO DE BOGOTÁ
-const bogotaMarker = L.marker([4.7110, -74.0721], { title: "Bogotá" })
-    .bindPopup("📍 Bogotá, Colombia")
-    .addTo(map);
-
-// PUNTO DE BOGOTÁ (para Turf)
-const bogota = turf.point([-74.0721, 4.7110]);
-
-// CARGAR GEOJSON DE PAÍSES
-fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
-    .then(res => res.json())
+// Cargar GeoJSON con países
+fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+    .then(response => response.json())
     .then(data => {
         L.geoJSON(data, {
-            style: feature => ({
-                color: "#555",
-                weight: 1,
-                fillColor: "#6baed6",
-                fillOpacity: 0.5
-            }),
-            onEachFeature: (feature, layer) => {
+            onEachFeature: function (feature, layer) {
                 const centroid = turf.centroid(feature);
                 const distancia = turf.distance(bogota, centroid, { units: 'kilometers' }).toFixed(2);
                 const nombrePais = feature.properties.ADMIN || feature.properties.name || "País desconocido";
-                const coords = centroid.geometry.coordinates;
-                const ciudad = `${coords[1].toFixed(2)}, ${coords[0].toFixed(2)}`;
-                
                 layer.bindPopup(`<strong>Distancia desde Bogotá a ${nombrePais}</strong><br>${distancia} km`);
             }
-        }).addTo(map);
+        }).addTo(mapa);
     });
+
+// ----- Explicaciones paso a paso -----
+const pasos = [
+    "Paso 1: Usamos Leaflet para mostrar un mapa interactivo en la web. Leaflet es una librería JavaScript que permite añadir mapas fácilmente.",
+    "Paso 2: Definimos las coordenadas de Bogotá. Esto nos servirá como punto de referencia para calcular distancias.",
+    "Paso 3: Cargamos un archivo GeoJSON que contiene las fronteras de todos los países. GeoJSON es un formato para representar datos geográficos usando texto (JSON).",
+    "Paso 4: Calculamos la distancia desde Bogotá al centro (centroide) de cada país usando Turf.js. Turf.js es una librería para análisis geoespacial.",
+    "Paso 5: Mostramos las distancias en ventanas emergentes (popups) cuando haces clic en un país del mapa."
+];
+
+let indicePaso = 0;
+
+function mostrarPaso() {
+    document.getElementById("explicacion").innerText = pasos[indicePaso];
+}
+
+document.getElementById("prev").addEventListener("click", () => {
+    if (indicePaso > 0) {
+        indicePaso--;
+        mostrarPaso();
+    }
+});
+
+document.getElementById("next").addEventListener("click", () => {
+    if (indicePaso < pasos.length - 1) {
+        indicePaso++;
+        mostrarPaso();
+    }
+});
+
+// Mostrar el primer paso
+mostrarPaso();
+

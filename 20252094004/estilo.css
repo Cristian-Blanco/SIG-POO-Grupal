@@ -8,15 +8,14 @@ body {
     height: 100vh;
 }
 
-#map {
+#mapa {
     flex: 2;
 }
 
-#tutorial {
+#panel {
     flex: 1;
-    background: #f9f9f9;
-    padding: 15px;
-    border-left: 2px solid #ddd;
+    background: #f8f9fa;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -24,18 +23,17 @@ body {
 
 #explicacion {
     flex: 1;
-    padding: 10px;
     font-size: 16px;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 #botones {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
 }
 
 button {
-    padding: 8px 15px;
-    margin: 5px;
+    padding: 8px 12px;
     font-size: 14px;
     cursor: pointer;
 }
