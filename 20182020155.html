@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guía WFS + CQL — Documentación bonita</title>
+  <meta name="description" content="Qué es WFS, qué es CQL, operaciones, parámetros, ejemplos y buenas prácticas. Página tipo documentación con diseño moderno." />
+  <style>
+    /* ====== Diseño base ====== */
+    :root{
+      --bg: #0b0c0f;         /* fondo en modo oscuro */
+      --panel: #12141a;      /* paneles */
+      --text: #eaeef7;       /* texto */
+      --muted: #a1a8b3;      /* texto suave */
+      --brand: #5f0a12;      /* color de marca (preferencia del usuario) */
+      --ok: #1b9e5a;
+      --warn: #e6a700;
+      --err: #d64545;
+      --border: #252a33;
+      --code: #0f1117;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 14px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#fafafa; --panel:#ffffff; --text:#111827; --muted:#6b7280; --border:#e5e7eb; --code:#0b1220; }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif; color:var(--text); background:linear-gradient(180deg, var(--bg), #0d0f14 20%, var(--bg) 100%);}
+    a{color:var(--brand); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* ====== Layout ====== */
+    .shell{display:grid; grid-template-columns: 280px 1fr; min-height:100dvh}
+    @media (max-width: 980px){ .shell{grid-template-columns: 1fr} }
+
+    /* ====== Sidebar ====== */
+    .sidebar{position:sticky; top:0; height:100dvh; padding:22px; border-right:1px solid var(--border); background:linear-gradient(180deg, rgba(95,10,18,.12), transparent 40%), var(--panel)}
+    @media (max-width: 980px){ .sidebar{position:relative; height:auto; border-right:none; border-bottom:1px solid var(--border)} }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.2px}
+    .brand .logo{width:36px; height:36px; border-radius:10px; background:radial-gradient(circle at 30% 20%, #ffb4b4, transparent 40%), linear-gradient(135deg, var(--brand), #b01729); box-shadow:var(--shadow)}
+    .brand small{display:block; color:var(--muted); font-weight:600}
+    .toc{margin-top:22px; display:flex; flex-direction:column; gap:12px}
+    .toc h4{margin:14px 0 6px; color:var(--muted); font-size:.9rem; text-transform:uppercase; letter-spacing:.08em}
+    .toc a{display:block; padding:10px 12px; border-radius:10px; color:var(--text); background:transparent; border:1px solid transparent}
+    .toc a.active{border-color:var(--brand); background:linear-gradient(180deg, rgba(95,10,18,.16), rgba(95,10,18,.06))}
+
+    /* ====== Main ====== */
+    .main{padding:32px 40px 80px; max-width:1100px}
+    @media (max-width: 980px){ .main{padding:24px 18px 56px} }
+
+    /* ====== Hero ====== */
+    .hero{display:grid; gap:16px; margin:8px 0 28px}
+    .eyebrow{color:var(--brand); font-weight:700; font-size:.9rem; letter-spacing:.12em; text-transform:uppercase}
+    h1{font-size: clamp(28px, 5vw, 48px); line-height:1.05; margin:0}
+    .lead{font-size: clamp(15px, 2.4vw, 18px); color:var(--muted); max-width:68ch}
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px}
+    .btn{appearance:none; border:none; cursor:pointer; padding:12px 14px; border-radius:12px; font-weight:700; background:var(--brand); color:#fff; box-shadow:var(--shadow)}
+    .btn.secondary{background:transparent; border:1px solid var(--border); color:var(--text)}
+
+    /* ====== Cards ====== */
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:18px}
+    .card{grid-column: span 12; background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:18px 18px 16px; box-shadow:var(--shadow)}
+    @media (min-width: 860px){ .card.span-6{grid-column: span 6} .card.span-4{grid-column: span 4} }
+    .card h2, .card h3{margin:.2rem 0 .6rem}
+    .card h2{font-size:1.4rem}
+    .card h3{font-size:1.05rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em}
+    .kpi{display:flex; gap:10px; align-items:center; margin:.4rem 0}
+    .kpi .dot{width:9px; height:9px; border-radius:99px; background:var(--brand)}
+    .tag{display:inline-flex; align-items:center; gap:6px; font-size:.82rem; border:1px solid var(--border); color:var(--muted); padding:6px 8px; border-radius:999px}
+
+    /* ====== Code & Examples ====== */
+    pre{margin:10px 0 0; background:linear-gradient(180deg, rgba(16,18,28,.8), rgba(16,18,28,.6)), var(--code); color:#e6edf3; border-radius:12px; border:1px solid var(--border); padding:14px; overflow:auto}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:.92rem}
+    .codebar{display:flex; justify-content:space-between; align-items:center; gap:12px}
+    .copy{border:1px solid var(--border); background:transparent; color:var(--muted); border-radius:9px; padding:6px 10px; cursor:pointer}
+    .label{font-size:.85rem; color:var(--muted)}
+
+    /* ====== Tabs ====== */
+    .tabs{display:flex; gap:8px; flex-wrap:wrap}
+    .tab{padding:8px 10px; border:1px solid var(--border); border-radius:10px; cursor:pointer; background:transparent; color:var(--muted)}
+    .tab.active{color:var(--text); border-color:var(--brand); background:linear-gradient(180deg, rgba(95,10,18,.18), rgba(95,10,18,.08))}
+
+    /* ====== Callouts ====== */
+    .callout{display:flex; gap:12px; align-items:flex-start; padding:14px; border-radius:12px; border:1px solid var(--border); background:linear-gradient(180deg, rgba(95,10,18,.08), transparent)}
+    .callout .icon{flex:0 0 22px; height:22px; border-radius:6px; background:var(--brand)}
+
+    /* ====== Playground ====== */
+    .play{display:grid; gap:12px}
+    .field{display:grid; gap:8px}
+    .field label{font-size:.9rem; color:var(--muted)}
+    .field input, .field textarea, .field select{width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:transparent; color:var(--text)}
+    .mutetxt{color:var(--muted); font-size:.92rem}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand" aria-label="Marca">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          Guía WFS + CQL
+          <small>por William • demo</small>
+        </div>
+      </div>
+      <nav class="toc" aria-label="Tabla de contenidos">
+        <h4>Contenido</h4>
+        <a href="#intro" class="toc-link active">¿Qué es WFS?</a>
+        <a href="#ops" class="toc-link">Operaciones WFS</a>
+        <a href="#params" class="toc-link">Parámetros clave</a>
+        <a href="#versions" class="toc-link">Versiones & formatos</a>
+        <a href="#cql" class="toc-link">¿Qué es CQL?</a>
+        <a href="#cql-gram" class="toc-link">Gramática CQL</a>
+        <a href="#cql-spatial" class="toc-link">Filtros espaciales</a>
+        <a href="#examples" class="toc-link">Ejemplos</a>
+        <a href="#playground" class="toc-link">Playground (offline)</a>
+        <a href="#tips" class="toc-link">Buenas prácticas</a>
+        <a href="#faq" class="toc-link">Errores comunes</a>
+        <a href="#links" class="toc-link">Recursos</a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <section class="hero">
+        <span class="eyebrow">Mapas Web • OGC</span>
+        <h1>WFS + CQL, sin enredos: guía práctica y bonita</h1>
+        <p class="lead">Aprende qué es <strong>WFS</strong> (Web Feature Service), cómo pedir y filtrar datos vectoriales desde un servidor (GeoServer, MapServer), y cómo escribir <strong>CQL</strong> para consultas potentes, incluidas las espaciales. Todo en una sola página.</p>
+        <div class="actions">
+          <button class="btn" onclick="window.print()">Imprimir / PDF</button>
+          <a class="btn secondary" href="#links">Ir a recursos</a>
+        </div>
+      </section>
+
+      <div class="grid">
+        <!-- Qué es WFS -->
+        <article id="intro" class="card span-6">
+          <h3>Concepto</h3>
+          <h2>¿Qué es WFS?</h2>
+          <p>WFS (Web Feature Service) es un estándar OGC para <strong>servir datos vectoriales</strong> (puntos, líneas, polígonos) por la web. A diferencia de WMS (imágenes), aquí descargas <em>features</em> reales con sus atributos para analizarlos, filtrarlos o mostrarlos en mapas interactivos.</p>
+          <div class="kpi"><span class="dot"></span><div><strong>Usos típicos:</strong> descargar GeoJSON, paginar registros, integrar con Leaflet/MapLibre, análisis SIG.</div></div>
+          <ul>
+            <li><span class="tag">Lo bueno</span> Controlas <em>qué</em> columnas y <em>cuántas</em> features recibes. Ideal para análisis.</li>
+            <li><span class="tag">A tener en cuenta</span> El tamaño crece con los datos; filtra y pagina. En WFS 1.1/2.0 ojo con el orden de ejes de EPSG:4326.</li>
+          </ul>
+        </article>
+
+        <!-- Operaciones WFS -->
+        <article id="ops" class="card span-6">
+          <h3>Operaciones</h3>
+          <h2>Operaciones WFS básicas</h2>
+          <p class="mutetxt">Reemplaza <code>https://tu-geoserver/wfs</code> y <code>workspace:capa</code> por tus valores.</p>
+
+          <div class="codebar"><span class="label">GetCapabilities</span><button class="copy" data-copy="https://tu-geoserver/wfs?service=WFS&request=GetCapabilities">Copiar</button></div>
+          <pre><code>GET https://tu-geoserver/wfs?service=WFS&request=GetCapabilities</code></pre>
+
+          <div class="codebar"><span class="label">DescribeFeatureType</span><button class="copy" data-copy="https://tu-geoserver/wfs?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=workspace:capa">Copiar</button></div>
+          <pre><code>GET https://tu-geoserver/wfs?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=workspace:capa</code></pre>
+
+          <div class="codebar"><span class="label">GetFeature (GeoJSON)</span><button class="copy" data-copy="https://tu-geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=workspace:capa&outputFormat=application/json&count=50">Copiar</button></div>
+          <pre><code>GET https://tu-geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=workspace:capa&outputFormat=application/json&count=50</code></pre>
+
+          <div class="callout" style="margin-top:12px"><span class="icon" aria-hidden="true"></span><div><strong>WFS-T (Transaccional):</strong> permite insertar, actualizar o borrar features desde el cliente. Requiere permisos y se envía como XML GML. Si no necesitas editar, usa sólo lectura.</div></div>
+        </article>
+
+        <!-- Parámetros clave -->
+        <article id="params" class="card span-6">
+          <h3>Referencia</h3>
+          <h2>Parámetros clave en GetFeature</h2>
+          <ul>
+            <li><code>service=WFS</code>, <code>request=GetFeature</code>, <code>version=1.1.0</code> o <code>2.0.0</code></li>
+            <li><code>typeName</code> / <code>typeNames</code> (1.1 vs 2.0) — <em>workspace:capa</em></li>
+            <li><code>outputFormat</code> — <em>application/json</em>, <em>JSON</em>, <em>GML2</em>/<em>GML3</em>, <em>SHAPE-ZIP</em></li>
+            <li><code>srsName</code> — CRS de salida, ej: <em>EPSG:3857</em> o <em>EPSG:4326</em></li>
+            <li><code>bbox=minx,miny,maxx,maxy,CRS</code> — recorta por extensión</li>
+            <li><code>count</code>, <code>startIndex</code> — paginación (2.0.0)</li>
+            <li><code>propertyName=col1,col2</code> — selecciona columnas</li>
+            <li><code>sortBy=colA A,colB D</code> — ordenar asc/desc</li>
+            <li><code>CQL_FILTER</code> o <code>FILTER</code> — filtra atributos y geometrías</li>
+          </ul>
+        </article>
+
+        <!-- Versiones y formatos -->
+        <article id="versions" class="card span-6">
+          <h3>Compatibilidad</h3>
+          <h2>Versiones & formatos</h2>
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="v10">WFS 1.0.0</button>
+            <button class="tab" data-tab="v11">WFS 1.1.0</button>
+            <button class="tab" data-tab="v20">WFS 2.0.0</button>
+          </div>
+          <div id="v10" class="tabpane">
+            <p>Antigua, simple. <code>typeName</code>, salida frecuente en GML2. Úsala si un cliente viejo lo exige.</p>
+          </div>
+          <div id="v11" class="tabpane" hidden>
+            <p>Muy usada. <code>typeName</code>, GML3.1.1. <strong>Ojo con EPSG:4326:</strong> el orden de ejes puede seguir la definición del EPSG (lat,lon) o ser lon,lat según servidor. Verifica con una prueba pequeña.</p>
+          </div>
+          <div id="v20" class="tabpane" hidden>
+            <p>La más moderna. <code>typeNames</code> (plural), <strong>paginación nativa</strong> (<code>count</code>, <code>startIndex</code>) y respuestas más consistentes. Ideal si tu servidor/cliente lo soporta.</p>
+          </div>
+          <hr style="border-color:var(--border); margin:12px 0">
+          <p><strong>Formatos comunes:</strong> <em>application/json</em> (GeoJSON), <em>GML2/GML3</em>, <em>SHAPE-ZIP</em>, <em>CSV</em>. Para web, GeoJSON es práctico; para SIG de escritorio, GML/Shape funcionan bien.</p>
+        </article>
+
+        <!-- Qué es CQL -->
+        <article id="cql" class="card span-6">
+          <h3>Concepto</h3>
+          <h2>¿Qué es CQL?</h2>
+          <p>CQL (Common Query Language) es una sintaxis <em>tipo SQL</em> que simplifica los filtros en WFS/GeoServer. Permite combinar <strong>filtros de atributos</strong> (números, texto, fechas) y <strong>filtros espaciales</strong> (intersecar, contener, distancias) de forma legible.</p>
+          <ul>
+            <li><span class="tag">Atributos</span> <code>poblacion &gt; 10000 AND nombre ILIKE 'bog%'</code></li>
+            <li><span class="tag">Espacial</span> <code>INTERSECTS(geom, BUFFER(POINT(-74,4.6), 5000))</code></li>
+            <li><span class="tag">URL</span> va en <code>CQL_FILTER=&lt;tu consulta URL-encoded&gt;</code></li>
+          </ul>
+        </article>
+
+        <!-- Gramática CQL -->
+        <article id="cql-gram" class="card span-6">
+          <h3>Referencia</h3>
+          <h2>Gramática básica de CQL</h2>
+          <ul>
+            <li><strong>Comparadores:</strong> <code>=</code>, <code>!=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code></li>
+            <li><strong>Lógicos:</strong> <code>AND</code>, <code>OR</code>, <code>NOT</code></li>
+            <li><strong>Texto:</strong> <code>LIKE</code> / <code>ILIKE</code> (comodín <code>%</code>); <code>strToLowerCase(col)</code></li>
+            <li><strong>Listas y rangos:</strong> <code>IN (...)</code>, <code>BETWEEN a AND b</code></li>
+            <li><strong>Nulos:</strong> <code>IS NULL</code>, <code>IS NOT NULL</code></li>
+            <li><strong>Fechas:</strong> <code>fecha &gt;= '2023-01-01'</code> (ISO-8601)</li>
+          </ul>
+        </article>
+
+        <!-- Filtros espaciales -->
+        <article id="cql-spatial" class="card span-6">
+          <h3>Espacial</h3>
+          <h2>Filtros espaciales en CQL</h2>
+          <ul>
+            <li><code>INTERSECTS(geom, POLYGON((...)))</code> — toca la geometría</li>
+            <li><code>WITHIN(geom, POLYGON((...)))</code> — está contenido</li>
+            <li><code>CONTAINS(geom, POINT(...))</code> — contiene al punto</li>
+            <li><code>BBOX(geom, minx, miny, maxx, maxy)</code> — dentro del sobre</li>
+            <li><code>DWITHIN(geom, POINT(...), distancia, unidades)</code> — a <em>distancia</em> de</li>
+          </ul>
+          <p class="mutetxt">La columna geométrica suele llamarse <code>geom</code> o <code>the_geom</code>. Verifícala con <em>DescribeFeatureType</em>.</p>
+        </article>
+
+        <!-- Ejemplos -->
+        <article id="examples" class="card">
+          <h3>Ejemplos</h3>
+          <h2>Snippets listos para usar</h2>
+
+          <div class="codebar"><span class="label">1) GeoJSON de los 100 municipios más poblados</span><button class="copy" data-copy="https://tu-geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=colombia:municipios&outputFormat=application/json&count=100&sortBy=poblacion D">Copiar</button></div>
+          <pre><code>GET https://tu-geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature
+  &typeNames=colombia:municipios
+  &outputFormat=application/json
+  &count=100&sortBy=poblacion D</code></pre>
+
+          <div class="codebar"><span class="label">2) Sólo nombre y población (menos peso)</span><button class="copy" data-copy="https://tu-geoserver/wfs?service=WFS&request=GetFeature&version=2.0.0&typeNames=colombia:municipios&propertyName=nombre,poblacion&outputFormat=application/json">Copiar</button></div>
+          <pre><code>...&propertyName=nombre,poblacion</code></pre>
+
+          <div class="codebar"><span class="label">3) Filtrar por texto (mayúsc./minúsc. sin importar)</span><button class="copy" data-copy="https://tu-geoserver/wfs?service=WFS&request=GetFeature&typeNames=colombia:municipios&outputFormat=application/json&CQL_FILTER=nombre%20ILIKE%20'bog%25'">Copiar</button></div>
+          <pre><code>...&CQL_FILTER=nombre ILIKE 'bog%'</code></pre>
+
+          <div class="codebar"><span class="label">4) Intersectar con BBOX</span><button class="copy" data-copy="https://tu-geoserver/wfs?service=WFS&request=GetFeature&version=1.1.0&typeName=colombia:rios&outputFormat=application/json&bbox=-74.3,4.4,-74.0,4.8,EPSG:4326">Copiar</button></div>
+          <pre><code>...&bbox=-74.3,4.4,-74.0,4.8,EPSG:4326</code></pre>
+
+          <div class="codebar"><span class="label">5) Filtro espacial por distancia (5 km de un punto)</span><button class="copy" data-copy="https://tu-geoserver/wfs?service=WFS&request=GetFeature&typeNames=colombia:parques&outputFormat=application/json&CQL_FILTER=DWITHIN(geom,POINT(-74.1%204.65),5000,meters)">Copiar</button></div>
+          <pre><code>...&CQL_FILTER=DWITHIN(geom,POINT(-74.1 4.65),5000,meters)</code></pre>
+
+          <div class="callout" style="margin-top:12px"><span class="icon" aria-hidden="true"></span><div><strong>Tip:</strong> Codifica espacios y caracteres especiales en la URL (<code>%20</code>, <code>%25</code>, etc.).</div></div>
+        </article>
+
+        <!-- Playground -->
+        <article id="playground" class="card">
+          <h3>Prueba aquí</h3>
+          <h2>Playground (offline): arma tu URL</h2>
+          <div class="play">
+            <div class="field">
+              <label>Base WFS</label>
+              <input id="base" placeholder="https://tu-geoserver/wfs" value="https://tu-geoserver/wfs" />
+            </div>
+            <div class="field">
+              <label>Versión</label>
+              <select id="ver">
+                <option value="2.0.0">2.0.0</option>
+                <option value="1.1.0">1.1.0</option>
+                <option value="1.0.0">1.0.0</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Capa (workspace:capa)</label>
+              <input id="layer" placeholder="colombia:municipios" value="colombia:municipios" />
+            </div>
+            <div class="field">
+              <label>Propiedades (coma)</label>
+              <input id="props" placeholder="nombre,poblacion" />
+            </div>
+            <div class="field">
+              <label>Filtro CQL (opcional)</label>
+              <textarea id="cql" rows="3" placeholder="poblacion > 10000 AND nombre ILIKE 'bog%'" ></textarea>
+            </div>
+            <div class="field">
+              <label>Formato</label>
+              <select id="fmt">
+                <option value="application/json">application/json</option>
+                <option value="GML2">GML2</option>
+                <option value="GML3">GML3</option>
+                <option value="SHAPE-ZIP">SHAPE-ZIP</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>count (límite de features)</label>
+              <input id="count" type="number" min="1" step="1" value="50" />
+            </div>
+            <button class="btn" id="build">Generar URL</button>
+            <div class="codebar"><span class="label">Tu URL</span><button class="copy" id="copy-url">Copiar</button></div>
+            <pre id="out"><code></code></pre>
+            <p class="mutetxt">Este generador no hace peticiones. Copia la URL y pruébala en tu navegador o cliente.</p>
+          </div>
+        </article>
+
+        <!-- Buenas prácticas -->
+        <article id="tips" class="card span-6">
+          <h3>Consejos</h3>
+          <h2>Buenas prácticas</h2>
+          <ul>
+            <li><strong>Paginar</strong>: usa <code>count</code> y <code>startIndex</code> (WFS 2.0.0) para no traer todo de golpe.</li>
+            <li><strong>Selecciona columnas</strong>: <code>propertyName</code> reduce tamaño de respuesta.</li>
+            <li><strong>Filtra cerca del servidor</strong>: aplica <code>CQL_FILTER</code> o <code>bbox</code> para minimizar datos.</li>
+            <li><strong>CRS consistente</strong>: define <code>srsName</code> y valida el orden lon/lat vs lat/lon.</li>
+            <li><strong>Índices</strong>: en la base de datos, indexa columnas filtradas y la geometría.</li>
+            <li><strong>Seguridad</strong>: evita exponer WFS-T sin control; usa autenticación y límites.</li>
+          </ul>
+        </article>
+
+        <!-- Errores comunes -->
+        <article id="faq" class="card span-6">
+          <h3>Debug</h3>
+          <h2>Errores comunes</h2>
+          <ul>
+            <li><strong>400 Bad Request</strong>: caracteres sin codificar en <code>CQL_FILTER</code> o comillas mal cerradas.</li>
+            <li><strong>Sin resultados</strong>: columna mal escrita, capa equivocada o CRS distinto al esperado.</li>
+            <li><strong>Geometrías vacías</strong>: usa <code>IS NOT NULL</code> sobre la geometría si necesitas filtrar nulos.</li>
+            <li><strong>Orden de ejes</strong>: con EPSG:4326 prueba un punto conocido; si se desplaza, invierte lat/lon.</li>
+            <li><strong>Payload enorme</strong>: olvido de <code>count</code> o de <code>propertyName</code>.</li>
+          </ul>
+        </article>
+
+        <!-- Recursos -->
+        <article id="links" class="card">
+          <h3>Aprende más</h3>
+          <h2>Recursos recomendados</h2>
+          <ul>
+            <li><a href="https://docs.geoserver.org/latest/en/user/services/wfs/" target="_blank" rel="noreferrer">GeoServer — WFS</a></li>
+            <li><a href="https://docs.geoserver.org/latest/en/user/tutorials/cql/cql_tutorial.html" target="_blank" rel="noreferrer">GeoServer — Tutorial CQL</a></li>
+            <li><a href="https://www.ogc.org/standard/wfs/" target="_blank" rel="noreferrer">OGC — Estándar WFS</a></li>
+            <li><a href="https://openlayers.org/en/latest/examples/wfs-getfeature.html" target="_blank" rel="noreferrer">Ejemplo WFS con OpenLayers</a></li>
+          </ul>
+          <p class="mutetxt">Puedes pegar esta página en tu proyecto, cambiar colores (variable <code>--brand</code>) y enlazar a tus servicios.</p>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ====== Tabla de contenidos activa ======
+    const links = [...document.querySelectorAll('.toc-link')]
+    const sections = links.map(a => document.querySelector(a.getAttribute('href')))
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          links.forEach(l => l.classList.remove('active'))
+          const idx = sections.indexOf(e.target)
+          if(idx>=0) links[idx].classList.add('active')
+        }
+      })
+    }, {rootMargin: '-40% 0px -50% 0px', threshold: .01})
+    sections.forEach(s => s && io.observe(s))
+
+    // ====== Copiar snippets ======
+    function copyText(txt){
+      navigator.clipboard.writeText(txt).then(()=>{
+        const note = document.createElement('div')
+        note.textContent = 'Copiado ✅'
+        Object.assign(note.style, {position:'fixed', bottom:'20px', right:'20px', background:'var(--panel)', color:'var(--text)', padding:'10px 12px', borderRadius:'10px', border:'1px solid var(--border)', boxShadow:'var(--shadow)'} )
+        document.body.appendChild(note)
+        setTimeout(()=> note.remove(), 1400)
+      })
+    }
+    document.querySelectorAll('.copy').forEach(btn =>{
+      btn.addEventListener('click', ()=> copyText(btn.dataset.copy || document.getElementById('out').innerText))
+    })
+
+    // ====== Tabs versiones ======
+    const tabs = [...document.querySelectorAll('.tab')]
+    const panes = {
+      v10: document.getElementById('v10'),
+      v11: document.getElementById('v11'),
+      v20: document.getElementById('v20')
+    }
+    tabs.forEach(t => t.addEventListener('click', ()=>{
+      tabs.forEach(x=>x.classList.remove('active'))
+      t.classList.add('active')
+      const id = t.dataset.tab
+      Object.entries(panes).forEach(([k,el])=> el.hidden = (k!==id))
+    }))
+
+    // ====== Playground ======
+    const qs = sel => document.querySelector(sel)
+    function buildURL(){
+      const base = qs('#base').value.trim().replace(/\/$/, '')
+      const ver = qs('#ver').value
+      const layer = qs('#layer').value.trim()
+      const props = qs('#props').value.trim()
+      const cql = qs('#cql').value.trim()
+      const fmt = qs('#fmt').value
+      const count = qs('#count').value
+      const typeKey = ver === '2.0.0' ? 'typeNames' : 'typeName'
+      const params = new URLSearchParams()
+      params.set('service','WFS')
+      params.set('version',ver)
+      params.set('request','GetFeature')
+      params.set(typeKey, layer)
+      params.set('outputFormat', fmt)
+      if(props) params.set('propertyName', props)
+      if(cql) params.set('CQL_FILTER', cql)
+      if(count) params.set('count', count)
+      const url = `${base}?${params.toString()}`
+      qs('#out').innerHTML = `<code>${url}</code>`
+      return url
+    }
+    qs('#build').addEventListener('click', buildURL)
+    qs('#copy-url').addEventListener('click', ()=> copyText(buildURL()))
+    // Primer render
+    buildURL()
+  </script>
+</body>
+</html>
