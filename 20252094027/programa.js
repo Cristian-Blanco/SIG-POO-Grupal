@@ -1,34 +1,30 @@
 document.getElementById('cargarDatosBtn').addEventListener('click', async () => {
-  // 1. Solicita datos a la API WFS
-  const url = "http://iboca.ambientebogota.gov.co:8080/geoserver/sda_ca/wfs";
-  const params = new URLSearchParams({
-    service: "WFS",
-    version: "2.0.0",
-    request: "GetFeature",
-    typeNames: "sda_ca:Hist_ca_aire_estaciones",
-    outputFormat: "application/json",
-    srsName: "EPSG:4326",
-    CQL_FILTER: "fecha_hora BETWEEN '2023-01-01T00:00.00' AND '2023-01-31T23:59.59'"
-  });
+  try {
+    const response = await fetch('historico_estaciones.json');
+    if (!response.ok) throw new Error("No se pudo cargar el archivo JSON local");
+    const data = await response.json();
 
-  const response = await fetch(`${url}?${params.toString()}`);
-  const data = await response.json();
+    // Extraer las features del GeoJSON
+    const features = data.features || [];
+    // Filtrar PM10
+    const pm10 = features.filter(f => f.properties.contaminante === "PM10");
 
-  // 2. Procesa los datos GeoJSON
-  const features = data.features;
-  // Filtra PM10
-  const pm10 = features.filter(f => f.properties.contaminante === "PM10");
+    const valores = pm10.map(f => f.properties.valor).filter(v => typeof v === 'number' && !isNaN(v));
 
-  // 3. Estadísticas básicas
-  const valores = pm10.map(f => f.properties.valor).filter(v => typeof v === 'number');
-  const estadisticas = calcularEstadisticas(valores);
-  document.getElementById('estadisticas').textContent = JSON.stringify(estadisticas, null, 2);
+    if (valores.length === 0) {
+      document.getElementById('estadisticas').textContent = "No se encontraron datos PM10 en el archivo JSON.";
+      return;
+    }
 
-  // 4. Muestra el mapa con Leaflet
-  mostrarMapa(pm10);
+    const estadisticas = calcularEstadisticas(valores);
+    document.getElementById('estadisticas').textContent = JSON.stringify(estadisticas, null, 2);
 
-  // 5. Histograma con Chart.js
-  mostrarHistograma(valores);
+    mostrarMapa(pm10);
+    mostrarHistograma(valores);
+  } catch (err) {
+    document.getElementById('estadisticas').textContent = "Error al cargar datos: " + err.message;
+    console.error(err);
+  }
 });
 
 function calcularEstadisticas(arr) {
