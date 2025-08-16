@@ -1,4 +1,4 @@
-document.getElementById('cargarDatosBtn').addEventListener('click', async () => {
+window.addEventListener('DOMContentLoaded', async () => {
   try {
     const response = await fetch('historico_estaciones.geojson');
     if (!response.ok) throw new Error("No se pudo cargar el archivo GeoJSON local");
