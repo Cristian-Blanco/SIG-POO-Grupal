@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explicación: Parques de Marichuela</title>
+
+  <!-- Tu CSS (puede ser la paleta astronauta que ya tienes) -->
+  <link rel="stylesheet" href="estilos.css">
+
+  <!-- estilos específicos para el code-lab (si necesitas añadir al estilos.css, copia esto allí) -->
+  <style>
+    .code-lab{max-width:1200px;margin:28px auto;padding:0 16px;display:grid;gap:18px}
+    .code-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .code-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    pre{background:#071026;color:#dff7ff;padding:14px;border-radius:10px;overflow:auto;border:1px solid rgba(255,255,255,0.04)}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; line-height:1.45}
+    .explicaciones{list-style: decimal-leading-zero; padding:12px 18px;background:#081227;border-radius:10px;color:#cfeaff;overflow:auto}
+    .explicaciones li{padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
+    .buttons {display:flex; gap:8px}
+    .btn {background:linear-gradient(90deg,#ff5cf4,#00e5ff); color:#04101a; border:0;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700}
+    @media (max-width:900px){ .code-wrap{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+
+  <header class="contenedor">
+    <h1>Explicación paso a paso — Parques de Marichuela</h1>
+    <p class="tagline">Lee el código a la izquierda y la explicación aparecida línea por línea a la derecha.</p>
+  </header>
+
+  <main class="code-lab contenedor">
+    <div class="code-header">
+      <div>
+        <strong>Archivo:</strong> <code>parques-marichuela.html</code> (snippet original)
+      </div>
+      <div class="buttons">
+        <button class="btn" id="copiarTodo">Copiar todo</button>
+        <button class="btn" id="descargar">Descargar (.html)</button>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <!-- Panel de código (líneas numeradas) -->
+      <div>
+        <div style="font-weight:700;margin-bottom:6px">Código (líneas numeradas)</div>
+        <pre><code id="code-html" spellcheck="false" ></code></pre>
+      </div>
+
+      <!-- Panel de explicaciones (línea por línea) -->
+      <div>
+        <div style="font-weight:700;margin-bottom:6px">Explicación línea por línea</div>
+        <ol id="explicaciones-html" class="explicaciones"></ol>
+      </div>
+    </div>
+
+    <p style="margin-top:12px;color:var(--muted)">Nota: para probar la funcionalidad del mapa en tu máquina necesitas: <code>parques-marichuela.geojson</code> y las imágenes referenciadas (por ejemplo <code>parque_principal.jpg</code>) en la misma carpeta, y conexión a internet para Leaflet y los tiles de OpenStreetMap.</p>
+  </main>
+
+  <!-- Aquí incrusto el snippet original EXACTO como texto plano (no se ejecuta) -->
+  <script id="snippet-html" type="text/plain">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parques de Marichuela</title>
+    <link rel="stylesheet" href="estilos.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <style>
+        /* Contenedor principal en flex */
+        #contenedor {
+            display: flex;
+            height: calc(100vh - 120px);
+            transition: all 0.3s ease;
+        }
+        /* Mapa ocupa todo al inicio */
+        #mapa {
+            flex: 1 0 100%;
+            transition: flex 0.3s ease;
+        }
+        /* Panel derecho oculto por defecto */
+        #info {
+            display: none;
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            overflow-y: auto;
+        }
+        #info img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .btn-cerrar {
+            background: crimson;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+        </div>
+        <h1>Parques de Marichuela</h1>
+    </header>
+
+    <!-- Menú -->
+    <nav>
+        <ul class="menu">
+            <li class="menu-item" id="equipamientos">Equipamientos
+                <ul class="submenu">
+                    <li><a href="ubicacion.html">Ubicación</a></li>
+                    <li><a href="movilidad.html">Movilidad</a></li>
+                    <li><a href="parques.html">Parques</a></li>
+                    <li><a href="catastro3d.html">Catastro 3D</a></li>
+                    <li><a href="recorrido_virtual.html">Recorrido Virtual</a></li>
+                    <li><a href="vias.html">Vías</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Contenedor -->
+    <div id="contenedor">
+        <div id="mapa"></div>
+        <div id="info">
+            <h2>Seleccione un parque en el mapa</h2>
+            <p>Haga clic sobre un parque para ver su descripción general.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-fixed">
+        ©️ 2025 Barrio Marichuela - Todos los derechos reservados. <br>
+        Diseño y desarrollo por AKA
+    </div>
+
+    <!-- Scripts Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const mapa = L.map('mapa').setView([4.562, -74.145], 16);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '©️ OpenStreetMap'
+        }).addTo(mapa);
+
+        const infoParques = {
+            "Parque Principal": {
+                img: "parque_principal.jpg",
+                desc: "Este es el parque principal de Marichuela, un punto de encuentro para la comunidad con zonas verdes, juegos y espacios deportivos."
+            },
+            "Parque Infantil": {
+                img: "parque_infantil.jpg",
+                desc: "Parque diseñado para el disfrute de los niños, con columpios, resbaladeros y un ambiente seguro."
+            },
+            "Parque Lineal": {
+                img: "parque_lineal.jpg",
+                desc: "Un parque alargado que conecta diferentes sectores del barrio, ideal para caminar, trotar y montar bicicleta."
+            }
+        };
+
+        const infoDiv = document.getElementById('info');
+        const mapaDiv = document.getElementById('mapa');
+
+        // Función para cerrar panel
+        function cerrarPanel() {
+            infoDiv.style.display = 'none';
+            mapaDiv.style.flex = '1 0 100%';
+        }
+
+        // Cargar GeoJSON
+        fetch('parques-marichuela.geojson')
+            .then(res => res.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    onEachFeature: (feature, layer) => {
+                        if (feature.properties && feature.properties.Nombre) {
+                            layer.bindPopup(feature.properties.Nombre);
+                            layer.on('click', () => {
+                                const nombre = feature.properties.Nombre;
+                                infoDiv.style.display = 'block';
+                                mapaDiv.style.flex = '1'; // Reducir mapa para mostrar panel
+                                
+                                if (infoParques[nombre]) {
+                                    infoDiv.innerHTML = `
+                                        <button class="btn-cerrar" onclick="cerrarPanel()">Cerrar</button>
+                                        <h2>Descripción general</h2>
+                                        <h3>${nombre}</h3>
+                                        <img src="${infoParques[nombre].img}" alt="${nombre}">
+                                        <p>${infoParques[nombre].desc}</p>
+                                    `;
+                                } else {
+                                    infoDiv.innerHTML = `
+                                        <button class="btn-cerrar" onclick="cerrarPanel()">Cerrar</button>
+                                        <h2>Descripción general</h2>
+                                        <h3>${nombre}</h3>
+                                        <p>No hay descripción disponible para este parque.</p>
+                                    `;
+                                }
+                            });
+                        }
+                    },
+                    style: {
+                        color: "green",
+                        weight: 2,
+                        fillOpacity: 0.4
+                    }
+                }).addTo(mapa);
+            });
+    </script>
+</body>
+</html>
+  </script>
+
+  <!-- Script que genera la vista numerada + explicaciones -->
+  <script src="programa.js" defer></script>
+</body>
+</html>
+
