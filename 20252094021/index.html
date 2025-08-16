@@ -29,7 +29,7 @@
     viewer.scene.globe.depthTestAgainstTerrain = true;
 
     // 1) Capa del barrio: SOLO para ubicar/recortar (sin extrusión)
-    const barrio = await Cesium.GeoJsonDataSource.load("Los_cedros_predios.geojson", {
+    const barrio = await Cesium.GeoJsonDataSource.load("Construccion_Macarena.geojson", {
       clampToGround: true
     });
     viewer.dataSources.add(barrio);
@@ -43,7 +43,7 @@
 
     // 2) PREDIOS: extrusión (usa 'altura' o 'pisos'; fallback 6 m)
     // Exporta desde QGIS como EPSG:4326
-    const predios = await Cesium.GeoJsonDataSource.load("Los_cedros_predios.geojson", {
+    const predios = await Cesium.GeoJsonDataSource.load("Construccion_Macarena.geojson", {
       // importante: SIN clampToGround si vas a extruir
     });
     viewer.dataSources.add(predios);
