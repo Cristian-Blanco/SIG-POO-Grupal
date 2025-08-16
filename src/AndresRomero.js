@@ -32,13 +32,27 @@ fetch('Lotes_La_Capuchina.geojson')
     alert('Hubo un problema cargando el polígono. Revisa la consola.');
   });
 
-// === Marcadores ===
+// === Marcadores con imágenes en popup ===
 const marcador1 = L.marker([4.601882386879739, -74.07840290587482])
-  .bindPopup("📍 Marcador 1")
+  .bindPopup(`
+    <div style="text-align:center;">
+      <h3>Escultura Negret La Mariposa</h3>
+      <img src="Plaza_La_Mariposa.jpg" 
+           alt="Escultura Negret La Mariposa" 
+           style="width:200px; border-radius:8px;"/>
+    </div>
+  `)
   .addTo(map);
 
 const marcador2 = L.marker([4.604600183830083, -74.07868720364645])
-  .bindPopup("📍 Marcador 2")
+  .bindPopup(`
+    <div style="text-align:center;">
+      <h3>Facultad de Artes ASAB</h3>
+      <img src="ASAB.jpeg"
+           alt="Facultad de Artes ASAB" 
+           style="width:200px; border-radius:8px;"/>
+    </div>
+  `)
   .addTo(map);
 
 
