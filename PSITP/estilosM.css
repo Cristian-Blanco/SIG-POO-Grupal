@@ -1,48 +1,62 @@
-/* Reset básico */
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
-
-/* Estilo de la sección */
-.seccion-movilidad {
+/* Estilo para el tutorial */
+.seccion-tutorial {
   width: 85%;
   max-width: 1000px;
   margin: 30px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f8f9fa;
-}
-
-.seccion-movilidad h2 {
-  text-align: center;
-  color: #1a535c;
-  margin-bottom: 15px;
-}
-
-/* Contenedor del mapa */
-.map-container {
-  width: 100%;
-  height: 600px;
+  padding: 25px;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #333;
 }
 
-/* Asegurar que el mapa llene el contenedor */
-#map {
-  width: 100%;
-  height: 100%;
+.seccion-tutorial h2, .seccion-tutorial h3 {
+  color: #1a535c;
 }
 
-/* Estilo para el ícono de autobús (emoji) */
-.paradero-icon {
-  font-size: 24px;
-  line-height: 1;
-  text-align: center;
-  color: #e74c3c; /* Rojo SITP */
+.seccion-tutorial h2 {
+  border-bottom: 3px solid #1a535c;
+  padding-bottom: 8px;
+}
+
+.seccion-tutorial h3 {
+  margin-top: 20px;
+  color: #2c3e50;
+}
+
+.seccion-tutorial ul, .seccion-tutorial ol {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.seccion-tutorial li {
+  margin: 8px 0;
+}
+
+.seccion-tutorial code {
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.seccion-tutorial pre {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 15px 0;
+  border: 1px solid #ccc;
+}
+
+.seccion-tutorial a {
+  color: #0077b6;
+  text-decoration: none;
+}
+
+.seccion-tutorial a:hover {
+  text-decoration: underline;
 }

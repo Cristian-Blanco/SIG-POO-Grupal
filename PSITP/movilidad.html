@@ -20,61 +20,102 @@
     </div>
   </section>
 
-  <!-- Sección del tutorial -->
+  <!-- Sección del tutorial detallado -->
   <section class="seccion-tutorial">
-    <h2>¿Cómo se hizo este mapa?</h2>
-    <p>Este mapa fue construido paso a paso usando tecnologías web abiertas. A continuación, te explicamos cómo se hizo:</p>
+    <h2>¿Cómo se construyó este mapa interactivo?</h2>
+    <p>Este mapa fue desarrollado utilizando tecnologías web modernas, siguiendo buenas prácticas de desarrollo cartográfico. A continuación, te explicamos paso a paso cómo se hizo, con detalles técnicos y conceptos clave.</p>
 
     <ol class="tutorial-list">
       <li>
-        <strong>Descargar los archivos GeoJSON</strong>
-        <p>Primero, se descargaron dos archivos en formato GeoJSON:</p>
+        <strong>1. Descarga de los datos geoespaciales en formato GeoJSON</strong>
+        <p>El proyecto comienza con dos archivos clave en formato <strong>GeoJSON</strong>, el estándar abierto para datos geográficos:</p>
         <ul>
-          <li><strong>Polígono del barrio Potosí</strong>: Define los límites del barrio. Se guardó como <code>potosi.geojson</code>.</li>
-          <li><strong>Paraderos del SITP</strong>: Contiene la ubicación de los paraderos zonales. Se descargó desde <a href="https://datosabiertos-transmilenio.hub.arcgis.com/datasets/paraderos-zonales-del-sitp/explore" target="_blank">ArcGIS Open Data</a> y se guardó como <code>Paraderos_Zonales_del_SITP.geojson</code>.</li>
+          <li><strong><code>potosi.geojson</code></strong>: Define el polígono del barrio Potosí en Suba. Este archivo contiene un <code>Polygon</code> o <code>MultiPolygon</code> con coordenadas en <strong>WGS 84 (EPSG:4326)</strong>, el sistema de referencia global que usan Leaflet y OpenStreetMap.</li>
+          <li><strong><code>Paraderos_Zonales_del_SITP.geojson</code></strong>: Contiene miles de puntos (<code>Point</code>) que representan los paraderos del SITP en Bogotá. Se descargó desde la plataforma oficial: <a href="https://datosabiertos-transmilenio.hub.arcgis.com/datasets/paraderos-zonales-del-sitp/explore" target="_blank">ArcGIS Open Data - TransMilenio</a>.</li>
         </ul>
-        <p>✅ Ambos archivos están en <strong>WGS 84 (EPSG:4326)</strong>, el sistema de coordenadas estándar para mapas web.</p>
+        <p>✅ Ambos archivos deben estar en la misma carpeta que el proyecto para que <code>fetch()</code> los cargue correctamente.</p>
       </li>
 
       <li>
-        <strong>Cargar el mapa base con OpenStreetMap</strong>
-        <p>Se usó <a href="https://leafletjs.com" target="_blank">Leaflet</a>, una librería JavaScript ligera y poderosa, para crear el mapa interactivo. Se cargó la capa base de OpenStreetMap para mostrar el fondo del mapa.</p>
+        <strong>2. Inicialización del mapa con Leaflet</strong>
+        <p>Se usó <a href="https://leafletjs.com" target="_blank">Leaflet</a>, la biblioteca JavaScript líder para mapas interactivos, por su simplicidad, rendimiento y compatibilidad con móviles.</p>
+        <p>El mapa se inicializa en un elemento HTML con <code>id="map"</code> y se centra en el barrio Potosí:</p>
+        <pre><code>var map = L.map('map').setView([4.653, -74.085], 14);</code></pre>
+        <p>El nivel de zoom <code>14</code> permite ver detalles urbanos como calles y paraderos.</p>
       </li>
 
       <li>
-        <strong>Dibujar el polígono del barrio</strong>
-        <p>Con <code>fetch()</code>, se cargó el archivo <code>potosi.geojson</code> y se dibujó sobre el mapa usando <code>L.geoJSON()</code>. Se le aplicó un estilo naranja para destacarlo.</p>
+        <strong>3. Carga de la capa base: OpenStreetMap</strong>
+        <p>Leaflet no incluye mapas por defecto. Se añade una capa de teselas (tiles) de <strong>OpenStreetMap</strong>, un mapa base gratuito y de código abierto:</p>
+        <pre><code>L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);</code></pre>
+        <p>Esta capa proporciona el fondo del mapa y es esencial para contextualizar los datos.</p>
       </li>
 
       <li>
-        <strong>Filtrar paraderos dentro del barrio</strong>
-        <p>Usando <a href="https://turfjs.org" target="_blank">Turf.js</a>, se verificó cuáles paraderos estaban <strong>dentro del polígono del barrio</strong> con <code>turf.booleanPointInPolygon()</code>. Esto asegura que solo se muestren los paraderos relevantes.</p>
+        <strong>4. Dibujar el polígono del barrio</strong>
+        <p>Con <code>fetch()</code>, se carga <code>potosi.geojson</code> y se agrega al mapa como una capa vectorial:</p>
+        <pre><code>L.geoJSON(data, {
+  style: estiloBarrio,
+  onEachFeature: function (feature, layer) {
+    layer.bindPopup('<b>Barrio Potosí</b><br>Localidad: Suba');
+  }
+}).addTo(map);</code></pre>
+        <p>El estilo define el color naranja del borde y relleno. <code>onEachFeature</code> permite agregar popups a cada elemento.</p>
       </li>
 
       <li>
-        <strong>Agregar marcadores interactivos</strong>
-        <p>Cada paradero se mostró con un marcador usando el emoji 🚌. Al hacer clic, aparece un popup con información clave:</p>
+        <strong>5. Filtrar paraderos dentro del barrio con Turf.js</strong>
+        <p>Leaflet no puede verificar si un punto está dentro de un polígono. Para eso, se usa <a href="https://turfjs.org" target="_blank">Turf.js</a>, una librería geoespacial potente.</p>
+        <p>El código convierte el GeoJSON del barrio a un polígono con <code>turf.polygon()</code> y verifica cada paradero:</p>
+        <pre><code>if (turf.booleanPointInPolygon(punto, barrioPolygon)) {
+  // Mostrar solo si está dentro
+}</code></pre>
+        <p>Este filtro asegura que solo se muestren los paraderos relevantes.</p>
+      </li>
+
+      <li>
+        <strong>6. Agregar marcadores interactivos</strong>
+        <p>Cada paradero se representa con un marcador usando el emoji 🚌, creado con <code>L.divIcon()</code>:</p>
+        <pre><code>const iconoParadero = L.divIcon({
+  html: '🚌',
+  className: 'paradero-icon',
+  iconSize: [30, 30]
+});</code></pre>
+        <p>Al hacer clic, se abre un popup con información útil: nombre, dirección bandera, código cenefa y localidad.</p>
+      </li>
+
+      <li>
+        <strong>7. Diseño y experiencia de usuario</strong>
+        <p>El mapa es <strong>mobile-friendly</strong>, con controles táctiles como:</p>
         <ul>
-          <li>Nombre del paradero</li>
-          <li>Dirección bandera</li>
-          <li>Código cenefa</li>
-          <li>Localidad</li>
+          <li>Arrastre con inercia</li>
+          <li>Pinzamiento para zoom</li>
+          <li>Desplazamiento con rueda del mouse</li>
         </ul>
+        <p>Los estilos CSS personalizados mejoran la presentación, y los popups se adaptan a cualquier dispositivo.</p>
       </li>
 
       <li>
-        <strong>Estilos y diseño</strong>
-        <p>Se usó CSS para dar estilo al contenedor del mapa, los popups y los marcadores. El diseño es limpio, responsive y funciona bien en móviles.</p>
-      </li>
-
-      <li>
-        <strong>Ejecutar con un servidor local</strong>
-        <p>Para que el <code>fetch()</code> funcione, se usó un servidor local (como <strong>Live Server</strong> en VS Code). Esto evita errores de acceso a archivos.</p>
+        <strong>8. Ejecución local con Live Server</strong>
+        <p>Para evitar errores de <em>CORS</em> al cargar archivos locales, se usa un servidor local como <strong>Live Server</strong> (extensión de VS Code).</p>
+        <p>La URL debe ser <code>http://localhost:5500</code>, no <code>file://</code>.</p>
       </li>
     </ol>
 
-    <p><strong>Resultado:</strong> Un mapa interactivo, preciso y útil para entender la movilidad en el barrio Potosí.</p>
-    <p>Este proyecto es <strong>reutilizable</strong>: cambia los archivos GeoJSON y funciona en cualquier otro barrio de Bogotá.</p>
+    <h3>¿Por qué Leaflet?</h3>
+    <p>Leaflet fue elegido porque:</p>
+    <ul>
+      <li>Es <strong>ligero</strong> (~42 KB) y sin dependencias externas.</li>
+      <li>Tiene una <strong>API clara y bien documentada</strong>.</li>
+      <li>Soporta <strong>GeoJSON, capas vectoriales y controles personalizados</strong>.</li>
+      <li>Es compatible con <strong>móviles y escritorio</strong>.</li>
+      <li>Tiene miles de <strong>plugins</strong> para extender funcionalidades.</li>
+    </ul>
+
+    <p><strong>Resultado final:</strong> Un mapa interactivo, preciso y educativo, que combina datos abiertos, tecnologías web y buenas prácticas de desarrollo.</p>
+    <p>Este proyecto es <strong>reutilizable</strong>: cambia los archivos GeoJSON y funciona en cualquier barrio de Bogotá.</p>
   </section>
 
   <!-- Leaflet JS -->
