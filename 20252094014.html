@@ -80,7 +80,7 @@
   viewer.scene.globe.depthTestAgainstTerrain = true;
 
   // 1) Carga construcciones (EPSG:4326)
-  const ds = await Cesium.GeoJsonDataSource.load("src/assets/construcciones.geojson");
+  const ds = await Cesium.GeoJsonDataSource.load("src/assets/20252094014.geojson");
   await viewer.dataSources.add(ds);
 
   // 2) Función para centrar la cámara
