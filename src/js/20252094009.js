@@ -5,7 +5,7 @@
   }).addTo(map);
 
   const iconoParque = L.icon({
-    iconUrl: 'imagenes/arbol.png',       // Ruta a tu ícono
+    iconUrl: 'src/imagenes/arbol.png',       // Ruta a tu ícono
     iconSize: [32, 32],                  // Ajusta a tu gusto
     iconAnchor: [16, 32],                // Centro inferior del ícono
     popupAnchor: [0, -32]                // Punto emergente del popup
@@ -42,12 +42,12 @@
   }
 
   const capaBarrio = await cargarGeoJSON(
-    'capas/Sector_Villa_Anny_II.json',
+    'src/capas/Sector_Villa_Anny_II.json',
     { color: 'blue', weight: 2, fillOpacity: 0 }
   );
 
   const capaParque = await cargarGeoJSON(
-    'capas/Parque.json',
+    'src/capas/Parque.json',
     { color: 'green', weight: 2, fillOpacity: 0.5 },
     'name',
     true
