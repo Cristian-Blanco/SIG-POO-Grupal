@@ -9,6 +9,21 @@
 </head>
 <body>
     <h1>Mapa del Barrio Marichuela - Bogotá</h1>
+
+    <!-- Párrafo explicativo -->
+    <section id="descripcion">
+        <h2>Descripción del Proyecto</h2>
+        <p>
+            En este proyecto se construyó un visor web interactivo utilizando <b>Leaflet</b> y archivos en formato <b>GeoJSON</b>. 
+            Se integraron diferentes capas de información geográfica: el polígono que delimita el barrio <i>Marichuela</i> en Bogotá, 
+            la red de vías internas y los paraderos del SITP. Los polígonos y líneas se visualizaron directamente a partir de sus archivos 
+            GeoJSON, mientras que los paraderos se representaron como marcadores sobre el mapa. Además, a cada marcador se le asoció 
+            una fotografía almacenada en el mismo archivo GeoJSON mediante un atributo adicional, de manera que al seleccionar un paradero 
+            se despliega su nombre y la imagen correspondiente. Todo este proceso permite consultar de forma sencilla y visual la información 
+            espacial y complementaria del barrio, integrando datos vectoriales, atributos y elementos multimedia en una sola aplicación web.
+        </p>
+    </section>
+
     <div id="map"></div>
 
     <!-- Leaflet JS -->
