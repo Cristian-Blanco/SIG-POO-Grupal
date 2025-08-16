@@ -10,7 +10,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// 3) Cargar Troncales de TransMilenio (ArcGIS FeatureServer)
+// 2) Cargar Troncales de TransMilenio (ArcGIS FeatureServer)
 const troncalesUrl =
   'https://gis.transmilenio.gov.co/arcgis/rest/services/Troncal/consulta_trazados_troncales/FeatureServer/0';
 
@@ -33,21 +33,35 @@ const troncalesLayer = L.esri
   })
   .addTo(map);
 
-// 4) Control de capas
-const overlayMaps = {
-  'Localidades': localidadesLayer,
-  'Troncales TransMilenio': troncalesLayer
-};
-L.control.layers({}, overlayMaps, { collapsed: true }).addTo(map);
+// 3) Cargar Estaciones de TransMilenio (puntos)
+const estacionesUrl =
+  'https://gis.transmilenio.gov.co/arcgis/rest/services/Troncal/consulta_estaciones_troncales/FeatureServer/0';
 
-// 5) Leyenda
-const legend = L.control({ position: 'bottomleft' });
-legend.onAdd = function () {
-  const div = L.DomUtil.create('div', 'legend');
-  div.innerHTML = `
-    <div><span class="swatch" style="background:#6fa8dc;border:1px solid #444"></span> Localidades</div>
-    <div><span class="swatch" style="background:red"></span> Troncales TransMilenio</div>
-  `;
-  return div;
-};
-legend.addTo(map);
+const estacionesLayer = L.esri
+  .featureLayer({
+    url: estacionesUrl,
+    fields: ['*'],
+    pointToLayer: (geojson, latlng) => {
+      return L.circleMarker(latlng, {
+        radius: 6,
+        fillColor: 'blue',
+        color: '#fff',
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.9
+      });
+    }
+  })
+  .on('click', function (e) {
+    const p = e.layer.feature?.properties || {};
+    const nombre = p.nombre_estacion || p.numero_estacion || 'Estación';
+    const troncal = p.troncal_estacion ? `<br><small>Troncal: ${p.troncal_estacion}</small>` : '';
+    L.popup()
+      .setLatLng(e.latlng)
+      .setContent(`<strong>${nombre}</strong>${troncal}`)
+      .openOn(map);
+  })
+  .on('requesterror', (err) => {
+    console.error('Error consultando estaciones:', err);
+  })
+  .addTo(map);
