@@ -41,6 +41,7 @@ fetch("./historico_estaciones.geojson")
       }
     });
 
+    
     // --- Graficar CO ---
     new Chart(document.getElementById("graficoCO"), {
       type: 'line',
@@ -68,6 +69,7 @@ fetch("./historico_estaciones.geojson")
         }]
       }
     });
+
 
     // --- Análisis Estadístico ---
     function calcularEstadisticas(arr) {
