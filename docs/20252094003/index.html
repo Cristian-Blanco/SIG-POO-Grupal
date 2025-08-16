@@ -3,26 +3,43 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Localidades y Troncales – Bogotá</title>
+  <title>TransMilenio – Troncales y Estaciones</title>
 
   <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-  <!-- Archivo de estilos -->
+  <!-- Estilos propios -->
   <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
-  <div id="map"></div>
-  
+  <div class="layout">
+    <!-- Panel izquierdo (descripción) -->
+    <aside class="panel">
+      <h1>TransMilenio – Mapa</h1>
+      <p>
+        Visor con las <strong>troncales</strong> (líneas rojas) y las
+        <strong>estaciones</strong> (puntos azules) de TransMilenio en Bogotá.
+        Usa el control de capas para activar/desactivar cada una.
+      </p>
+
+      <h2>Descripción</h2>
+      <ul>
+        <li><b>Troncales:</b> trazados principales del sistema.</li>
+        <li><b>Estaciones:</b> paradas operativas sobre las troncales.</li>
+        <li>Haz clic sobre una geometría para ver su nombre.</li>
+      </ul>
+    </aside>
+
+    <!-- Panel derecho (mapa) -->
+    <main id="map" aria-label="Mapa interactivo"></main>
+  </div>
+
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Esri Leaflet para consumir servicios ArcGIS -->
   <script src="https://unpkg.com/esri-leaflet@3.0.11/dist/esri-leaflet.js"></script>
-
-  <!-- Archivo JS -->
+  <!-- Lógica del mapa -->
   <script src="programa.js"></script>
 </body>
 </html>
+
