@@ -1,19 +1,36 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #f4f4f4;
+  height: 100vh;
 }
 
-h1 {
-  margin: 20px 0;
-  color: #333;
+.container {
+  display: flex;
+  height: 100vh;
 }
 
 #map {
-  height: 90vh;
-  width: 100%;
-  border: 2px solid #333;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  margin-bottom: 20px;
+  flex: 2; /* Ocupa más espacio que el texto */
+  height: 100%;
+}
+
+.sidebar {
+  flex: 1;
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar h1 {
+  margin-bottom: 10px;
+  color: #09435C;
+}
+
+.sidebar p {
+  color: #333;
+  text-align: center;
 }
