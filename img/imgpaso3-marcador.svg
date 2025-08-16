@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#0b1428"></rect>
+  <rect x="60" y="40" width="680" height="320" rx="16" fill="#142a4a" stroke="#2a3d62"></rect>
+  <circle cx="400" cy="200" r="70" fill="#1d3e6a"></circle>
+  <path d="M400 120 c40 0 72 32 72 72 0 40-40 76-64 110 -4 6-12 6-16 0 -24-34-64-70-64-110 0-40 32-72 72-72z" fill="#ff6b6b"></path>
+  <circle cx="400" cy="192" r="16" fill="white" opacity="0.9"></circle>
+  <text x="400" y="320" fill="#ffd7d7" font-size="18" font-family="Inter, Arial" text-anchor="middle">Marcador + Popup</text>
+</svg>

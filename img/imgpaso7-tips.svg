@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#0b1428"></rect>
+  <rect x="60" y="40" width="680" height="320" rx="16" fill="#142a4a" stroke="#2a3d62"></rect>
+  <rect x="110" y="90" width="580" height="220" rx="12" fill="#0f1f3a" stroke="#2a3d62"></rect>
+  <text x="400" y="130" fill="#7bb7ff" font-size="18" font-family="Inter, Arial" text-anchor="middle">Tips de Producción</text>
+  <text x="140" y="170" fill="#e6e8ee" font-size="14" font-family="Inter, Arial">• GeoJSON con L.geoJSON(...)</text>
+  <text x="140" y="195" fill="#e6e8ee" font-size="14" font-family="Inter, Arial">• Clustering de marcadores</text>
+  <text x="140" y="220" fill="#e6e8ee" font-size="14" font-family="Inter, Arial">• Reutiliza mapa/capas</text>
+  <text x="140" y="245" fill="#e6e8ee" font-size="14" font-family="Inter, Arial">• Revisa licencias de teselas</text>
+</svg>
