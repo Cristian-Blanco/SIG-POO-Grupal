@@ -6,7 +6,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
 }).addTo(mapa);
 
-// Marcador de subestación (ejemplo en Bogotá)
+// Marcador de subestación fijo
 const marcador = L.marker([4.531206, -74.111714]).addTo(mapa)
   .bindPopup("Subestación de Monitoreo");
 
@@ -28,20 +28,21 @@ fetch("./historico_estaciones.geojson")
     const o3 = [];
 
     data.features.forEach(f => {
-      const { fecha, contaminante, valor } = f.properties;
+      const { fecha_hora, contaminante, valor } = f.properties;
 
-      if (!fechas.includes(fecha)) {
-        fechas.push(fecha);
+      // Guardar fechas de forma ordenada
+      if (!fechas.includes(fecha_hora)) {
+        fechas.push(fecha_hora);
       }
 
+      // Guardar valores según contaminante
       if (contaminante === "CO") {
-        co.push(valor);
+        co.push(parseFloat(valor));
       } else if (contaminante === "O3") {
-        o3.push(valor);
+        o3.push(parseFloat(valor));
       }
     });
 
-    
     // --- Graficar CO ---
     new Chart(document.getElementById("graficoCO"), {
       type: 'line',
@@ -51,8 +52,15 @@ fetch("./historico_estaciones.geojson")
           label: 'CO (ppm)',
           data: co,
           borderColor: 'red',
-          fill: false
+          fill: false,
+          tension: 0.3
         }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true }
+        }
       }
     });
 
@@ -65,18 +73,25 @@ fetch("./historico_estaciones.geojson")
           label: 'O3 (µg/m³)',
           data: o3,
           borderColor: 'green',
-          fill: false
+          fill: false,
+          tension: 0.3
         }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true }
+        }
       }
     });
 
-
     // --- Análisis Estadístico ---
     function calcularEstadisticas(arr) {
+      if (arr.length === 0) return { max: 0, min: 0, promedio: 0, desviacion: 0 };
       const max = Math.max(...arr);
       const min = Math.min(...arr);
       const promedio = arr.reduce((a, b) => a + b, 0) / arr.length;
-      const desviacion = Math.sqrt(arr.map(x => Math.pow(x - promedio, 2)).reduce((a, b) => a + b) / arr.length);
+      const desviacion = Math.sqrt(arr.map(x => Math.pow(x - promedio, 2)).reduce((a, b) => a + b, 0) / arr.length);
       return { max, min, promedio, desviacion };
     }
 
