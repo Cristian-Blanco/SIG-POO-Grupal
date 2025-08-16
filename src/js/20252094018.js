@@ -1,47 +1,63 @@
-const mapa = L.map('map').setView([4.7110, -74.0721], 13);
+// Coordenadas iniciales (Bogotá como ejemplo)
+const START = { lat: 4.7110, lng: -74.0721 };
+let map;               // instancia L.map
+let baseLayers = {};   // para el control de capas
+let overlays = {};     // para el control de capas
+let marker;            // marcador principal
+let shapes = {};       // circle y polyline
+let clickHandlerOn = false;
 
-// Capa base
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+// Fragmentos de código a mostrar en cada paso (solo informativo)
+const snippets = [
+`// 1) Crear el mapa
+const map = L.map('map', {
+  center: [${START.lat}, ${START.lng}],
+  zoom: 12
+});`,
+
+`// 2) Añadir capa base (OpenStreetMap)
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
   attribution: '&copy; OpenStreetMap contributors'
-}).addTo(mapa);
+}).addTo(map);`,
 
-// Cargar archivo GPX
-const gpx = new L.GPX('track.gpx', {
-  async: true,
-  marker_options: {
-    startIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.1/pin-icon-start.png',
-    endIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.1/pin-icon-end.png',
-    shadowUrl: 'https://unpkg.com/leaflet-gpx@1.5.1/pin-shadow.png',
-    wptIconUrls: {
-      '': 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png'
-    }
-  },
-  polyline_options: {
-    color: 'blue',
-    weight: 4,
-    opacity: 0.75
-  }
-})
-.on('loaded', function(e) {
-  mapa.fitBounds(e.target.getBounds());
-})
-.on('addpoint', function(e) {
-  const point = e.point;
-  const marker = e.marker;
+`// 3) Colocar un marcador con popup
+const marker = L.marker([${START.lat}, ${START.lng}]).addTo(map);
+marker.bindPopup('<b>¡Hola Leaflet!</b><br>Bogotá, CO').openPopup();`,
 
-  if (!marker) return;
+`// 4) Dibujar un círculo y una polilínea
+const circle = L.circle([${START.lat}, ${START.lng}], {
+  radius: 800
+}).addTo(map);
 
-  // Obtener el número del punto del nombre, por ejemplo "Punto 2" -> 2
-  const match = (point.name || '').match(/(\d+)/);
-  const index = match ? parseInt(match[1]) : null;
-  const fotoRuta = index ? `fotos/foto${index}.jpg` : null;
+const line = L.polyline([
+  [${START.lat}, ${START.lng}],
+  [${START.lat + 0.04}, ${START.lng - 0.06}]
+]).addTo(map);
 
-  let popup = `<b>${point.name || 'Punto'}</b>`;
-  if (point.desc) popup += `<br>${point.desc}`;
-  if (fotoRuta) {
-    popup += `<br><img src="${fotoRuta}" style="width:120px; border-radius:8px;">`;
-  }
+map.fitBounds(line.getBounds());`,
 
-  marker.bindPopup(popup);
-})
-.addTo(mapa);
+`// 5) Control de capas y escala
+const toner = L.tileLayer('https://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+  maxZoom: 20,
+  attribution: 'Map tiles by Stamen, Data by OpenStreetMap'
+});
+L.control.layers({ 'OSM': osm, 'Stamen Toner': toner }, { 'Círculo': circle, 'Ruta': line }).addTo(map);
+L.control.scale().addTo(map);`,
+
+`// 6) Interacción: click para agregar marcadores
+map.on('click', (e) => {
+  L.marker(e.latlng).addTo(map).bindPopup(\`Nuevo punto: \${e.latlng.lat.toFixed(5)}, \${e.latlng.lng.toFixed(5)}\`);
+});`,
+
+`// 7) Consejos
+// - Reutiliza una sola instancia de mapa.
+// - Usa tus propias claves/tiles si el proveedor lo requiere.
+// - Agrupa muchos marcadores con Leaflet.markercluster.
+// - Carga GeoJSON con L.geoJSON(...) y estilos dinámicos.
+`
+];
+
+// Pasos como funciones que mutan el estado del mapa
+const steps = [
+  // 0: Crear

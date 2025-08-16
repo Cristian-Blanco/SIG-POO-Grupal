@@ -1,24 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mapa con GPX</title>
-  <link rel="stylesheet" href="estilos.css" />
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta charset="utf-8" />
+  <title>Tutorial paso a paso: Leaflet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Leaflet CSS (CDN oficial) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Mapa con archivo GPX</h1>
-  <div id="map"></div>
+  <header class="app-header">
+    <h1>Cómo usar Leaflet, paso a paso</h1>
+    <p class="subtitle">Mapa interactivo con instrucciones guiadas</p>
+  </header>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <!-- Leaflet GPX Plugin -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.1/gpx.min.js"></script>
-
-  <!-- Tu script principal -->
-  <script src="programa.js"></script>
-</body>
-</html>
+  <main class="app-main">
+    <aside class="steps">
+      <ol id="stepsList">
+        <li data-step="0" class="active">
+          1) Crear el mapa (<code>L.map</code>)
+          <p class="hint">Prepara el contenedor y fija el centro/zoom.</p>
+        </li>
+        <li data-step="1">
+          2) Añadir una capa de teselas (<code>L.tileLayer</code>)
+          <p class="hint">Usa OpenStreetMap u otro proveedor.</p>
+        </li>
+        <li data-step="2">
+          3) Colocar un marcador
