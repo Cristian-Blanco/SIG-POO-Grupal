@@ -1,0 +1,11 @@
+/* Estilos básicos para el mapa */
+html, body, #viewDiv {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#viewDiv {
+    background-color: #f4f4f4;
+}
