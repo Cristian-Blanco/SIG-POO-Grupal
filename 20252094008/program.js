@@ -170,8 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const extTxt = fmtArea(m2);
 
       // IMAGEN por NOMBRE_PAR (exacto -> slug -> placeholder)
-      const imgExact = 'img/parques/' + encodeURIComponent(nombre) + '.jpg';
-      const imgSlug  = 'img/parques/' + toNameSlug(nombre) + '.jpg';
+      const imgExact = 'imgpar/' + encodeURIComponent(nombre) + '.jpg';
+      const imgSlug  = 'imgpar/' + toNameSlug(nombre) + '.jpg';
 
       // Tooltip (hover)
       const tooltipHTML = `
