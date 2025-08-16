@@ -2,8 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Tutorial paso a paso: Leaflet</title>
+  <title>Leaflet: Presentación Paso a Paso</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Fuente opcional -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <!-- Leaflet CSS (CDN oficial) -->
   <link
@@ -13,79 +16,59 @@
     crossorigin=""
   />
 
-  <!-- Estilos propios -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="app-header">
-    <h1>Cómo usar Leaflet, paso a paso</h1>
-    <p class="subtitle">Mapa interactivo con instrucciones guiadas</p>
-  </header>
+  <div class="stage" id="app">
+    <section class="deck" aria-live="polite">
+      <h1>Leaflet: paso a paso</h1>
+      <p class="subtitle">Demo didáctica — explicación + imagen + mapa en vivo</p>
 
-  <main class="app-main">
-    <aside class="steps">
-      <ol id="stepsList">
-        <li data-step="0" class="active">
-          1) Crear el mapa (<code>L.map</code>)
-          <p class="hint">Prepara el contenedor y fija el centro/zoom.</p>
-        </li>
-        <li data-step="1">
-          2) Añadir una capa de teselas (<code>L.tileLayer</code>)
-          <p class="hint">Usa OpenStreetMap u otro proveedor.</p>
-        </li>
-        <li data-step="2">
-          3) Colocar un marcador (<code>L.marker</code>)
-          <p class="hint">Un punto en el mapa con popup.</p>
-        </li>
-        <li data-step="3">
-          4) Dibujar formas (<code>L.circle</code>, <code>L.polyline</code>)
-          <p class="hint">Geometrías básicas sobre el mapa.</p>
-        </li>
-        <li data-step="4">
-          5) Control de capas y escala
-          <p class="hint">Alterna entre capas y muestra escala.</p>
-        </li>
-        <li data-step="5">
-          6) Interacción: click para agregar marcadores
-          <p class="hint">Captura eventos del mapa.</p>
-        </li>
-        <li data-step="6">
-          7) Consejos de producción
-          <p class="hint">Buenas prácticas y siguientes pasos.</p>
-        </li>
-      </ol>
+      <div class="slide" id="slide">
+        <span class="chip">Paso <span id="chipStep">1</span> de <span id="chipTotal">7</span></span>
+        <h2 id="slideTitle">Crear el mapa (L.map)</h2>
+        <ul id="slideBullets"></ul>
 
-      <div class="nav">
-        <button id="prevBtn" type="button" disabled>⟵ Anterior</button>
-        <span id="stepCounter" aria-live="polite">1 / 7</span>
-        <button id="nextBtn" type="button">Siguiente ⟶</button>
+        <!-- Imagen de referencia libre -->
+        <figure class="illustration">
+          <img id="stepImage" src="img/paso1-mapa.svg" alt="Referencia del paso 1" />
+          <figcaption id="imgCaption">Referencia visual del paso actual</figcaption>
+        </figure>
+
+        <details class="codebox" id="codeBox" open>
+          <summary>Ver fragmento de código</summary>
+          <pre><code id="codeSnippet" class="mono"></code></pre>
+        </details>
       </div>
 
-      <details class="codepeek">
-        <summary>Ver fragmentos de código del paso actual</summary>
-        <pre id="codeBlock"><code>// Avanza los pasos para ver el código aquí</code></pre>
-      </details>
-    </aside>
+      <div class="controlbar" role="toolbar" aria-label="Controles de presentación">
+        <div class="pager">
+          <button id="prevBtn" class="btn secondary" disabled aria-label="Paso anterior">⟵ Anterior</button>
+          <button id="nextBtn" class="btn" aria-label="Siguiente paso">Siguiente ⟶</button>
+          <span class="counter" id="counter" aria-live="polite">1 / 7</span>
+        </div>
+        <div class="keys">
+          Atajos:
+          <kbd>←</kbd><kbd>→</kbd> <kbd>Space</kbd>/<kbd>Enter</kbd>,
+          <kbd>F</kbd> pantalla completa, <kbd>C</kbd> código
+        </div>
+        <div class="progress" aria-hidden="true"><div id="progressBar" class="bar"></div></div>
+      </div>
+    </section>
 
-    <section class="map-wrap">
-      <!-- Contenedor del mapa -->
+    <section class="screen">
+      <div class="map-banner" id="mapBanner" role="status" aria-live="polite">Paso 1: Crear el mapa</div>
+      <div class="help">En el paso 6, haz clic en el mapa para añadir marcadores.</div>
       <div id="map" aria-label="Mapa Leaflet"></div>
     </section>
-  </main>
+  </div>
 
-  <footer class="app-footer">
-    Hecho con ❤️ usando <a href="https://leafletjs.com/" target="_blank" rel="noreferrer">Leaflet</a>.
-  </footer>
-
-  <!-- Leaflet JS (CDN oficial) -->
+  <!-- Leaflet JS -->
   <script
-    defer
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
-
-  <!-- Lógica del tutorial -->
   <script defer src="app.js"></script>
 </body>
 </html>
