@@ -78,6 +78,29 @@
       .header h1 { font-size: 1.3em; }
       #cesiumContainer { width: 98vw; height: 50vw; min-height: 180px; }
     }
+    .reflection-box {
+      width: 100%;
+      background: linear-gradient(90deg, #fffde7 60%, #e3f2fd 100%);
+      border-top: 8px solid #1e88e5;
+      border-bottom: 8px solid #43a047;
+      box-shadow: 0 2px 18px rgba(30,136,229,0.07);
+      padding: 32px 0 24px 0;
+      margin-top: 0;
+      text-align: center;
+    }
+    .reflection-box h2 {
+      margin: 0 0 16px 0;
+      color: #1e88e5;
+      font-size: 1.7em;
+      letter-spacing: 1px;
+    }
+    .reflection-box p {
+      margin: 0 auto;
+      max-width: 900px;
+      font-size: 1.15em;
+      color: #263238;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -91,11 +114,19 @@
       Cesium es una plataforma de código abierto para crear mapas y visualizaciones 3D interactivas en la web. Permite explorar datos geoespaciales de manera realista y dinámica, facilitando la visualización de ciudades, terrenos y edificios en tres dimensiones desde cualquier navegador.
     </p>
   </div>
-  <div class="info-box">
-    <h2>Ejemplo</h2>
-    <p>
-      A partir de un archivo GeoJSON correspondiente a la capa de construcciones, obtenido desde los datos abiertos de Bogotá, fue posible visualizar en 3D las edificaciones del barrio La Macarena. Este barrio, de carácter colonial y ubicado en el centro de la ciudad, se representa tridimensionalmente en la plataforma Cesium gracias a la información geoespacial contenida en dicho archivo. El proceso incluyó la carga del GeoJSON en el visor de Cesium, donde cada polígono correspondiente a una edificación fue extruido en altura según sus atributos, permitiendo así una exploración realista y detallada de la morfología urbana del sector.
-    </p>
+  <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; align-items: stretch; margin-top: 32px;">
+    <div class="info-box" style="flex:1 1 320px; min-width:260px;">
+      <h2>Ejemplo</h2>
+      <p>
+        A partir de un archivo GeoJSON correspondiente a la capa de construcciones, obtenido desde los datos abiertos de Bogotá, fue posible visualizar en 3D las edificaciones del barrio La Macarena. Este barrio, de carácter colonial y ubicado en el centro de la ciudad, se representa tridimensionalmente en la plataforma Cesium gracias a la información geoespacial contenida en dicho archivo. El proceso incluyó la carga del GeoJSON en el visor de Cesium, donde cada polígono correspondiente a una edificación fue extruido en altura según sus atributos, permitiendo así una exploración realista y detallada de la morfología urbana del sector.
+      </p>
+    </div>
+    <div class="info-box" style="flex:1 1 320px; min-width:260px; border-left:8px solid #43a047; background:linear-gradient(90deg,#e8f5e9 60%,#fffde7 100%);">
+      <h2>¿Qué es extrusión?</h2>
+      <p>
+        En Cesium, si cargas un archivo GeoJSON con polígonos de edificaciones, puedes usar una propiedad como "height" o "extrudedHeight" para que cada edificio se represente con una altura determinada. Cesium toma ese valor y "estira" el polígono hacia arriba, dándole profundidad visual. Es decir, podemos pasar de 2D a 3D.
+      </p>
+    </div>
   </div>
   <div class="info-box">
     <h2>Aplicaciones de Cesium</h2>
@@ -116,6 +147,12 @@
   </div>
   <div class="cesium-box">
     <div id="cesiumContainer"></div>
+  </div>
+  <div class="reflection-box">
+    <h2>Entonces ¿cómo Cesium me sorprendió?</h2>
+    <p>
+      Como estudiante de la especialización en SIG, Cesium me sorprendió por su capacidad de llevar la visualización geoespacial a un nuevo nivel de interactividad, realismo y accesibilidad en la web. A diferencia de muchas herramientas SIG tradicionales centradas en análisis técnico o visualización 2D, Cesium ofrece una experiencia inmersiva en 3D que transforma la forma en que percibimos y comunicamos los datos espaciales.
+    </p>
   </div>
   <script type="module">
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0OTU5NWZjNC0wNzg1LTRjMjQtOTEzNS0xOTk2NDNhNjIwNTQiLCJpZCI6MzMxMzY5LCJpYXQiOjE3NTUwNDI1ODl9.bfQ2JufdXQOAiJn31JyUiKEHGJF5iooMHHus7wyAvSg';
