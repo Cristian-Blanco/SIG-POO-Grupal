@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Especialista SIG</title>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f6f8fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .contenido-central {
+            width: 100%;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        h2 {
+            color: #2980b9;
+            text-align: center;
+            margin-bottom: 28px;
+            font-size: 1.6em;
+        }
+        .titulos-container {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 22px;
+        }
+        .titulo-subrama {
+            color: #1a237e;
+            font-size: 1.25em;
+            font-weight: bold;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #e1e4e8;
+            padding: 16px 24px;
+            min-width: 220px;
+            max-width: 260px;
+            text-align: center;
+            margin-bottom: 0;
+        }
+        .subramas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin-top: 0;
+        }
+        .fila {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+        }
+        .subrama-section {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #e1e4e8;
+            min-width: 220px;
+            max-width: 260px;
+            padding: 22px 24px 28px 24px;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #1a237e;
+        }
+        .asociados {
+            font-size: 1.08em;
+            color: #2980b9;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .descripcion {
+            font-size: 1em;
+            color: #34495e;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        .img-section {
+            margin-top: 14px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .subrama-section img {
+            max-width: 140px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenido-central">
+        <h1>Especialista SIG</h1>
+        <h2>ESPECIALISTA SIG</h2>
+        <!-- Títulos arriba en una fila -->
+        <div class="titulos-container">
+            <div class="titulo-subrama">Representación de datos</div>
+            <div class="titulo-subrama">Analítica de Geodatos espaciales</div>
+            <div class="titulo-subrama">Estadística descriptiva</div>
+        </div>
+        <div class="subramas-container">
+            <div class="fila">
+                <div class="subrama-section">
+                    <div class="descripcion">
+                        La representación de datos puede llevarse a cabo en series, imágenes 2D, 3D, 4D (relacionadas con el tiempo) y 5D.
+                    </div>
+                    <div class="asociados">Series, 3D, 2D, 4D, 5D</div>
+                    <div class="img-section">
+                        <img src="1.png" alt="Representación de datos">
+                    </div>
+                </div>
+                <div class="subrama-section">
+                    <div class="descripcion">
+                        Los requerimientos deben ser definidos para orientar el rumbo del proyecto a desarrollar. Estos determinan la arquitectura, las necesidades de las partes interesadas y el desarrollo paso a paso del proyecto.
+                    </div>
+                    <div class="asociados">Requerimientos, Arquitectura, Desarrollo</div>
+                    <div class="img-section">
+                        <img src="2.jpg" alt="Analítica de Geodatos espaciales">
+                    </div>
+                </div>
+                <div class="subrama-section">
+                    <div class="descripcion">
+                        Esta área utiliza bibliotecas como Numpy y Pandas, que permiten realizar un análisis descriptivo de datos específicos.
+                    </div>
+                    <div class="asociados">Numpy, Pandas</div>
+                    <div class="img-section">
+                        <img src="3.png" alt="Estadística descriptiva">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Títulos abajo en una fila -->
+        <div class="titulos-container" style="margin-top:40px;">
+            <div class="titulo-subrama">Estadística analítica o proyectiva</div>
+            <div class="titulo-subrama">Inteligencia artificial geoespacial</div>
+        </div>
+        <div class="subramas-container">
+            <div class="fila">
+                <div class="subrama-section">
+                    <div class="descripcion">
+                        Para proyectos de regresión lineal y predicción, utilizamos Scikit-learn, una biblioteca de Python que incluye herramientas para clasificación, regresión, agrupamiento y reducción de dimensionalidad.
+                    </div>
+                    <div class="asociados">Regresión lineal, Scikit-Learn, Predicción</div>
+                    <div class="img-section">
+                        <img src="4.png" alt="Estadística analítica o proyectiva">
+                    </div>
+                </div>
+                <div class="subrama-section">
+                    <div class="descripcion">
+                        Gracias a la inteligencia artificial, podemos realizar clasificaciones, predicciones y clustering. Para ello, usamos PyTorch, que se emplea para desarrollar y entrenar redes neuronales, así como otros modelos de aprendizaje automático.
+                    </div>
+                    <div class="asociados">Pytorch, Clustering, Pronóstico, Clasificación</div>
+                    <div class="img-section">
+                        <img src="5.jpg" alt="Inteligencia artificial geoespacial">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

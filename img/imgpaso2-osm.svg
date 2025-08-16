@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#0c162b"></rect>
+  <g opacity="0.8">
+    <rect x="60" y="40" width="680" height="320" rx="16" fill="#173254" stroke="#2a3d62"></rect>
+    <g stroke="#2a4f7a" stroke-width="2" fill="none">
+      <path d="M100 160 L700 160 M100 220 L700 220 M160 80 L160 360 M520 80 L520 360"></path>
+    </g>
+  </g>
+  <text x="400" y="210" fill="#a4f3a4" font-size="20" font-family="Inter, Arial" text-anchor="middle">Teselas OpenStreetMap</text>
+</svg>

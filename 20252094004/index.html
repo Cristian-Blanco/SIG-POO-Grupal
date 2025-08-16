@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa de Distancias desde Bogotá</title>
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div id="contenedor">
+        <div id="mapa"></div>
+        <div id="panel">
+            <h2>Explicación paso a paso</h2>
+            <div id="explicacion"></div>
+            <div id="botones">
+                <button id="prev">Anterior</button>
+                <button id="next">Siguiente</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+    <script src="programa.js"></script>
+</body>
+</html>

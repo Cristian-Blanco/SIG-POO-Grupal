@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TransMilenio – Troncales y Estaciones</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <div class="layout">
+    <!-- Panel izquierdo (descripción) -->
+    <aside class="panel">
+      <h1>TransMilenio – Mapa</h1>
+      <p>
+        Visor con las <strong>troncales</strong> (líneas rojas) y las
+        <strong>estaciones</strong> (puntos azules) de TransMilenio en Bogotá.
+        Usa el control de capas para activar/desactivar cada una.
+      </p>
+
+      <h2>Descripción</h2>
+      <ul>
+        <li><b>Troncales:</b> trazados principales del sistema.</li>
+        <li><b>Estaciones:</b> paradas operativas sobre las troncales.</li>
+        <li>Haz clic sobre una geometría para ver su nombre.</li>
+      </ul>
+      <h1>Explicaciòn</h1>
+      <p>
+        El código construye un visor web dividido en dos secciones: a la derecha muestra un mapa interactivo y a la izquierda una descripción. Usando Leaflet y Esri Leaflet, se cargan en tiempo real los datos de TransMilenio desde servicios ArcGIS: las troncales se dibujan como líneas rojas y las estaciones como puntos azules. Al hacer clic en cualquiera de ellas se despliega un popup con su nombre, y mediante un control de capas el usuario puede activar o desactivar la visualización de troncales y estaciones.
+      </p>
+
+    </aside>
+
+    <!-- Panel derecho (mapa) -->
+    <main id="map" aria-label="Mapa interactivo"></main>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Esri Leaflet para consumir servicios ArcGIS -->
+  <script src="https://unpkg.com/esri-leaflet@3.0.11/dist/esri-leaflet.js"></script>
+  <!-- Lógica del mapa -->
+  <script src="programa.js"></script>
+</body>
+</html>
+

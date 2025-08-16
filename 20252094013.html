@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Como crear GeoJson desde geojson.io</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg:#0f172a; --text:#e5e7eb; --muted:#94a3b8; --card:#111827; --border:#1f2937; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial;
+      min-height:100vh;
+      padding:24px;
+    }
+    .wrap{
+      width:100%;
+      max-width:900px;
+      margin:auto;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:24px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    h1{
+      font-size:clamp(22px,3.2vw,36px);
+      line-height:1.2;
+      text-align:center;
+      margin-bottom:16px;
+    }
+    p.sub{text-align:center;color:var(--muted);margin-bottom:18px;font-size:14px;}
+    .img-box{
+      overflow:hidden;
+      border-radius:12px;
+      border:1px solid var(--border);
+      margin-bottom:30px;
+    }
+    .img-box img{display:block;width:100%;height:auto;}
+    /* Sección dos columnas */
+    .two-cols{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:20px;
+    }
+    .two-cols img{
+      max-width:350px;
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--border);
+    }
+    .two-cols p{
+      flex:1;
+      font-size:16px;
+      line-height:1.5;
+      color:var(--text);
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <!-- Primera sección -->
+    <h1>Como crear GeoJson desde geojson.io</h1>
+    <p class="sub">Guía visual</p>
+    <div class="img-box">
+      <img src="src/img/visron_geojson_io.png" alt="Vista de geojson.io">
+    </div>
+
+    <!-- Segunda sección -->
+    <div class="two-cols">
+      <img src="src/img/erramientasdeedicion.png" alt="Herramientas de edición en geojson.io">
+      <p>Estas son las herramientas dentro de la página para comenzar a crear nuestro GeoJson.<br><br>
+         Paso 1. usar el icono llamado "Draw polygon (p)"</p>
+    </div>
+  </main>
+</body>
+</html>

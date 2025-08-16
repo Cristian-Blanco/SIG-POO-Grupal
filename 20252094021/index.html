@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>¿Cómo Cesium me sorprendió?</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.132/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.132/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    .header {
+      width: 100%;
+      background: #1e88e5;
+      color: white;
+      padding: 32px 0 16px 0;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(30,136,229,0.08);
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    .header p {
+      margin: 12px 0 0 0;
+      font-size: 1.2em;
+      color: #e3f2fd;
+    }
+    .info-box {
+      max-width: 650px;
+      margin: 32px auto 0 auto;
+      background: linear-gradient(90deg, #e3f2fd 60%, #fffde7 100%);
+      border-left: 8px solid #1e88e5;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(30,136,229,0.07);
+      padding: 24px 32px;
+      color: #263238;
+    }
+    .info-box h2 {
+      margin-top: 0;
+      color: #1e88e5;
+      font-size: 1.4em;
+    }
+    .info-box p {
+      margin-bottom: 0;
+      font-size: 1.1em;
+    }
+    .cesium-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 60vh;
+    }
+    #cesiumContainer {
+      width: 600px;
+      height: 400px;
+      border-radius: 18px;
+      border: 6px solid;
+      border-image: linear-gradient(135deg, #1e88e5 30%, #43a047 70%, #fbc02d 100%) 1;
+      box-shadow: 0 6px 32px rgba(30,136,229,0.10);
+      background: white;
+      margin: 32px 0;
+      transition: box-shadow 0.3s;
+    }
+    #cesiumContainer:hover {
+      box-shadow: 0 12px 48px rgba(30,136,229,0.18);
+    }
+    @media (max-width: 700px) {
+      #cesiumContainer { width: 95vw; height: 45vw; min-height: 250px; }
+    }
+    @media (max-width: 500px) {
+      .header h1 { font-size: 1.3em; }
+      #cesiumContainer { width: 98vw; height: 50vw; min-height: 180px; }
+    }
+    .reflection-box {
+      width: 100%;
+      background: linear-gradient(90deg, #fffde7 60%, #e3f2fd 100%);
+      border-top: 8px solid #1e88e5;
+      border-bottom: 8px solid #43a047;
+      box-shadow: 0 2px 18px rgba(30,136,229,0.07);
+      padding: 32px 0 24px 0;
+      margin-top: 0;
+      text-align: center;
+    }
+    .reflection-box h2 {
+      margin: 0 0 16px 0;
+      color: #1e88e5;
+      font-size: 1.7em;
+      letter-spacing: 1px;
+    }
+    .reflection-box p {
+      margin: 0 auto;
+      max-width: 900px;
+      font-size: 1.15em;
+      color: #263238;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>¿Cómo Cesium me sorprendió?</h1>
+    <p>Explora el barrio La Macarena en 3D y descubre el potencial de la visualización geoespacial.</p>
+  </div>
+  <div class="info-box">
+    <h2>¿Qué es Cesium?</h2>
+    <p>
+      Cesium es una plataforma de código abierto para crear mapas y visualizaciones 3D interactivas en la web. Permite explorar datos geoespaciales de manera realista y dinámica, facilitando la visualización de ciudades, terrenos y edificios en tres dimensiones desde cualquier navegador.
+    </p>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; align-items: stretch; margin-top: 32px;">
+    <div class="info-box" style="flex:1 1 320px; min-width:260px;">
+      <h2>Ejemplo</h2>
+      <p>
+        A partir de un archivo GeoJSON correspondiente a la capa de construcciones, obtenido desde los datos abiertos de Bogotá, fue posible visualizar en 3D las edificaciones del barrio La Macarena. Este barrio, de carácter colonial y ubicado en el centro de la ciudad, se representa tridimensionalmente en la plataforma Cesium gracias a la información geoespacial contenida en dicho archivo. El proceso incluyó la carga del GeoJSON en el visor de Cesium, donde cada polígono correspondiente a una edificación fue extruido en altura según sus atributos, permitiendo así una exploración realista y detallada de la morfología urbana del sector.
+      </p>
+    </div>
+    <div class="info-box" style="flex:1 1 320px; min-width:260px; border-left:8px solid #43a047; background:linear-gradient(90deg,#e8f5e9 60%,#fffde7 100%);">
+      <h2>¿Qué es extrusión?</h2>
+      <p>
+        En Cesium, si cargas un archivo GeoJSON con polígonos de edificaciones, puedes usar una propiedad como "height" o "extrudedHeight" para que cada edificio se represente con una altura determinada. Cesium toma ese valor y "estira" el polígono hacia arriba, dándole profundidad visual. Es decir, podemos pasar de 2D a 3D.
+      </p>
+    </div>
+  </div>
+  <div class="info-box">
+    <h2>Aplicaciones de Cesium</h2>
+    <ul style="margin-top:0;">
+      <li><strong>Medio ambiente</strong>
+        <ul>
+          <li>Monitoreo de áreas naturales, deforestación, calidad del aire, etc.</li>
+          <li>Simulación de desastres naturales (inundaciones, terremotos).</li>
+        </ul>
+      </li>
+      <li><strong>Planificación urbana y arquitectura</strong>
+        <ul>
+          <li>Visualización de ciudades en 3D.</li>
+          <li>Simulación de impacto visual de nuevas construcciones.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="info-box" style="display: flex; flex-direction: column; align-items: center; margin-top: 24px;">
+    <img src="Cesium.PNG" alt="Logo Cesium" style="max-width: 220px; width: 100%; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 12px rgba(30,136,229,0.10);">
+    <p style="text-align: center; font-size: 1.08em;">
+      Para aprender a usarlo, visita el siguiente link:<br>
+      <a href="https://cesium.com/learn/cesiumjs-learn/cesiumjs-quickstart/" target="_blank" style="color: #1e88e5; text-decoration: underline;">
+        https://cesium.com/learn/cesiumjs-learn/cesiumjs-quickstart/
+      </a>
+    </p>
+  </div>
+  <div class="cesium-box">
+    <div id="cesiumContainer"></div>
+  </div>
+  <div class="reflection-box">
+    <h2>Entonces ¿cómo Cesium me sorprendió?</h2>
+    <p>
+      Como estudiante de la especialización en SIG, Cesium me sorprendió por su capacidad de llevar la visualización geoespacial a un nuevo nivel de interactividad, realismo y accesibilidad en la web. A diferencia de muchas herramientas SIG tradicionales centradas en análisis técnico o visualización 2D, Cesium ofrece una experiencia inmersiva en 3D que transforma la forma en que percibimos y comunicamos los datos espaciales.
+    </p>
+  </div>
+  <script type="module">
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0OTU5NWZjNC0wNzg1LTRjMjQtOTEzNS0xOTk2NDNhNjIwNTQiLCJpZCI6MzMxMzY5LCJpYXQiOjE3NTUwNDI1ODl9.bfQ2JufdXQOAiJn31JyUiKEHGJF5iooMHHus7wyAvSg';
+
+    const viewer = new Cesium.Viewer("cesiumContainer", {
+      terrain: Cesium.Terrain.fromWorldTerrain(),
+      baseLayer: Cesium.ImageryLayer.fromProviderAsync(
+        Cesium.ArcGisMapServerImageryProvider.fromBasemapType(
+          Cesium.ArcGisBaseMapType.SATELLITE
+        )
+      ),
+      timeline: false,
+      animation: false,
+      shadows: true
+    });
+    viewer.scene.globe.depthTestAgainstTerrain = true;
+
+    // 1) Capa del barrio: SOLO para ubicar/recortar (sin extrusión)
+    const barrio = await Cesium.GeoJsonDataSource.load("Construccion_Macarena.geojson", {
+      clampToGround: true
+    });
+    viewer.dataSources.add(barrio);
+    for (const e of barrio.entities.values) {
+      if (!e.polygon) continue;
+      e.polygon.material = Cesium.Color.fromCssColorString("#1e88e5").withAlpha(0.25);
+      e.polygon.outline = true;
+      e.polygon.outlineColor = Cesium.Color.fromCssColorString("#0d47a1");
+    }
+    await viewer.flyTo(barrio);
+
+    // 2) PREDIOS: extrusión (usa 'altura' o 'pisos'; fallback 6 m)
+    // Exporta desde QGIS como EPSG:4326
+    const predios = await Cesium.GeoJsonDataSource.load("Construccion_Macarena.geojson", {
+      // importante: SIN clampToGround si vas a extruir
+    });
+    viewer.dataSources.add(predios);
+
+    for (const e of predios.entities.values) {
+      const pol = e.polygon;
+      if (!pol) continue;
+
+      const props = e.properties || {};
+      const hasAltura = props.altura && !isNaN(+props.altura.getValue?.());
+      const hasPisos  = props.pisos  && !isNaN(+props.pisos.getValue?.());
+      const altura = hasAltura ? +props.altura.getValue()
+                    : hasPisos  ? +props.pisos.getValue() * 3   // 3 m por piso
+                                : 6;
+
+      pol.material = Cesium.Color.fromCssColorString("#7a8a50").withAlpha(0.95);
+      pol.outline = true;
+      pol.outlineColor = Cesium.Color.BLACK;
+
+      pol.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+      pol.extrudedHeight = altura; // en metros
+      pol.extrudedHeightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+    }
+
+    // 3) (Opcional) Edificios OSM recortados a la zona del barrio
+    // Útil si en OSM hay huellas/alturas; si no, quizá veas pocos.
+    const osm = await Cesium.createOsmBuildingsAsync();
+    viewer.scene.primitives.add(osm);
+
+    // Recorta OSM a la envolvente del polígono del barrio
+    // (calculamos bbox a partir del primer polígono del barrio)
+    const poly = barrio.entities.values.find(e => e.polygon)?.polygon;
+    if (poly) {
+      const positions = poly.hierarchy.getValue().positions;
+      const toDeg = (c) => {
+        const carto = Cesium.Ellipsoid.WGS84.cartesianToCartographic(c);
+        return { lon: Cesium.Math.toDegrees(carto.longitude), lat: Cesium.Math.toDegrees(carto.latitude) };
+      };
+      let west=180, south=90, east=-180, north=-90;
+      positions.map(toDeg).forEach(({lon,lat}) => {
+        west = Math.min(west, lon);
+        east = Math.max(east, lon);
+        south= Math.min(south,lat);
+        north= Math.max(north,lat);
+      });
+      const rect = Cesium.Rectangle.fromDegrees(west, south, east, north);
+      osm.clippingPlanes = Cesium.ClippingPlaneCollection.fromBoundingRectangle(rect, {
+        unionClippingRegions: true,
+        edgeWidth: 0.0
+      });
+    }
+
+    // 4) Cámara inicial manual (por si lo prefieres)
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(-74.17653, 4.59027, 1000),
+      orientation: { heading: 0, pitch: Cesium.Math.toRadians(-25) }
+    });
+
+    // Después de agregar las capas y configurar sus estilos
+
+    // Haz zoom a la capa de construcciones (predios)
+    await viewer.flyTo(predios, {
+      offset: new Cesium.HeadingPitchRange(
+        0, // heading
+        Cesium.Math.toRadians(-25), // pitch
+        900 // distancia (más cerca que antes)
+      )
+    });
+  </script>
+</body>
+</html>

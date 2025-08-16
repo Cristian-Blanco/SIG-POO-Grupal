@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Catastro 3D - Barrio María Cano</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Cesium -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.132/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.132/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
+
+  <!-- Estilos del sitio -->
+  <link rel="stylesheet" href="src/css/20252094014.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="topbar" role="banner">
+    <div class="topbar__left">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="title-wrap">
+        <h1 class="title">Catastro 3D — Barrio María Cano</h1>
+        <p class="subtitle">Prototipo 3D con CesiumJS, datos IGAC y selección en QGIS</p>
+      </div>
+    </div>
+    <nav class="topbar__right" aria-label="acciones">
+      <a class="btn" href="#metodo">Metodología</a>
+      <a class="btn" href="#fuentes">Fuentes</a>
+      <a class="btn btn--primary" href="#aclaraciones">Aclaraciones</a>
+    </nav>
+  </header>
+
+  <!-- Contenido principal en dos columnas -->
+  <main class="layout">
+    <!-- Columna izquierda: Mapa -->
+    <section class="col col--map" aria-label="Mapa 3D">
+      <div id="cesiumContainer" class="map"></div>
+    </section>
+
+    <!-- Columna derecha: Descripción -->
+    <aside class="col col--panel" aria-label="Descripción del método">
+      <div class="panel">
+        <h2 id="metodo">¿Qué estás viendo?</h2>
+        <p>
+          Un modelo 3D de <strong>construcciones del barrio María Cano</strong>, extruidas
+          según su número de pisos. Para cada polígono, se toma el atributo
+          <code>CONNPISOS</code> y se multiplica por <strong>3&nbsp;m/piso</strong> para definir
+          la altura de extrusión. La base se “ancla” al terreno global de Cesium
+          usando <em>sampleTerrainMostDetailed</em>.
+        </p>
+
+        <h3>Pasos:</h3>
+        <ol>
+          <li>Delimitar el polígono del barrio en <strong>QGIS</strong>.</li>
+          <li>Tomar construcciones del <strong>IGAC</strong> (GeoJSON en EPSG:4326).</li>
+          <li>Filtrar a las que caen dentro del barrio y conservar <code>CONNPISOS</code>.</li>
+          <li>Cargar el GeoJSON en <strong>CesiumJS</strong> y muestrear la altura del terreno en el centro de cada polígono.</li>
+          <li>Aplicar <code>height = baseTerreno</code> y <code>extrudedHeight = base + (CONNPISOS × 3)</code>.</li>
+        </ol>
+
+        <h3>Decisiones de visualización</h3>
+        <ul>
+          <li>Color oliva con 95% de opacidad, contorno negro: contraste amable.</li>
+          <li>Sombras activas y prueba de profundidad contra terreno para evitar “flotantes”.</li>
+          <li>Botón “Home” personalizado para volver al barrio en un click.</li>
+        </ul>
+
+        <h2 id="fuentes">Fuentes de datos</h2>
+        <ul class="tags">
+          <li>IGAC — construcciones</li>
+          <li>QGIS — selección del polígono del barrio</li>
+          <li>Cesium World Terrain</li>
+        </ul>
+
+        <h2 id="aclaraciones">Aclaraciones</h2>
+        <p>
+          La altura por piso de <strong>3&nbsp;m</strong> es una aproximación común para prototipado.
+          En un estudio detallado, podrías reemplazarla por alturas reales por uso (residencial, comercial)
+          o por piso típico del municipio.
+        </p>
+
+        <details>
+          <summary>¿Por qué muestrear el centro del polígono?</summary>
+          <p>
+            Es rápido y funciona bien si las edificaciones no tienen grandes variaciones internas de
+            topografía. Para mayor precisión, podrías muestrear varios puntos (vértices) y usar el
+            mínimo para “pegar” la base sin huecos.
+          </p>
+        </details>
+
+      </div>
+    </aside>
+  </main>
+
+  <!-- Tu script (si lo usas) -->
+  <script src="src/js/programa.js" defer></script>
+
+  <!-- Inicialización Cesium -->
+  <script type="module">
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZjBjZWNjNi1lN2E2LTQxN2EtOWY2MS0xZjliMjIxMDZmMzUiLCJpZCI6MzMxMzU3LCJpYXQiOjE3NTUwNDI1NTB9.CLqrLXgbk4VfneVH0NK8xmkyEll98A0whFdesGkvMTo';
+
+    const viewer = new Cesium.Viewer("cesiumContainer", {
+      terrain: Cesium.Terrain.fromWorldTerrain(),
+      baseLayer: Cesium.ImageryLayer.fromProviderAsync(
+        Cesium.ArcGisMapServerImageryProvider.fromBasemapType(
+          Cesium.ArcGisBaseMapType.SATELLITE
+        )
+      ),
+      timeline:false, animation:false, shadows:true
+    });
+    viewer.scene.globe.depthTestAgainstTerrain = true;
+
+    // 1) Carga construcciones (EPSG:4326)
+    const ds = await Cesium.GeoJsonDataSource.load("src/assets/20252094014.geojson");
+    await viewer.dataSources.add(ds);
+
+    // 2) Centrar cámara (zoom a dataset)
+    await viewer.zoomTo(ds);
+
+    // 3) Anclar cada polígono al terreno y extruir por CONNPISOS*3
+    const entities = ds.entities.values;
+
+    // Helper para aproximar centro de polígono
+    function centroidCartographic(entity) {
+      const pos = entity.polygon.hierarchy.getValue().positions;
+      const bs = Cesium.BoundingSphere.fromPoints(pos);
+      return Cesium.Ellipsoid.WGS84.cartesianToCartographic(bs.center);
+    }
+
+    // Construimos lista de muestras
+    const samples = [];
+    for (const e of entities) {
+      if (!e.polygon) continue;
+      const carto = centroidCartographic(e);
+      samples.push(carto);
+    }
+    // Muestrear terreno
+    await Cesium.sampleTerrainMostDetailed(viewer.terrainProvider, samples);
+
+    // Aplicar alturas
+    for (let i = 0; i < entities.length; i++) {
+      const e = entities[i];
+      const pol = e.polygon;
+      if (!pol) continue;
+
+      const pisos = Number(e.properties?.CONNPISOS?.getValue?.());
+      const altura = Number.isFinite(pisos) ? pisos * 3 : 6; // 3 m/piso
+      const base = samples[i].height;
+
+      pol.material = Cesium.Color.fromCssColorString("#7a8a50").withAlpha(0.95);
+      pol.outline = true;
+      pol.outlineColor = Cesium.Color.BLACK;
+
+      pol.height = base;
+      pol.extrudedHeight = base + altura;
+      pol.perPositionHeight = false;
+    }
+
+    // Cámara inicial y “home”
+    const HOME_POS = {
+      destination: Cesium.Cartesian3.fromDegrees(-74.17648138133184, 4.589581121293994, 2700),
+      orientation: { heading: 0, pitch: Cesium.Math.toRadians(-25) }
+    };
+    viewer.camera.flyTo(HOME_POS);
+    viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function(e) {
+      e.cancel = true;
+      viewer.camera.flyTo(HOME_POS);
+    });
+  </script>
+</body>
+</html>

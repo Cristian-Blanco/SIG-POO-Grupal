@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#0b1428"></rect>
+  <rect x="60" y="40" width="680" height="320" rx="16" fill="#142a4a" stroke="#2a3d62"></rect>
+  <circle cx="260" cy="180" r="10" fill="#ff6b6b"></circle>
+  <circle cx="380" cy="240" r="10" fill="#ff6b6b"></circle>
+  <circle cx="520" cy="200" r="10" fill="#ff6b6b"></circle>
+  <path d="M520 160 l20 -20" stroke="#ffd27a" stroke-width="6" stroke-linecap="round"></path>
+  <text x="400" y="330" fill="#d9eaff" font-size="18" font-family="Inter, Arial" text-anchor="middle">Clic para añadir puntos</text>
+</svg>
