@@ -1,143 +1,79 @@
-// Visor 3D de construcciones con MapLibre GL (sin token)
-// Requiere: arbalta_construcciones.geojson en la misma carpeta.
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4NTIyNDlhYy03OGZhLTRkNTctYjhhOC01NGFlYTRmZGFhNTQiLCJpZCI6MzMxMzcwLCJpYXQiOjE3NTUwNDI1OTF9.01glnnDUpehAFVaOO5v6Vfk5XnvjyEPt6wgYd7jP_9c';
 
-const map = new maplibregl.Map({
-  container: 'map',
-  style: {
-    version: 8,
-    // Estilo mínimo con una capa raster de OSM por defecto
-    sources: {
-      osm: {
-        type: 'raster',
-        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-        tileSize: 256,
-        attribution: '© OpenStreetMap contrib.'
-      }
-    },
-    layers: [
-      { id: 'osm', type: 'raster', source: 'osm' }
-    ],
-    // Luz para extrusiones
-    light: {
-      anchor: 'viewport',
-      color: 'white',
-      intensity: 0.4
-    }
-  },
-  center: [-74.154, 4.582], // Aproximación a Arborizadora Alta (Bogotá)
-  zoom: 14.5,
-  pitch: 60,
-  bearing: -20,
-  antialias: true
+const viewer = new Cesium.Viewer("cesiumContainer", {
+  terrain: Cesium.Terrain.fromWorldTerrain(),
+  baseLayer: Cesium.ImageryLayer.fromProviderAsync(
+    Cesium.ArcGisMapServerImageryProvider.fromBasemapType(
+      Cesium.ArcGisBaseMapType.SATELLITE
+    )
+  ),
+  timeline: false,
+  animation: false,
+  shadows: true
 });
+viewer.scene.globe.depthTestAgainstTerrain = true;
 
-// Controles básicos
-map.addControl(new maplibregl.NavigationControl(), 'top-left');
-map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }), 'bottom-left');
-
-// Recentrar
-document.getElementById('resetView').addEventListener('click', () => {
-  map.easeTo({ center: [-74.154, 4.582], zoom: 14.5, pitch: 60, bearing: -20, duration: 1200 });
+// 1) Barrio (referencia)
+const barrio = await Cesium.GeoJsonDataSource.load("arbalta_construcciones_4326.geojson", {
+  clampToGround: true
 });
+viewer.dataSources.add(barrio);
+for (const e of barrio.entities.values) {
+  if (!e.polygon) continue;
+  e.polygon.material = Cesium.Color.fromCssColorString("#1e88e5").withAlpha(0.25);
+  e.polygon.outline = true;
+  e.polygon.outlineColor = Cesium.Color.fromCssColorString("#0d47a1");
+}
+await viewer.flyTo(barrio);
 
-// Cambiar mapa base (tres fuentes raster sencillas)
-const basemapSelect = document.getElementById('basemap');
-basemapSelect.addEventListener('change', (e) => {
-  const value = e.target.value;
-  let tiles, attribution;
-  if (value === 'osm') {
-    tiles = ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'];
-    attribution = '© OpenStreetMap contrib.';
-  } else if (value === 'carto') {
-    tiles = ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'];
-    attribution = '© OpenStreetMap, © CARTO';
-  } else {
-    tiles = ['https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png'];
-    attribution = 'Map tiles by Stamen, Data © OSM';
-  }
-  map.getSource('osm').setTiles(tiles);
-  map.getSource('osm').setAttribution(attribution);
+// 2) Construcciones extruidas según número de pisos
+const construcciones = await Cesium.GeoJsonDataSource.load("arbalta_construcciones_4326.geojson");
+viewer.dataSources.add(construcciones);
+
+for (const e of construcciones.entities.values) {
+  const pol = e.polygon;
+  if (!pol) continue;
+
+  const props = e.properties || {};
+  const hasPisos = props.CONNPISOS && !isNaN(+props.CONNPISOS.getValue?.());
+  const altura = hasPisos ? (+props.CONNPISOS.getValue() * 3) : 6; // 3m por piso
+
+  pol.material = Cesium.Color.fromCssColorString("#7a8a50").withAlpha(0.95);
+  pol.outline = true;
+  pol.outlineColor = Cesium.Color.BLACK;
+
+  pol.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+  pol.extrudedHeight = altura;
+  pol.extrudedHeightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+}
+
+// 3) OSM Buildings recortados al barrio
+const osm = await Cesium.createOsmBuildingsAsync();
+viewer.scene.primitives.add(osm);
+
+const poly = barrio.entities.values.find(e => e.polygon)?.polygon;
+if (poly) {
+  const positions = poly.hierarchy.getValue().positions;
+  const toDeg = (c) => {
+    const carto = Cesium.Ellipsoid.WGS84.cartesianToCartographic(c);
+    return { lon: Cesium.Math.toDegrees(carto.longitude), lat: Cesium.Math.toDegrees(carto.latitude) };
+  };
+  let west=180, south=90, east=-180, north=-90;
+  positions.map(toDeg).forEach(({lon,lat}) => {
+    west = Math.min(west, lon);
+    east = Math.max(east, lon);
+    south= Math.min(south,lat);
+    north= Math.max(north,lat);
+  });
+  const rect = Cesium.Rectangle.fromDegrees(west, south, east, north);
+  osm.clippingPlanes = Cesium.ClippingPlaneCollection.fromBoundingRectangle(rect, {
+    unionClippingRegions: true,
+    edgeWidth: 0.0
+  });
+}
+
+// 4) Cámara inicial
+viewer.camera.flyTo({
+  destination: Cesium.Cartesian3.fromDegrees(-74.17653, 4.59027, 2600),
+  orientation: { heading: 0, pitch: Cesium.Math.toRadians(-25) }
 });
-
-// Carga del GeoJSON y creación de extrusiones
-map.on('load', async () => {
-  const statusEl = document.getElementById('fileStatus');
-
-  try {
-    const resp = await fetch('arbalta_construcciones.geojson', { cache: 'no-cache' });
-    if (!resp.ok) throw new Error(`No se pudo cargar el archivo (${resp.status})`);
-    const data = await resp.json();
-
-    // Añadir fuente
-    map.addSource('construcciones', {
-      type: 'geojson',
-      data,
-      promoteId: 'id' // si no existe, no pasa nada
-    });
-
-    // Escala dinámica para alturas
-    let heightScale = 1.0;
-    const scaleInput = document.getElementById('heightScale');
-    const scaleLabel = document.getElementById('heightScaleValue');
-    scaleInput.addEventListener('input', () => {
-      heightScale = parseFloat(scaleInput.value);
-      scaleLabel.textContent = `${heightScale.toFixed(1)}×`;
-      updateHeights();
-    });
-
-    // Expresión para altura y min_height:
-    // Busca el primer atributo disponible entre: height, altura, HA, h
-    const baseHeightExpr = [
-      'coalesce',
-      ['get', 'height'],
-      ['get', 'altura'],
-      ['get', 'HA'],
-      ['get', 'h'],
-      10 // por defecto 10m si no hay atributo
-    ];
-    const minHeightExpr = [
-      'coalesce',
-      ['get', 'min_height'],
-      ['get', 'base_height'],
-      0
-    ];
-
-    const scaledHeightExpr = ['*', baseHeightExpr, ['var', 'hs']];
-
-    // Variable de estilo para escala de altura
-    map.setPaintProperty = map.setPaintProperty.bind(map); // fix for some bundlers
-    map.addLayer({
-      id: 'construcciones-3d',
-      type: 'fill-extrusion',
-      source: 'construcciones',
-      paint: {
-        'fill-extrusion-height': scaledHeightExpr,
-        'fill-extrusion-base': minHeightExpr,
-        'fill-extrusion-opacity': 0.95,
-        'fill-extrusion-color': [
-          'step',
-          baseHeightExpr,
-          '#4e79a7', 10,
-          '#59a14f', 20,
-          '#f28e2b', 30,
-          '#e15759', 50,
-          '#b07aa1'
-        ]
-      }
-    });
-
-    // Inicializar variable de estilo (escala)
-    map.setFilter('construcciones-3d', ['all']); // fuerza evaluación
-    map.setPaintProperty('construcciones-3d', 'fill-extrusion-height', ['*', baseHeightExpr, ['var', 'hs']]);
-    map.setFilter('construcciones-3d', ['all']); // de nuevo por si acaso
-    map.setStyleVariable('hs', 1.0); // define variable hs = 1.0
-
-    function updateHeights(){
-      // Actualiza la variable de estilo 'hs'
-      map.setStyleVariable('hs', heightScale);
-    }
-
-    // Sombreado/resalte al pasar el mouse (borde “brillo”)
-    // Creamos una capa de líneas sobre las extrusiones para el hover
-    map.addLayer({
-

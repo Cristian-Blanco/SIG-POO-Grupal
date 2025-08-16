@@ -1,148 +1,47 @@
-:root{
-  --bg:#0b0f14;
-  --panel:#111823;
-  --card:#0f1622;
-  --text:#e6edf3;
-  --muted:#9fb3c8;
-  --accent:#3aa7ff;
-  --btn:#1f2a3a;
-  --border:#203044;
-}
-
-*{ box-sizing: border-box; }
-
+/* --- Estilos generales --- */
 html, body {
+  width: 100%;
   height: 100%;
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #111;
+  color: #eee;
+  display: flex;
+  flex-direction: column;
 }
 
-.app-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1rem;
-  padding: .6rem 1rem;
-  border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, #0e1622, #0b111a);
-  position: sticky;
-  top: 0;
-  z-index: 3;
+/* --- Encabezado --- */
+header {
+  background: linear-gradient(90deg, #0d47a1, #1976d2);
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.4);
 }
 
-.branding{
-  display:flex; align-items:center; gap:.75rem;
-}
-.branding .logo{
-  width:36px; height:36px; object-fit:cover; border-radius:8px; border:1px solid var(--border);
-}
-.branding h1{
-  font-size:1.05rem; margin:0; letter-spacing: .2px; color: var(--text);
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-.actions{ display:flex; align-items:center; gap:.75rem; }
-.btn{
-  background: var(--btn);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: .45rem .75rem;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.btn:hover{ background: #273449; }
-
-.file-status{
-  color: var(--muted);
-  font-size: .9rem;
+/* --- Contenedor Cesium --- */
+main {
+  flex: 1;
+  position: relative;
 }
 
-main{
-  display:grid;
-  grid-template-columns: 1fr 320px;
-  height: calc(100vh - 64px);
+#cesiumContainer {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-#map{
-  width:100%;
-  height:100%;
-  outline:none;
-}
-
-.panel{
-  height:100%;
-  background: var(--panel);
-  border-left:1px solid var(--border);
-  padding: 1rem;
-  overflow:auto;
-}
-
-.panel h2{
-  margin-top:0;
-  font-size:1.05rem;
-}
-
-.control-group{
-  display:flex; flex-direction:column; gap:.4rem;
-  margin: .75rem 0 1rem;
-}
-
-select, input[type="range"]{
-  width:100%;
-}
-
-.legend{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: .6rem .75rem;
-}
-.legend h3{
-  margin: .3rem 0 .6rem;
-  font-size: .95rem;
-}
-.legend-row{
-  display:flex; align-items:center; gap:.5rem;
-  margin: .25rem 0;
-}
-.swatch{
-  display:inline-block; width:18px; height:12px; border-radius:3px; border:1px solid #00000033;
-}
-.swatch.h1{ background:#4e79a7; }
-.swatch.h2{ background:#59a14f; }
-.swatch.h3{ background:#f28e2b; }
-.swatch.h4{ background:#e15759; }
-.swatch.h5{ background:#b07aa1; }
-
-.help{
-  margin-top: 1rem;
-  border: 1px dashed var(--border);
-  border-radius: 12px;
-  padding: .4rem .75rem;
-}
-
-.maplibregl-popup{
-  font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial;
-}
-.maplibregl-popup-content{
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-.maplibregl-popup-tip{
-  border-top-color: var(--card) !important;
-  border-bottom-color: var(--card) !important;
-}
-
-/* Responsive */
-@media (max-width: 900px){
-  main{
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 320px;
-  }
-  .panel{
-    border-left:none; border-top:1px solid var(--border);
-  }
+/* --- Footer --- */
+footer {
+  background: #222;
+  color: #aaa;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 5px;
+  border-top: 1px solid #444;
 }
