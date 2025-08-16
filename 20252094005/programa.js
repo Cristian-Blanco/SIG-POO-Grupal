@@ -1,11 +1,16 @@
 // Inicializar mapa
-const mapa = L.map('map').setView([4.563, -74.11], 15); // Ajusta coordenadas iniciales
+var map = L.map('map').setView([-74.11888097912265, 4.5111155476835965], 14);
 
 // Capa base
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(mapa);
 
+
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+}).addTo(map);
 // Elementos de la interfaz
 const infoDiv = document.getElementById('info');
 const mapaDiv = document.getElementById('map');
@@ -30,47 +35,9 @@ function cerrarPanel() {
 
 // Cargar GeoJSON
 fetch('Parques-Marichuela.geojson')
-    .then(res => res.json())
+    .then(response => response.json())
     .then(data => {
-        const geojsonLayer = L.geoJSON(data, {
-            onEachFeature: (feature, layer) => {
-                // Propiedad del nombre (ajusta según tu archivo)
-                const nombre = feature.properties?.Nombre || feature.properties?.name || "Parque sin nombre";
-                
-                // Popup básico
-                layer.bindPopup(nombre);
-
-                // Evento click
-                layer.on('click', () => {
-                    infoDiv.style.display = 'block';
-                    mapaDiv.style.flex = '1';
-
-                    if (infoParques[nombre]) {
-                        infoDiv.innerHTML = `
-                            <button class="btn-cerrar" onclick="cerrarPanel()">Cerrar</button>
-                            <h2>Descripción general</h2>
-                            <h3>${nombre}</h3>
-                            <img src="${infoParques[nombre].img}" alt="${nombre}">
-                            <p>${infoParques[nombre].desc}</p>
-                        `;
-                    } else {
-                        infoDiv.innerHTML = `
-                            <button class="btn-cerrar" onclick="cerrarPanel()">Cerrar</button>
-                            <h2>Descripción general</h2>
-                            <h3>${nombre}</h3>
-                            <p>No hay descripción disponible para este parque.</p>
-                        `;
-                    }
-                });
-            },
-            style: {
-                color: "green",
-                weight: 2,
-                fillOpacity: 0.4
-            }
-        }).addTo(mapa);
-
-        // Ajustar zoom automáticamente a los polígonos
-        mapa.fitBounds(geojsonLayer.getBounds());
+        console.log("GeoJSON cargado:", data); // 👈 verificar aquí
+        L.geoJSON(data).addTo(map);
     })
-    .catch(err => console.error("Error cargando GeoJSON:", err));
+    .catch(error => console.error("Error al cargar el GeoJSON:", error));
