@@ -1,0 +1,217 @@
+/*
+  Esta hoja define la presentación (colores, tamaños, distribución) de la página.
+*/
+
+/* Reset básico y fuente general */
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: Arial, Helvetica, sans-serif; /* Tipografía legible y estándar */
+  color: #ffffff;                            /* Texto por defecto en blanco para contrastar */
+  background: #0f2d11;                       /* Verde muy oscuro de fondo general */
+}
+/* Hace que el footer siempre esté abajo */
+html, body {
+  height: 100%;           /* Ocupa todo el alto de la ventana */
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column; /* Ordena las filas verticalmente */
+}
+
+header, nav, .hero {
+  flex-shrink: 0; /* Evita que estas filas se encojan */
+}
+
+footer {
+  flex-shrink: 0; /* El footer tampoco se encoge */
+  margin-top: auto; /* Empuja el footer al fondo */
+}
+
+/* ==================== FILA 1: Encabezado ==================== */
+.topbar {
+  display: flex;                 /* Habilita distribución en fila */
+  justify-content: center;       /* Centra el contenido horizontalmente */
+  align-items: center;           /* Centra verticalmente */
+  width: 100%;                   /* Ocupa todo el ancho de la página */
+  background-color: #2e7d32;     /* Verde principal del encabezado */
+  border-bottom: 3px solid #1b5e20; /* Línea inferior para separar visualmente */
+  padding: 16px;                 /* Espaciado interno */
+  box-sizing: border-box;        /* Incluye padding en el ancho total */
+}
+
+/* Contenedor horizontal del logo y título */
+.logo-title {
+  display: flex;                 /* Pone logo y título en una fila */
+  align-items: center;           /* Alineación vertical centrada */
+  justify-content: center;       /* Alineación horizontal centrada */
+  gap: 14px;                     /* Espacio entre logo y título */
+  max-width: 1200px;             /* Limita ancho máximo del bloque interno */
+  width: 100%;                   /* Permite que se centre correctamente */
+}
+
+/* Imagen del logo: tamaño fijo en altura para consistencia */
+.logo {
+  height: 90px;                  /* Alto del logo (ajústalo si lo necesitas) */
+  width: auto;                   /* Mantiene proporción */
+}
+
+/* Título principal */
+.title {
+  font-size: 1.8rem;             /* Tamaño del texto del título */
+  color: #ffffff;                /* Color blanco para buen contraste */
+  margin: 0;                     /* Quita márgenes por defecto */
+  text-align: center;            /* Centra el texto por si el bloque se hace multi-línea */
+}
+
+/* ==================== FILA 2: Navegación principal ==================== */
+.navgrid {
+  display: flex;                 /* Muestra los elementos de navegación en fila */
+  justify-content: center;        /* Centra horizontalmente */
+  gap: 20px;                      /* Espacio entre botones */
+  align-items: stretch;          /* Estira los elementos a la misma altura */
+  background-color: #1b5e20;     /* Banda verde oscura */
+  padding: 12px;                 /* Espacio interno de la barra */
+  width: 100%;                   /* Ocupa todo el ancho */
+  box-sizing: border-box;        /* Cuenta el padding dentro del ancho */
+}
+
+/* ==================== FILA 3: Imagen de fondo ==================== */
+.hero {
+  margin-top: 1px;    /* Espacio arriba */
+  margin-bottom: 1px; /* Espacio abajo */
+  flex-shrink: 0;  /* Evita que se reduzca en el layout de flexbox */
+  width: 100%;     /* Ocupar todo el ancho */
+  height: 300px;       /* Alto de la sección (puedes ajustarlo) */
+  background-image: url('https://bogota.gov.co/sites/default/files/styles/1050px/public/2024-10/parque-maria-cano.jpg');
+  background-size: cover;       /* La imagen cubre todo el espacio */
+  background-position: center;  /* Centra la imagen */
+  display: flex;                /* Para centrar el texto con flexbox */
+  align-items: center;          /* Centra verticalmente */
+  justify-content: center;      /* Centra horizontalmente */
+}
+
+/* Texto encima de la imagen */
+
+.hero-text {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+  margin: 0;
+}
+.footer {
+  margin-top: 1px;    /* Espacio arriba */
+  margin-bottom: 0px; /* Espacio abajo */
+  background-color: #1b5e20;
+  color: white;
+  text-align: center;
+  padding: 1px;
+}
+
+/* ==================== FILA 4: Pie de página ==================== */
+.footer {
+  width: 100%;
+  height: 60px;
+  background-color: #1b5e20;
+  color: white;
+  font-size: 0.8rem;
+  margin: 0;
+
+  /* Centrado perfecto */
+  display: flex;
+  align-items: center;  /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  text-align: center;
+}
+
+
+/* Estilo común para enlaces de navegación y botón del dropdown */
+.navitem,
+.dropbtn {
+  color: #ffffff;                /* Texto blanco */
+  text-decoration: none;         /* Sin subrayado en enlaces */
+  font-weight: bold;             /* Texto en negrita */
+  padding: 10px 14px;            /* Relleno interno */
+  border-radius: 6px;            /* Bordes redondeados suaves */
+  background: transparent;       /* Fondo transparente por defecto */
+  border: none;                  /* Sin borde (para el botón) */
+  cursor: pointer;               /* Cursor de mano */
+  display: inline-flex;          /* Centra contenido verticalmente */
+  align-items: center;           /* Centrado vertical */
+  gap: 6px;                      /* Espacio entre texto y la flecha o logo */
+}
+
+/* Efectos al pasar el mouse para mejorar la interacción */
+.navitem:hover,
+.dropbtn:hover,
+.dropdown-menu a:hover {
+  background-color: #388e3c;     /* Verde más claro al hover */
+}
+
+/* Contenedor relativo para posicionar el submenú */
+.dropdown { position: relative; }
+
+/* Flechita del botón Equipamiento */
+.caret { font-size: 0.9em; line-height: 1; }
+
+/* Submenú: por defecto oculto y posicionado bajo el botón */
+.dropdown-menu {
+  position: absolute;            /* Flota respecto al .dropdown */
+  top: 100%;                     /* Aparece justo debajo del botón */
+  left: 0;                       /* Alineado al borde izquierdo */
+  min-width: 220px;              /* Ancho mínimo para el menú */
+  margin-top: 6px;               /* Separación vertical del botón */
+  padding: 6px;                  /* Relleno interno del contenedor */
+  background: #2e7d32;           /* Fondo del menú */
+  border: 2px solid #1b5e20;     /* Borde para contraste */
+  border-radius: 8px;            /* Bordes redondeados */
+  list-style: none;              /* Quita viñetas */
+  display: none;                 /* Oculto inicialmente */
+  z-index: 1000;                 /* Por encima de otros elementos */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25); /* Sombra para profundidad */
+}
+
+/* Cada enlace dentro del submenú ocupa toda la fila del menú */
+.dropdown-menu a {
+  display: block;                /* Ocupa todo el ancho disponible */
+  padding: 10px 12px;            /* Relleno interno */
+  color: #fff;                   /* Texto blanco */
+  text-decoration: none;         /* Sin subrayado */
+  border-radius: 6px;            /* Bordes redondeados */
+}
+
+/* Mostrar el submenú cuando el contenedor tenga la clase .open (se agrega con JS) */
+.dropdown.open .dropdown-menu { display: block; }
+
+/* También mostrar en escritorio al pasar el mouse (sin clic) */
+@media (hover: hover) and (pointer: fine) {
+  .dropdown:hover .dropdown-menu { display: block; }
+}
+
+/* Estilos específicos para "Acerca de" con logo a la derecha */
+.navitem.acerca { display: inline-flex; align-items: center; gap: 8px; }
+.acerca-logo {
+  height: 20px;                  /* Tamaño del icono de Acerca de */
+  width: auto;                   /* Mantiene proporciones */
+  border-radius: 4px;            /* Bordes sutiles */
+}
+
+/* ==================== Responsivo (móviles) ==================== */
+@media (max-width: 640px) {
+  .logo { height: 72px; }        /* Logo un poco más pequeño en móviles */
+  .title { font-size: 1.4rem; }  /* Reduce el tamaño del título */
+
+  .navgrid { flex-wrap: wrap; }  /* Permite que los botones bajen de línea */
+
+  /* Que cada item ocupe el ancho completo para fácil toque */
+  .dropdown, .navitem { flex: 1 1 100%; }
+
+  /* El submenú en móvil se vuelve de flujo normal (no flotante) */
+  .dropdown-menu {
+    position: static;            /* Se integra al flujo del documento */
+    margin-top: 8px;             /* Separación del botón */
+    width: 100%;                 /* Ocupa todo el ancho */
+  }
+}
