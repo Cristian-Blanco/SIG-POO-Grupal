@@ -1,0 +1,9 @@
+/* filepath: c:\Users\Estudiantes\Documents\Proyecto_SIG\RepoGrupal\SIG-POO-Grupal\20252094027\styles.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+#map {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Análisis Estadístico PM10 Bogotá</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Incluye Leaflet para mapas y Chart.js para gráficos -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <h1>Análisis Estadístico PM10 Bogotá</h1>
+  <button id="cargarDatosBtn">Cargar y Analizar Datos</button>
+  <div id="map" style="height: 400px;"></div>
+  <div>
+    <h2>Estadísticas PM10</h2>
+    <pre id="estadisticas"></pre>
+    <canvas id="histograma" width="400" height="400"></canvas>
+  </div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="programa.js"></script>
+</body>
+</html>
