@@ -1,43 +1,38 @@
-<!DOCTYPE html> <!-- 1) Declaramos que el documento es HTML5 para que el navegador use el modo estándar -->
-<html lang="es"> <!-- 2) Indicamos que el contenido principal está en español -->
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="UTF-8" /> <!-- 3) Usamos UTF-8 para que se vean bien tildes, eñes y símbolos -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- 4) Hacemos la página responsive en móviles -->
-  <title>Mapa Barrio Potosí</title> <!-- 5) Título que se muestra en la pestaña del navegador -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa Barrio Potosí</title>
 
-  <!-- 6) Leaflet CSS: hoja de estilos de la librería de mapas; sin esto el mapa/control no se ven correctamente -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-  <!-- 7) Tu CSS: aquí van tus estilos personalizados (por ejemplo, la altura del #map) -->
-  <link rel="stylesheet" href="estilos.css" />
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="estilos/estilos.css" />
 </head>
 <body>
-  <!-- 8) Contenedor general para integrar el bloque del mapa dentro de una página existente -->
-  <section class="seccion-mapa"> <!-- 9) Sección semántica que agrupa título, mapa, descripción y botón -->
-    <h2>Ubicación del Barrio Potosí</h2> <!-- 10) Encabezado de la sección -->
+  <section class="seccion-mapa">
+    <h2>Ubicación del Barrio Potosí</h2>
 
-    <!-- 11) Sección de descripción del contenido -->
     <p class="descripcion-mapa">
-      Esta página muestra un mapa interactivo con la ubicación aproximada del Barrio Potosí, 
-      permitiendo visualizar su localización geográfica. 
-      Incluye un marcador y opciones para mostrar información adicional sobre el sector.
+      Este mapa muestra la ubicación aproximada del Barrio Potosí y su localidad.  
+      Se incluye un zoom progresivo primero a la localidad y luego al barrio, con opción de mostrar información adicional.
     </p>
 
-    <div class="map-container"> <!-- 12) Contenedor para controlar el layout del mapa (márgenes, tamaños, etc.) -->
-      <div id="map"></div> <!-- 13) Contenedor donde Leaflet “pinta” el mapa (L.map('map', ...)).
-                                 IMPORTANTE: darle altura en estilosU.css, p.ej. #map { height: 420px; } -->
+    <div class="map-container">
+      <div id="map"></div>
     </div>
 
-    <!-- 14) Botón que podrás usar desde tu JS para mostrar/ocultar información o reabrir un panel -->
-    <button id="btn-abrir-info" style="margin-top: 10px; padding: 8px 16px; font-size: 14px;">
+    <button id="btn-abrir-info" class="btn-info">
       Mostrar información
     </button>
   </section>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  
+  <!-- Script del proyecto -->
+  <script src="js/proyecto.js"></script>
 </body>
-
-<!-- 15) Leaflet JS: librería de funcionalidad de mapas. Debe cargarse antes de tu script para poder usar L.* -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<!-- 16) Tu JS: archivo donde inicializas el mapa (#map), añades capas/controles y manejas el botón -->
-<script src="proyecto.js"></script>
 </html>
