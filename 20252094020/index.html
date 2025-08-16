@@ -2,39 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Visor Construcciones 3D Barrio Arborizadora Alta</title>
+  <title>Cesium - Barrio Arborizadora Alta</title>
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.132/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.132/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
-
   <style>
-    :root { --header-h: 64px; --header-bg:#0d47a1; }
-
-    html, body { height: 100%; margin: 0; font-family: system-ui, Arial, sans-serif; }
-
-    /* Barra superior fija */
-    header.topbar{
-      position: fixed; top: 0; left: 0; right: 0;
-      height: var(--header-h);
-      background: var(--header-bg);
-      color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 600; letter-spacing: .3px;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0,0,0,.35);
-    }
-
-    /* El visor ocupa todo el alto menos la barra */
-    #cesiumContainer{
-      position: absolute;
-      top: var(--header-h); left: 0; right: 0; bottom: 0;
-    }
+    html, body, #cesiumContainer { width: 100%; height: 100%; margin: 0; padding: 0; }
   </style>
 </head>
 <body>
-  <!-- Barra con título -->
-  <header class="topbar">Visor Construcciones 3D Barrio Arborizadora Alta</header>
-
-  <!-- Visor Cesium -->
   <div id="cesiumContainer"></div>
 
   <script type="module">
@@ -67,20 +42,25 @@
     await viewer.flyTo(barrio);
 
     // 2) Construcciones con extrusión según CONNPISOS
-    const construcciones = await Cesium.GeoJsonDataSource.load("arbalta_construcciones_4326.geojson");
+    const construcciones = await Cesium.GeoJsonDataSource.load("arbalta_construcciones_4326.geojson", {
+      // no usar clampToGround si se van a extruir
+    });
     viewer.dataSources.add(construcciones);
 
     for (const e of construcciones.entities.values) {
       const pol = e.polygon;
       if (!pol) continue;
+
       const props = e.properties || {};
       const hasPisos = props.CONNPISOS && !isNaN(+props.CONNPISOS.getValue?.());
       const altura = hasPisos ? (+props.CONNPISOS.getValue() * 3) : 6; // 3 m por piso
+
       pol.material = Cesium.Color.fromCssColorString("#7a8a50").withAlpha(0.95);
       pol.outline = true;
       pol.outlineColor = Cesium.Color.BLACK;
+
       pol.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-      pol.extrudedHeight = altura;
+      pol.extrudedHeight = altura; 
       pol.extrudedHeightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
     }
 

@@ -1,47 +1,23 @@
-/* --- Estilos generales --- */
-html, body {
+html, body, #cesiumContainer {
   width: 100%;
   height: 100%;
   margin: 0;
-  font-family: "Segoe UI", Tahoma, sans-serif;
-  background: #111;
-  color: #eee;
-  display: flex;
-  flex-direction: column;
-}
-
-/* --- Encabezado --- */
-header {
-  background: linear-gradient(90deg, #0d47a1, #1976d2);
-  color: white;
-  padding: 10px 20px;
-  text-align: center;
-  box-shadow: 0px 2px 5px rgba(0,0,0,0.4);
-}
-
-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-/* --- Contenedor Cesium --- */
-main {
-  flex: 1;
-  position: relative;
-}
-
-#cesiumContainer {
-  width: 100%;
-  height: 100%;
+  padding: 0;
   display: block;
+  overflow: hidden;
 }
 
-/* --- Footer --- */
-footer {
-  background: #222;
-  color: #aaa;
-  text-align: center;
-  font-size: 0.9rem;
-  padding: 5px;
-  border-top: 1px solid #444;
+/* Caja de información */
+#infoBox {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 12px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
 }
