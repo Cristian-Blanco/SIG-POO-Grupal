@@ -1,199 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Distancia desde Bogotá — Mapa + Paso a Paso</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Estilos propios -->
-  <link rel="stylesheet" href="estilo.css" />
-
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-
-  <!-- Turf.js (geodésico, centroides, distancias) -->
-  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js" defer></script>
+    <meta charset="UTF-8">
+    <title>Mapa y Tutorial Interactivo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="estilo.css" />
 </head>
 <body>
-  <header class="topbar">
-    <h1>Distancia desde Bogotá (km)</h1>
-    <div class="controls">
-      <label class="toggle">
-        <input type="checkbox" id="toggleCentroides" />
-        <span>Mostrar centroides</span>
-      </label>
-      <label class="toggle">
-        <input type="checkbox" id="toggleLineas" />
-        <span>Dibujar línea al hacer clic</span>
-      </label>
+    <div id="contenedor">
+        <!-- Mapa -->
+        <div id="map"></div>
+
+        <!-- Panel explicativo -->
+        <div id="tutorial">
+            <h2>📚 Paso a paso</h2>
+            <div id="explicacion"></div>
+            <div id="botones">
+                <button id="prev">⬅ Anterior</button>
+                <button id="next">Siguiente ➡</button>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <!-- Mapa -->
-  <div id="map"></div>
-
-  <!-- Sección Paso a Paso -->
-  <section id="pasos">
-    <h2>Aprende paso a paso </h2>
-
-    <div class="grid">
-      <!-- Cada tarjeta abre un modal con más info -->
-      <article class="card" data-modal="m1">
-        <h3>1) ¿Qué librerías usamos?</h3>
-        <p>Leaflet para dibujar mapas y Turf.js para cálculos geoespaciales.</p>
-        <button class="btn">Ver explicación</button>
-      </article>
-
-      <article class="card" data-modal="m2">
-        <h3>2) Crear el mapa base</h3>
-        <p>Elegimos un fondo oscuro y centramos el mundo.</p>
-        <button class="btn">Ver explicación</button>
-      </article>
-
-      <article class="card" data-modal="m3">
-        <h3>3) Marcar Bogotá</h3>
-        <p>Ponemos un marcador fijo en Bogotá (Colombia).</p>
-        <button class="btn">Ver explicación</button>
-      </article>
-
-      <article class="card" data-modal="m4">
-        <h3>4) Cargar países (GeoJSON)</h3>
-        <p>Descargamos fronteras de países desde un dataset público.</p>
-        <button class="btn">Ver explicación</button>
-      </article>
-
-      <article class="card" data-modal="m5">
-        <h3>5) Centroides y distancias</h3>
-        <p>Con Turf.js calculamos centroide y distancia geodésica.</p>
-        <button class="btn">Ver explicación</button>
-      </article>
-
-      <article class="card" data-modal="m6">
-        <h3>6) Mostrar resultados</h3>
-        <p>Popups con “Distancia desde Bogotá a [país]”.</p>
-        <button class="btn">Ver explicación</button>
-      </article>
-
-      <article class="card" data-modal="m7">
-        <h3>Tipos de datos clave</h3>
-        <p>¿Qué es un GeoJSON? ¿Array? ¿Objeto? ¿String? Aquí te lo explico fácil.</p>
-        <button class="btn">Ver explicación</button>
-      </article>
-    </div>
-  </section>
-
-  <!-- Modales -->
-  <div class="modal" id="m1" aria-hidden="true">
-    <div class="modal__content">
-      <button class="modal__close" data-close>&times;</button>
-      <h3>1) ¿Qué librerías usamos?</h3>
-      <ul>
-        <li><strong>Leaflet:</strong> dibuja mapas en el navegador (capas, marcadores, popups).</li>
-        <li><strong>Turf.js:</strong> hace matemáticas geoespaciales. Aquí lo usamos para:
-          <ul>
-            <li><code>turf.centroid(feature)</code> → centro geográfico del país.</li>
-            <li><code>turf.distance(puntoA, puntoB, { units: 'kilometers' })</code> → distancia sobre la esfera.</li>
-          </ul>
-        </li>
-      </ul>
-      <pre><code>&lt;link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"&gt;
-&lt;script src="https://unpkg.com/leaflet/dist/leaflet.js"&gt;&lt;/script&gt;
-&lt;script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"&gt;&lt;/script&gt;</code></pre>
-    </div>
-  </div>
-
-  <div class="modal" id="m2" aria-hidden="true">
-    <div class="modal__content">
-      <button class="modal__close" data-close>&times;</button>
-      <h3>2) Crear el mapa base</h3>
-      <p>Iniciamos Leaflet, elegimos un mapa base “oscuro” y lo mostramos en un div con id <code>#map</code>.</p>
-      <pre><code>const map = L.map('map').setView([20, 0], 2);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '© OSM · © CARTO'
-}).addTo(map);</code></pre>
-      <p><em>Nota:</em> Leaflet usa orden <strong>[lat, lon]</strong> en sus funciones visuales.</p>
-    </div>
-  </div>
-
-  <div class="modal" id="m3" aria-hidden="true">
-    <div class="modal__content">
-      <button class="modal__close" data-close>&times;</button>
-      <h3>3) Marcar Bogotá</h3>
-      <p>Agregamos un marcador fijo con popup.</p>
-      <pre><code>const bogotaLat = 4.60971;
-const bogotaLon = -74.08175;
-L.marker([bogotaLat, bogotaLon]).addTo(map)
- .bindPopup('Bogotá, Colombia');</code></pre>
-      <p><strong>Ojo:</strong> en Turf, los puntos son <strong>[lon, lat]</strong>. ¡No los inviertas!</p>
-    </div>
-  </div>
-
-  <div class="modal" id="m4" aria-hidden="true">
-    <div class="modal__content">
-      <button class="modal__close" data-close>&times;</button>
-      <h3>4) Cargar países (GeoJSON)</h3>
-      <p>Usamos un GeoJSON público (fronteras de países). Cada país es un <em>Feature</em> con:</p>
-      <ul>
-        <li><code>properties</code> → datos (nombre del país, etc.)</li>
-        <li><code>geometry</code> → polígonos con coordenadas</li>
-      </ul>
-      <pre><code>fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
- .then(r =&gt; r.json())
- .then(data =&gt; L.geoJSON(data).addTo(map));</code></pre>
-      <p>El nombre puede venir en <code>properties.ADMIN</code> o <code>properties.name</code>.</p>
-    </div>
-  </div>
-
-  <div class="modal" id="m5" aria-hidden="true">
-    <div class="modal__content">
-      <button class="modal__close" data-close>&times;</button>
-      <h3>5) Centroides y distancias</h3>
-      <p>Calculamos el centroide de cada país y la distancia geodésica desde Bogotá.</p>
-      <pre><code>const bogota = turf.point([-74.08175, 4.60971]); // [lon, lat]
-const centroid = turf.centroid(feature);
-const km = turf.distance(bogota, centroid, { units: 'kilometers' });</code></pre>
-      <p>Esto da una buena aproximación general (más simple que usar capitales reales).</p>
-    </div>
-  </div>
-
-  <div class="modal" id="m6" aria-hidden="true">
-    <div class="modal__content">
-      <button class="modal__close" data-close>&times;</button>
-      <h3>6) Mostrar resultados</h3>
-      <p>Al hacer clic en un país mostramos: <em>“Distancia desde Bogotá a &lt;país&gt;: &lt;km&gt; km”</em>. Opcional: dibujar la línea Bogotá → centroide.</p>
-      <pre><code>layer.bindPopup(`Distancia desde Bogotá a ${nombre}: ${km.toFixed(2)} km`);
-if (dibujarLineas) L.polyline([[latB, lonB],[latC, lonC]]).addTo(map);</code></pre>
-    </div>
-  </div>
-
-  <div class="modal" id="m7" aria-hidden="true">
-    <div class="modal__content">
-      <button class="modal__close" data-close>&times;</button>
-      <h3>Tipos de datos clave (para dummies)</h3>
-      <ul class="bullets">
-        <li><strong>Número:</strong> <code>4.60971</code> (latitud), <code>-74.08175</code> (longitud).</li>
-        <li><strong>String (texto):</strong> <code>"Colombia"</code>, <code>"Distancia"</code>.</li>
-        <li><strong>Array (lista):</strong> <code>[lat, lon]</code> o <code>[lon, lat]</code>.</li>
-        <li><strong>Objeto (JSON):</strong> <code>{ nombre: "Colombia", km: 2500 }</code>.</li>
-        <li><strong>GeoJSON:</strong> JSON especial para mapas.
-          <ul>
-            <li><em>FeatureCollection</em> → lista de features.</li>
-            <li><em>Feature</em> → un país; tiene <code>properties</code> y <code>geometry</code>.</li>
-            <li><em>Geometry</em> → <code>Polygon</code> o <code>MultiPolygon</code> con coordenadas <code>[lon, lat]</code>.</li>
-          </ul>
-        </li>
-      </ul>
-      <pre><code>{
-  "type": "Feature",
-  "properties": { "ADMIN": "Colombia" },
-  "geometry": { "type": "Polygon", "coordinates": [ ... ] }
-}</code></pre>
-    </div>
-  </div>
-
-  <!-- Lógica del mapa y de los modales -->
-  <script src="programa.js" defer></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="programa.js"></script>
 </body>
 </html>
-

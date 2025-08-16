@@ -1,146 +1,81 @@
-/*****  Configuración básica  *****/
-const BOGOTA = { lat: 4.60971, lon: -74.08175 };              // Leaflet usa [lat, lon]
-const BOGOTA_TURF = turf.point([BOGOTA.lon, BOGOTA.lat]);      // Turf usa [lon, lat]
-const DATA_URL = 'https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson';
+// PASOS DEL TUTORIAL
+const pasos = [
+    {
+        titulo: "Cargar librerías",
+        texto: "Usamos Leaflet para mostrar mapas y Turf.js para cálculos geográficos. Leaflet trabaja con datos tipo 'coordenadas' y Turf usa geometrías GeoJSON."
+    },
+    {
+        titulo: "Mostrar el mapa",
+        texto: "Creamos un mapa centrado en Bogotá (latitud 4.7110, longitud -74.0721) con un nivel de zoom 2 para ver el mundo completo."
+    },
+    {
+        titulo: "Añadir marcador de Bogotá",
+        texto: "Ponemos un marcador rojo en Bogotá para tener un punto de referencia fijo. No desaparecerá aunque interactúes con el mapa."
+    },
+    {
+        titulo: "Cargar países",
+        texto: "Usamos datos GeoJSON de todos los países para poder calcular distancias desde Bogotá al centro de cada país."
+    },
+    {
+        titulo: "Calcular distancias",
+        texto: "Turf calcula la distancia en kilómetros desde Bogotá al centroide de cada país usando coordenadas geográficas."
+    },
+    {
+        titulo: "Mostrar resultados",
+        texto: "Coloreamos los países según la distancia y al hacer clic mostramos un popup con la distancia desde Bogotá y el nombre del país."
+    }
+];
 
-// Contenedores de capas opcionales
-let capaCentroides = null;
-let capaLineas = L.layerGroup();
+let pasoActual = 0;
+const explicacionDiv = document.getElementById("explicacion");
 
-/*****  Crear mapa  *****/
-const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
+function mostrarPaso() {
+    const paso = pasos[pasoActual];
+    explicacionDiv.innerHTML = `<h3>${paso.titulo}</h3><p>${paso.texto}</p>`;
+}
+document.getElementById("prev").addEventListener("click", () => {
+    if (pasoActual > 0) pasoActual--;
+    mostrarPaso();
+});
+document.getElementById("next").addEventListener("click", () => {
+    if (pasoActual < pasos.length - 1) pasoActual++;
+    mostrarPaso();
+});
+mostrarPaso();
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '© OpenStreetMap · © CARTO'
+// MAPA
+const map = L.map('map').setView([4.7110, -74.0721], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
 }).addTo(map);
 
-// Marcador fijo en Bogotá
-L.marker([BOGOTA.lat, BOGOTA.lon], { title: 'Bogotá, Colombia' })
-  .addTo(map)
-  .bindPopup('<strong>Bogotá</strong><br>Capital de Colombia');
+// MARCADOR FIJO DE BOGOTÁ
+const bogotaMarker = L.marker([4.7110, -74.0721], { title: "Bogotá" })
+    .bindPopup("📍 Bogotá, Colombia")
+    .addTo(map);
 
-/*****  Utilidades  *****/
-const fmtKm = (n) => Number(n).toLocaleString('es-CO', { maximumFractionDigits: 2 });
+// PUNTO DE BOGOTÁ (para Turf)
+const bogota = turf.point([-74.0721, 4.7110]);
 
-function nombrePais(props) {
-  // Evita 'undefined' pase lo que pase
-  return props?.ADMIN || props?.name || 'País desconocido';
-}
-
-/*****  Cargar países y preparar capa  *****/
-fetch(DATA_URL)
-  .then(r => r.json())
-  .then((geojson) => {
-    // Crear capa de países con comportamiento
-    const paises = L.geoJSON(geojson, {
-      style: {
-        color: '#00FFFF',
-        weight: 1,
-        fillOpacity: 0.15
-      },
-      onEachFeature: (feature, layer) => {
-        // Centroides y distancia
-        const c = turf.centroid(feature);                     // Point [lon, lat]
-        const km = turf.distance(BOGOTA_TURF, c, { units: 'kilometers' });
-
-        // Guardamos para reutilizar en eventos
-        const [clon, clat] = c.geometry.coordinates;
-        layer.feature.properties.__centroid = { lat: clat, lon: clon };
-        layer.feature.properties.__km = km;
-
-        // Popup
-        const nombre = nombrePais(feature.properties);
-        layer.bindPopup(
-          `<strong>Distancia desde Bogotá a ${nombre}:</strong><br>${fmtKm(km)} km`
-        );
-
-        // Al hacer clic: si está activo el toggle, dibujar línea Bogotá → centroide
-        layer.on('click', () => {
-          if (document.getElementById('toggleLineas').checked) {
-            const p1 = [BOGOTA.lat, BOGOTA.lon];
-            const p2 = [clat, clon];
-            // Limpiamos y dibujamos la nueva línea
-            capaLineas.clearLayers();
-            L.polyline([p1, p2], { color: '#ffd166', weight: 2 }).addTo(capaLineas);
-            capaLineas.addTo(map);
-          }
-        });
-      }
-    }).addTo(map);
-
-    // Centroides (se crean pero no se muestran hasta que actives el toggle)
-    const puntos = [];
-    geojson.features.forEach((f) => {
-      const c = f.properties.__centroid
-        ? [f.properties.__centroid.lat, f.properties.__centroid.lon]
-        : (() => {
-            const cc = turf.centroid(f).geometry.coordinates;
-            return [cc[1], cc[0]];
-          })();
-
-      const nombre = nombrePais(f.properties);
-      const km = f.properties.__km ?? turf.distance(BOGOTA_TURF, turf.point([c[1], c[0]]), { units: 'kilometers' });
-
-      const m = L.circleMarker(c, {
-        radius: 4,
-        color: '#a37900',
-        weight: 0.8,
-        fillColor: '#ffd166',
-        fillOpacity: 0.95
-      }).bindTooltip(`${nombre}<br><small>${fmtKm(km)} km</small>`, { sticky: true });
-
-      puntos.push(m);
+// CARGAR GEOJSON DE PAÍSES
+fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
+    .then(res => res.json())
+    .then(data => {
+        L.geoJSON(data, {
+            style: feature => ({
+                color: "#555",
+                weight: 1,
+                fillColor: "#6baed6",
+                fillOpacity: 0.5
+            }),
+            onEachFeature: (feature, layer) => {
+                const centroid = turf.centroid(feature);
+                const distancia = turf.distance(bogota, centroid, { units: 'kilometers' }).toFixed(2);
+                const nombrePais = feature.properties.ADMIN || feature.properties.name || "País desconocido";
+                const coords = centroid.geometry.coordinates;
+                const ciudad = `${coords[1].toFixed(2)}, ${coords[0].toFixed(2)}`;
+                
+                layer.bindPopup(`<strong>Distancia desde Bogotá a ${nombrePais}</strong><br>${distancia} km`);
+            }
+        }).addTo(map);
     });
-    capaCentroides = L.layerGroup(puntos); // aún no se añade
-
-  })
-  .catch((e) => {
-    console.error(e);
-    alert('No se pudieron cargar los países. Verifica tu conexión.');
-  });
-
-/*****  Toggles UI  *****/
-// Mostrar / ocultar centroides
-document.getElementById('toggleCentroides').addEventListener('change', (ev) => {
-  if (!capaCentroides) return;
-  if (ev.target.checked) {
-    capaCentroides.addTo(map);
-  } else {
-    map.removeLayer(capaCentroides);
-  }
-});
-
-// Borrar línea cuando se apaga el toggle de líneas
-document.getElementById('toggleLineas').addEventListener('change', (ev) => {
-  if (!ev.target.checked) capaLineas.clearLayers();
-});
-
-/*****  Modales (paso a paso)  *****/
-const openModal = (id) => document.getElementById(id).setAttribute('aria-hidden', 'false');
-const closeModal = (id) => document.getElementById(id).setAttribute('aria-hidden', 'true');
-
-// Abrir desde tarjetas
-document.querySelectorAll('.card[data-modal]').forEach(card => {
-  card.addEventListener('click', (e) => {
-    // Evita doble click en botón vs tarjeta
-    const id = card.getAttribute('data-modal');
-    openModal(id);
-  });
-});
-
-// Cerrar con botones [x]
-document.querySelectorAll('[data-close]').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    const modal = e.target.closest('.modal');
-    if (modal) modal.setAttribute('aria-hidden', 'true');
-  });
-});
-
-// Cerrar al hacer click fuera del contenido
-document.querySelectorAll('.modal').forEach(m => {
-  m.addEventListener('click', (e) => {
-    if (e.target.classList.contains('modal')) {
-      m.setAttribute('aria-hidden', 'true');
-    }
-  });
-});
