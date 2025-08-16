@@ -4,10 +4,21 @@
     <meta charset="UTF-8">
     <title>Especialista SIG</title>
     <style>
+        html, body {
+            height: 100%;
+        }
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
+            margin: 0;
             background-color: #f6f8fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .contenido-central {
+            width: 100%;
         }
         h1 {
             color: #2c3e50;
@@ -44,17 +55,19 @@
     </style>
 </head>
 <body>
-    <h1>Especialista SIG</h1>
-    <h2>Áreas de especialización:</h2>
-    <div class="subramas-container">
-        <div class="fila">
-            <div class="subrama">Representación de datos</div>
-            <div class="subrama">Analítica de Geodatos espaciales</div>
-            <div class="subrama">Estadística descriptiva</div>
-        </div>
-        <div class="fila">
-            <div class="subrama">Estadística analítica o proyectiva</div>
-            <div class="subrama">Inteligencia artificial geoespacial</div>
+    <div class="contenido-central">
+        <h1>Especialista SIG</h1>
+        <h2>Áreas de especialización:</h2>
+        <div class="subramas-container">
+            <div class="fila">
+                <div class="subrama">Representación de datos</div>
+                <div class="subrama">Analítica de Geodatos espaciales</div>
+                <div class="subrama">Estadística descriptiva</div>
+            </div>
+            <div class="fila">
+                <div class="subrama">Estadística analítica o proyectiva</div>
+                <div class="subrama">Inteligencia artificial geoespacial</div>
+            </div>
         </div>
     </div>
 </body>
