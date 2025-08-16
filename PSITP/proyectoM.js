@@ -11,10 +11,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Estilo para el polígono del barrio
 const estiloBarrio = {
-  color: '#FF8C00',        // Naranja oscuro
+  color: '#FF8C00',
   weight: 3,
   opacity: 0.8,
-  fillColor: '#FFA500',    // Naranja claro
+  fillColor: '#FFA500',
   fillOpacity: 0.1
 };
 
@@ -72,9 +72,8 @@ function cargarYFiltrarParaderos(barrioPolygon) {
       data.features.forEach(feature => {
         if (feature.geometry && feature.geometry.type === 'Point') {
           const [lng, lat] = feature.geometry.coordinates;
-          const punto = [lng, lat]; // [lng, lat] para Turf
+          const punto = [lng, lat];
 
-          // Verificar si el paradero está dentro del barrio
           if (turf.booleanPointInPolygon(punto, barrioPolygon)) {
             const props = feature.properties;
             const nombre = props.nombre || 'Sin nombre';
@@ -82,7 +81,6 @@ function cargarYFiltrarParaderos(barrioPolygon) {
             const cenefa = props.cenefa || 'No especificada';
             const localidad = props.localidad || 'Desconocida';
 
-            // Contenido del popup
             const popupContent = `
               <b>📍 ${nombre}</b><br>
               <strong>Dirección bandera:</strong> ${direccion}<br>
@@ -90,7 +88,6 @@ function cargarYFiltrarParaderos(barrioPolygon) {
               <strong>Localidad:</strong> ${localidad}
             `;
 
-            // Agregar marcador con emoji 🚌
             L.marker([lat, lng], { icon: iconoParadero })
               .addTo(map)
               .bindPopup(popupContent);

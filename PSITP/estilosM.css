@@ -109,3 +109,39 @@ html, body {
 .seccion-tutorial a:hover {
   text-decoration: underline;
 }
+
+/* Estilo para la sección de definiciones */
+.seccion-definiciones {
+  width: 85%;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 25px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.seccion-definiciones h2, .seccion-definiciones h3 {
+  color: #1a535c;
+}
+
+.seccion-definiciones h2 {
+  border-bottom: 3px solid #1a535c;
+  padding-bottom: 8px;
+}
+
+.seccion-definiciones ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.seccion-definiciones a {
+  color: #0077b6;
+  text-decoration: none;
+}
+
+.seccion-definiciones a:hover {
+  text-decoration: underline;
+}

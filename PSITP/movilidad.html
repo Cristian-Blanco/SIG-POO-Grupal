@@ -113,9 +113,56 @@
       <li>Es compatible con <strong>móviles y escritorio</strong>.</li>
       <li>Tiene miles de <strong>plugins</strong> para extender funcionalidades.</li>
     </ul>
+  </section>
 
-    <p><strong>Resultado final:</strong> Un mapa interactivo, preciso y educativo, que combina datos abiertos, tecnologías web y buenas prácticas de desarrollo.</p>
-    <p>Este proyecto es <strong>reutilizable</strong>: cambia los archivos GeoJSON y funciona en cualquier barrio de Bogotá.</p>
+  <!-- Sección de definiciones basadas en Leaflet -->
+  <section class="seccion-definiciones">
+    <h2>Conceptos clave en mapas interactivos</h2>
+
+    <h3>¿Qué es Leaflet?</h3>
+    <p>Según su documentación oficial, <strong>Leaflet</strong> es la <em>biblioteca JavaScript líder para mapas interactivos móviles y de escritorio</em>. Pesa solo <strong>42 KB</strong> y tiene todas las funciones que la mayoría de desarrolladores necesitan.</p>
+    <p>Está diseñado con <em>simplicidad, rendimiento y usabilidad</em> en mente, y funciona eficientemente en todos los dispositivos principales.</p>
+
+    <h3>Características principales de Leaflet</h3>
+    <ul>
+      <li><strong>Capas por defecto:</strong> Tiles, marcadores, popups, polígonos, GeoJSON.</li>
+      <li><strong>Interacción:</strong> Arrastre, zoom con rueda, pinch-zoom en móviles, eventos (click, mouseover).</li>
+      <li><strong>Diseño visual:</strong> Animaciones suaves, diseño predeterminado atractivo, soporte para pantallas retina.</li>
+      <li><strong>Personalización:</strong> Popups y controles con CSS, marcadores personalizados, proyecciones de mapa (EPSG:3857, 4326, 3395).</li>
+      <li><strong>Rendimiento:</strong> Aceleración por hardware en móviles, simplificación dinámica de líneas, construcción modular.</li>
+      <li><strong>Controles integrados:</strong> Botones de zoom, atribución, selector de capas, escala.</li>
+      <li><strong>Compatibilidad:</strong> Chrome, Firefox, Safari, Edge, IE 9+, y navegadores móviles modernos.</li>
+    </ul>
+
+    <h3>¿Qué es una capa (layer)?</h3>
+    <p>Una <strong>capa</strong> es un conjunto de datos geográficos que se muestra sobre el mapa. En este proyecto usamos:</p>
+    <ul>
+      <li><strong>Capa base:</strong> OpenStreetMap.</li>
+      <li><strong>Capa vectorial:</strong> Polígono del barrio Potosí.</li>
+      <li><strong>Capa de marcadores:</strong> Paraderos del SITP.</li>
+    </ul>
+
+    <h3>¿Qué es un GeoJSON?</h3>
+    <p>Es un formato basado en JSON para representar datos geográficos como <strong>puntos, líneas y polígonos</strong>. Es el estándar abierto para compartir información espacial en aplicaciones web.</p>
+
+    <h3>¿Qué es un popup?</h3>
+    <p>Un <strong>popup</strong> es una ventana emergente que muestra información al hacer clic en un marcador o polígono. En este mapa, muestra el nombre, dirección bandera y código cenefa del paradero.</p>
+
+    <h3>¿Qué es Turf.js?</h3>
+    <p><strong>Turf.js</strong> es una librería de análisis geoespacial que permite operaciones como verificar si un punto está dentro de un polígono, calcular distancias o áreas. Esencial para filtrar datos precisos.</p>
+
+    <h3>Ejemplos de librerías similares</h3>
+    <p>Otras librerías populares para mapas web:</p>
+    <ul>
+      <li><strong><a href="https://openlayers.org" target="_blank">OpenLayers</a>:</strong> Más avanzada, ideal para aplicaciones GIS complejas.</li>
+      <li><strong><a href="https://deck.gl" target="_blank">deck.gl</a>:</strong> De Uber, para visualización 3D y grandes volúmenes de datos.</li>
+      <li><strong><a href="https://maplibre.org" target="_blank">MapLibre</a>:</strong> Fork de Mapbox, open-source, con estilos personalizados.</li>
+      <li><strong><a href="https://carto.com" target="_blank">CARTO</a>:</strong> Plataforma completa para análisis espacial en la nube.</li>
+    </ul>
+    <p>Leaflet es ideal para proyectos simples, rápidos y móviles.</p>
+
+    <h3>¿Por qué usamos WGS 84 (EPSG:4326)?</h3>
+    <p>Es el sistema de coordenadas global que usa GPS. Leaflet y OpenStreetMap lo usan por defecto. Las coordenadas están en <strong>grados de latitud y longitud</strong>, como <code>[4.653, -74.085]</code>. Es fundamental que tus archivos GeoJSON estén en este sistema.</p>
   </section>
 
   <!-- Leaflet JS -->
