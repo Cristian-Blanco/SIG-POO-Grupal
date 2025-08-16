@@ -34,4 +34,58 @@
           <p class="hint">Usa OpenStreetMap u otro proveedor.</p>
         </li>
         <li data-step="2">
-          3) Colocar un marcador
+          3) Colocar un marcador (<code>L.marker</code>)
+          <p class="hint">Un punto en el mapa con popup.</p>
+        </li>
+        <li data-step="3">
+          4) Dibujar formas (<code>L.circle</code>, <code>L.polyline</code>)
+          <p class="hint">Geometrías básicas sobre el mapa.</p>
+        </li>
+        <li data-step="4">
+          5) Control de capas y escala
+          <p class="hint">Alterna entre capas y muestra escala.</p>
+        </li>
+        <li data-step="5">
+          6) Interacción: click para agregar marcadores
+          <p class="hint">Captura eventos del mapa.</p>
+        </li>
+        <li data-step="6">
+          7) Consejos de producción
+          <p class="hint">Buenas prácticas y siguientes pasos.</p>
+        </li>
+      </ol>
+
+      <div class="nav">
+        <button id="prevBtn" type="button" disabled>⟵ Anterior</button>
+        <span id="stepCounter" aria-live="polite">1 / 7</span>
+        <button id="nextBtn" type="button">Siguiente ⟶</button>
+      </div>
+
+      <details class="codepeek">
+        <summary>Ver fragmentos de código del paso actual</summary>
+        <pre id="codeBlock"><code>// Avanza los pasos para ver el código aquí</code></pre>
+      </details>
+    </aside>
+
+    <section class="map-wrap">
+      <!-- Contenedor del mapa -->
+      <div id="map" aria-label="Mapa Leaflet"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    Hecho con ❤️ usando <a href="https://leafletjs.com/" target="_blank" rel="noreferrer">Leaflet</a>.
+  </footer>
+
+  <!-- Leaflet JS (CDN oficial) -->
+  <script
+    defer
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- Lógica del tutorial -->
+  <script defer src="app.js"></script>
+</body>
+</html>
