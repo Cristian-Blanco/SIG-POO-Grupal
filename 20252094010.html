@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>20252094010 – SUBA: Rutas SITP y Paraderos</title>
+  <title>Troncales TransMilenio en SUBA – 20252094010</title>
 
-  <!-- Leaflet -->
+  <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
-  <!-- MarkerCluster -->
+  <!-- MarkerCluster CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
@@ -20,33 +20,27 @@
   <link rel="stylesheet" href="src/css/20252094010.css" />
 </head>
 <body>
-  <!-- ==================== FILA 1: Encabezado ==================== -->
+  <!-- Encabezado + métricas -->
   <header class="topbar">
     <div class="brand">
-      <div class="title">SUBA – Rutas SITP recortadas + Estaciones/Paraderos</div>
-      <div class="subtitle">Proyecto 20252094010 (Leaflet + Turf.js)</div>
+      <div class="title">SUBA – Troncales TransMilenio (clip dentro de la localidad)</div>
+      <div class="subtitle">Proyecto 20252094010 · Leaflet + Turf.js</div>
     </div>
-    <div class="metrics" id="metrics">
-      <div><strong>Rutas que tocan SUBA:</strong> <span id="m_rutas_touch">–</span></div>
+    <div class="metrics">
+      <div><strong>Troncales que tocan SUBA:</strong> <span id="m_lines_touch">–</span></div>
       <div><strong>Tramos dentro de SUBA:</strong> <span id="m_tramos_clip">–</span></div>
       <div><strong>Longitud total (km):</strong> <span id="m_km_total">–</span></div>
-      <div><strong>Estaciones/Paraderos:</strong> <span id="m_pts">–</span></div>
+      <div><strong>Estaciones troncales:</strong> <span id="m_pts">–</span></div>
     </div>
   </header>
 
-  <!-- ==================== FILA 2: Descripción de PASOS ==================== -->
-  <section class="steps">
-    <div class="step" id="s1"><span class="badge">1</span><span>Cargar Localidades</span></div>
-    <div class="step" id="s2"><span class="badge">2</span><span>Unificar SUBA</span></div>
-    <div class="step" id="s3"><span class="badge">3</span><span>Cargar Rutas (1ª disponible)</span></div>
-    <div class="step" id="s4"><span class="badge">4</span><span>Intersectar con SUBA</span></div>
-    <div class="step" id="s5"><span class="badge">5</span><span>Clip + Longitudes</span></div>
-    <div class="step" id="s6"><span class="badge">6</span><span>Cargar Paraderos</span></div>
-    <div class="step" id="s7"><span class="badge">7</span><span>Filtrar dentro de SUBA</span></div>
-    <div class="step" id="s8"><span class="badge">8</span><span>Pintar mapa y controles</span></div>
+  <!-- Info de propósito -->
+  <section class="info-row">
+    <h1>Mapa de troncales TransMilenio en SUBA</h1>
+    <p>Fuente directa desde APIs oficiales (GeoJSON). El sistema prueba varias URLs y usa la primera disponible.</p>
   </section>
 
-  <!-- ==================== FILA 3: Mapa + Log ==================== -->
+  <!-- Mapa + log lateral -->
   <main class="layout">
     <div id="map"></div>
     <aside class="log">
@@ -55,15 +49,15 @@
       <details>
         <summary>Ayuda</summary>
         <ul>
-          <li>Si un servicio no responde, se prueba con el siguiente candidato.</li>
-          <li>Si ves errores CORS, abre con un servidor local (VS Code → Live Server).</li>
-          <li>Las fuentes oficiales a veces están intermitentes; reintenta más tarde.</li>
+          <li>Abra este archivo con un servidor local (VS Code → Live Server) para evitar CORS.</li>
+          <li>Si una URL no responde, se intenta con la siguiente.</li>
+          <li>Revise la consola del navegador para ver errores de red.</li>
         </ul>
       </details>
     </aside>
   </main>
 
-  <!-- Librerías JS -->
+  <!-- Librerías -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VMUNs7CqjzCtm0h+50="
