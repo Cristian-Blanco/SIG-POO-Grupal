@@ -19,4 +19,22 @@ h1 {
 .leaflet-popup-content img {
     max-width: 200px;
     height: auto;
+
+.leaflet-popup-content {
+    text-align: center;
+    font-size: 14px;
+}
+
+.leaflet-popup-content strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.leaflet-popup-content img {
+    max-width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
 }
