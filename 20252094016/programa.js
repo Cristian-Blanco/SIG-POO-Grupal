@@ -11,7 +11,7 @@ const marcador = L.marker([4.65, -74.1]).addTo(mapa)
   .bindPopup("Subestación de Monitoreo");
 
 // Cargar polígono de barrio
-fetch("Barrio.geojson")
+fetch("./Limite_barrio_Marichuela.geojson")
   .then(res => res.json())
   .then(data => {
     L.geoJSON(data, {
