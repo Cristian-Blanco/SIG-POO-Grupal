@@ -1,5 +1,5 @@
 // --- Inicialización del mapa ---
-const mapa = L.map('mapa').setView([4.518426196790787, -74.11697088763084], 12); // Bogotá
+const mapa = L.map('mapa').setView([4.518426196790787, -74.11697088763084], 15); // Bogotá
 
 // Capa base
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -7,7 +7,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(mapa);
 
 // Marcador de subestación (ejemplo en Bogotá)
-const marcador = L.marker([4.65, -74.1]).addTo(mapa)
+const marcador = L.marker([4.531206, -74.111714]).addTo(mapa)
   .bindPopup("Subestación de Monitoreo");
 
 // Cargar polígono de barrio
