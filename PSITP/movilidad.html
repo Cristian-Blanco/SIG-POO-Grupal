@@ -23,207 +23,150 @@
   <!-- Sección del tutorial -->
   <section class="seccion-tutorial">
     <h2>¿Cómo se construyó este mapa interactivo?</h2>
-    <p>Este mapa fue desarrollado utilizando tecnologías web modernas, siguiendo buenas prácticas de desarrollo cartográfico. A continuación, te explicamos paso a paso cómo se hizo, con detalles técnicos y conceptos clave.</p>
+    <p>Este mapa fue desarrollado usando <a href="https://leafletjs.com" target="_blank">Leaflet</a>, la biblioteca JavaScript líder para mapas interactivos móviles y de escritorio. Con solo <strong>42 KB</strong>, incluye todas las funciones que la mayoría de desarrolladores necesitan.</p>
+
+    <p>Leaflet está diseñado con <strong>simplicidad, rendimiento y usabilidad</strong> en mente, y funciona eficientemente en todos los dispositivos principales.</p>
 
     <ol class="tutorial-list">
       <li>
         <strong>1. Descarga de los datos geoespaciales en formato GeoJSON</strong>
-        <p>El proyecto comienza con dos archivos clave en formato <strong>GeoJSON</strong>, el estándar abierto para datos geográficos:</p>
+        <p>El proyecto comienza con dos archivos clave en formato <strong>GeoJSON</strong>:</p>
         <ul>
-          <li><strong><code>potosi.geojson</code></strong>: Define el polígono del barrio Potosí en Suba. Este archivo contiene un <code>Polygon</code> o <code>MultiPolygon</code> con coordenadas en <strong>WGS 84 (EPSG:4326)</strong>, el sistema de referencia global que usan Leaflet y OpenStreetMap.</li>
-          <li><strong><code>Paraderos_Zonales_del_SITP.geojson</code></strong>: Contiene miles de puntos (<code>Point</code>) que representan los paraderos del SITP en Bogotá. Se descargó desde la plataforma oficial: <a href="https://datosabiertos-transmilenio.hub.arcgis.com/datasets/paraderos-zonales-del-sitp/explore" target="_blank">ArcGIS Open Data - TransMilenio</a>.</li>
+          <li><strong><code>potosi.geojson</code></strong>: Define el polígono del barrio Potosí (tipo <code>Polygon</code>).</li>
+          <li><strong><code>Paraderos_Zonales_del_SITP.geojson</code></strong>: Contiene puntos (<code>Point</code>) de paraderos del SITP.</li>
         </ul>
-        <p>✅ Ambos archivos deben estar en la misma carpeta que el proyecto para que <code>fetch()</code> los cargue correctamente.</p>
+        <p>✅ Ambos están en <strong>WGS 84 (EPSG:4326)</strong>, el sistema estándar de Leaflet.</p>
       </li>
 
       <li>
-        <strong>2. Inicialización del mapa con Leaflet</strong>
-        <p>Se usó <a href="https://leafletjs.com" target="_blank">Leaflet</a>, la biblioteca JavaScript líder para mapas interactivos, por su simplicidad, rendimiento y compatibilidad con móviles.</p>
-        <p>El mapa se inicializa en un elemento HTML con <code>id="map"</code> y se centra en el barrio Potosí:</p>
+        <strong>2. Inicialización del mapa</strong>
+        <p>Se crea el mapa en el elemento <code>id="map"</code> y se centra en el barrio:</p>
         <pre><code>var map = L.map('map').setView([4.653, -74.085], 14);</code></pre>
-        <p>El nivel de zoom <code>14</code> permite ver detalles urbanos como calles y paraderos.</p>
       </li>
 
       <li>
-        <strong>3. Carga de la capa base: OpenStreetMap</strong>
-        <p>Leaflet no incluye mapas por defecto. Se añade una capa de teselas (tiles) de <strong>OpenStreetMap</strong>, un mapa base gratuito y de código abierto:</p>
+        <strong>3. Carga de la capa base</strong>
+        <p>Se añade OpenStreetMap como fondo:</p>
         <pre><code>L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '© OpenStreetMap contributors'
 }).addTo(map);</code></pre>
-        <p>Esta capa proporciona el fondo del mapa y es esencial para contextualizar los datos.</p>
       </li>
 
       <li>
         <strong>4. Dibujar el polígono del barrio</strong>
-        <p>Con <code>fetch()</code>, se carga <code>potosi.geojson</code> y se agrega al mapa como una capa vectorial:</p>
-        <pre><code>L.geoJSON(data, {
-  style: estiloBarrio,
-  onEachFeature: function (feature, layer) {
-    layer.bindPopup('<b>Barrio Potosí</b><br>Localidad: Suba');
-  }
-}).addTo(map);</code></pre>
-        <p>El estilo define el color naranja del borde y relleno. <code>onEachFeature</code> permite agregar popups a cada elemento.</p>
+        <p>Con <code>L.geoJSON()</code> se carga y muestra el barrio con estilo naranja.</p>
       </li>
 
       <li>
-        <strong>5. Filtrar paraderos dentro del barrio con Turf.js</strong>
-        <p>Leaflet no puede verificar si un punto está dentro de un polígono. Para eso, se usa <a href="https://turfjs.org" target="_blank">Turf.js</a>, una librería geoespacial potente.</p>
-        <p>El código convierte el GeoJSON del barrio a un polígono con <code>turf.polygon()</code> y verifica cada paradero:</p>
-        <pre><code>if (turf.booleanPointInPolygon(punto, barrioPolygon)) {
-  // Mostrar solo si está dentro
-}</code></pre>
-        <p>Este filtro asegura que solo se muestren los paraderos relevantes.</p>
+        <strong>5. Filtrar paraderos dentro del barrio</strong>
+        <p>Usando <a href="https://turfjs.org" target="_blank">Turf.js</a>, se verifica cuáles paraderos están dentro del barrio con <code>turf.booleanPointInPolygon()</code>.</p>
       </li>
 
       <li>
         <strong>6. Agregar marcadores interactivos</strong>
-        <p>Cada paradero se representa con un marcador usando el emoji 🚌, creado con <code>L.divIcon()</code>:</p>
-        <pre><code>const iconoParadero = L.divIcon({
-  html: '🚌',
-  className: 'paradero-icon',
-  iconSize: [30, 30]
-});</code></pre>
-        <p>Al hacer clic, se abre un popup con información útil: nombre, dirección bandera, código cenefa y localidad.</p>
+        <p>Cada paradero se muestra con un marcador usando el emoji 🚌. Al hacer clic, aparece un popup con información clave.</p>
       </li>
 
       <li>
         <strong>7. Diseño y experiencia de usuario</strong>
-        <p>El mapa es <strong>mobile-friendly</strong>, con controles táctiles como:</p>
-        <ul>
-          <li>Arrastre con inercia</li>
-          <li>Pinzamiento para zoom</li>
-          <li>Desplazamiento con rueda del mouse</li>
-        </ul>
-        <p>Los estilos CSS personalizados mejoran la presentación, y los popups se adaptan a cualquier dispositivo.</p>
+        <p>El mapa es <strong>mobile-friendly</strong> con arrastre, pinch-zoom y eventos táctiles. El diseño CSS es limpio y claro.</p>
       </li>
 
       <li>
-        <strong>8. Ejecución local con Live Server</strong>
-        <p>Para evitar errores de <em>CORS</em> al cargar archivos locales, se usa un servidor local como <strong>Live Server</strong> (extensión de VS Code).</p>
-        <p>La URL debe ser <code>http://localhost:5500</code>, no <code>file://</code>.</p>
+        <strong>8. Ejecución local</strong>
+        <p>Se usa <strong>Live Server</strong> para evitar errores de <em>CORS</em> al cargar archivos locales.</p>
       </li>
     </ol>
-
-    <h3>¿Por qué Leaflet?</h3>
-    <p>Leaflet fue elegido porque:</p>
-    <ul>
-      <li>Es <strong>ligero</strong> (~42 KB) y sin dependencias externas.</li>
-      <li>Tiene una <strong>API clara y bien documentada</strong>.</li>
-      <li>Soporta <strong>GeoJSON, capas vectoriales y controles personalizados</strong>.</li>
-      <li>Es compatible con <strong>móviles y escritorio</strong>.</li>
-      <li>Tiene miles de <strong>plugins</strong> para extender funcionalidades.</li>
-    </ul>
   </section>
 
-  <!-- Sección de definiciones avanzadas -->
-<section class="seccion-definiciones">
-  <h2>Definiciones técnicas basadas en Leaflet.js</h2>
-  <p>Esta sección se basa en la documentación oficial de <a href="https://leafletjs.com" target="_blank">Leaflet</a>, la biblioteca líder para mapas interactivos.</p>
+  <!-- Sección de definiciones técnicas -->
+  <section class="seccion-definiciones">
+    <h2>Características técnicas de Leaflet</h2>
+    <p>Basado en la documentación oficial de <a href="https://leafletjs.com" target="_blank">Leaflet</a>.</p>
 
-  <h3>¿Qué es Leaflet?</h3>
-  <p><strong>Leaflet</strong> es la biblioteca JavaScript líder para crear <strong>mapas interactivos móviles y de escritorio</strong>. Con solo <strong>42 KB</strong>, incluye todas las funciones que la mayoría de desarrolladores necesitan.</p>
-  <p>Está diseñado con <strong>simplicidad, rendimiento y usabilidad</strong> en mente, y funciona eficientemente en todos los dispositivos principales.</p>
+    <h3>¿Qué es Leaflet?</h3>
+    <p>Leaflet es la biblioteca JavaScript líder para crear <strong>mapas interactivos móviles y de escritorio</strong>. Pesa solo <strong>42 KB</strong> y tiene todas las funciones que la mayoría de desarrolladores necesitan.</p>
 
-  <h3>Características principales de Leaflet</h3>
+    <h3>Capas integradas</h3>
+    <ul>
+      <li><strong>Tile layers y WMS</strong>: Fondos de mapa.</li>
+      <li><strong>Marcadores y Popups</strong>: Para mostrar información.</li>
+      <li><strong>Capas vectoriales</strong>: Líneas, polígonos, círculos, rectángulos.</li>
+      <li><strong>Superposiciones de imagen</strong>: Imágenes en coordenadas geográficas.</li>
+      <li><strong>GeoJSON</strong>: Carga directa de datos geoespaciales.</li>
+    </ul>
 
-  <h4>1. Capas por defecto (Layers Out of the Box)</h4>
-  <p>Leaflet incluye soporte nativo para varios tipos de capas:</p>
-  <ul>
-    <li><strong>Tile layers:</strong> Imágenes de fondo del mapa (como OpenStreetMap).</li>
-    <li><strong>WMS:</strong> Servicios de mapas web estándar (usados en GIS).</li>
-    <li><strong>Markers:</strong> Marcadores que señalan ubicaciones.</li>
-    <li><strong>Popups:</strong> Ventanas emergentes con información.</li>
-    <li><strong>Vector layers:</strong> Líneas, polígonos, círculos y rectángulos dibujados en el mapa.</li>
-    <li><strong>GeoJSON:</strong> Soporte integrado para cargar y mostrar datos geoespaciales.</li>
-    <li><strong>Image overlays:</strong> Imágenes superpuestas en coordenadas geográficas.</li>
-  </ul>
+    <h3>Interacción</h3>
+    <ul>
+      <li>Arrastre con inercia</li>
+      <li>Zoom con rueda y pinch-zoom en móviles</li>
+      <li>Doble clic para acercar</li>
+      <li>Seleccionar área para zoom (Shift + arrastrar)</li>
+      <li>Navegación con teclado</li>
+      <li>Eventos: click, mouseover, etc.</li>
+      <li>Arrastre de marcadores</li>
+    </ul>
 
-  <h4>2. Interacción (Interaction Features)</h4>
-  <p>Leaflet ofrece una experiencia de usuario fluida y natural:</p>
-  <ul>
-    <li><strong>Arrastre con inercia:</strong> El mapa sigue moviéndose después de soltar el mouse.</li>
-    <li><strong>Zoom con rueda:</strong> Aumenta o disminuye el nivel de detalle.</li>
-    <li><strong>Pinch-zoom en móviles:</strong> Usa dos dedos para hacer zoom.</li>
-    <li><strong>Doble clic para acercar:</strong> Alternativa rápida al zoom.</li>
-    <li><strong>Zoom a área (Shift + arrastrar):</strong> Selecciona un rectángulo para acercar.</li>
-    <li><strong>Navegación con teclado:</strong> Mover el mapa con flechas.</li>
-    <li><strong>Eventos:</strong> Detecta clics, pasar el mouse, arrastrar marcadores, etc.</li>
-    <li><strong>Arrastre de marcadores:</strong> Para reubicarlos (útil en formularios).</li>
-  </ul>
+    <h3>Visualización</h3>
+    <ul>
+      <li>Animaciones suaves de zoom y desplazamiento</li>
+      <li>Fade en teselas y popups</li>
+      <li>Diseño predeterminado atractivo</li>
+      <li>Soporte para pantallas retina</li>
+    </ul>
 
-  <h4>3. Características visuales (Visual Features)</h4>
-  <p>Leaflet no solo funciona bien, sino que se ve bien:</p>
-  <ul>
-    <li><strong>Animaciones de zoom y desplazamiento:</strong> Suaves y naturales.</li>
-    <li><strong>Fade en popups y teselas:</strong> Transiciones elegantes.</li>
-    <li><strong>Diseño predeterminado atractivo:</strong> Marcadores, controles y popups bien diseñados.</li>
-    <li><strong>Soporte para pantallas retina:</strong> Imágenes nítidas en dispositivos de alta resolución.</li>
-  </ul>
+    <h3>Personalización</h3>
+    <ul>
+      <li>Popups y controles con CSS</li>
+      <li>Marcadores con imagen o HTML</li>
+      <li>Capas y controles personalizados</li>
+      <li>Proyecciones: EPSG:3857, 4326, 3395</li>
+      <li>Extensión de clases con programación orientada a objetos</li>
+    </ul>
 
-  <h4>4. Personalización (Customization Features)</h4>
-  <p>Leaflet es altamente personalizable:</p>
-  <ul>
-    <li><strong>Popups y controles con CSS:</strong> Fáciles de restilar.</li>
-    <li><strong>Marcadores con imagen o HTML:</strong> Puedes usar emojis, íconos o texto.</li>
-    <li><strong>Capas y controles personalizados:</strong> Crea tus propias funciones.</li>
-    <li><strong>Proyecciones de mapa:</strong> Soporta EPSG:3857 (Web Mercator), EPSG:4326 (WGS 84) y EPSG:3395.</li>
-    <li><strong>Extensión de clases:</strong> Programación orientada a objetos para crear funcionalidades nuevas.</li>
-  </ul>
+    <h3>Rendimiento</h3>
+    <ul>
+      <li>Aceleración por hardware en móviles</li>
+      <li>Uso de CSS para animaciones suaves</li>
+      <li>Renderizado inteligente de polilíneas y polígonos</li>
+      <li>Sistema modular para eliminar funciones no usadas</li>
+      <li>Eliminación del retraso táctil (tap delay)</li>
+    </ul>
 
-  <h4>5. Rendimiento (Performance Features)</h4>
-  <p>Leaflet está optimizado para ser rápido y eficiente:</p>
-  <ul>
-    <li><strong>Aceleración por hardware en móviles:</strong> Se siente como una app nativa.</li>
-    <li><strong>Uso de CSS para animaciones:</strong> Panning y zoom muy suaves.</li>
-    <li><strong>Renderizado inteligente de líneas y polígonos:</strong> Simplificación dinámica para mejorar el rendimiento.</li>
-    <li><strong>Sistema modular:</strong> Puedes eliminar funciones que no necesitas.</li>
-    <li><strong>Eliminación del retraso táctil (tap delay):</strong> Respuesta instantánea en móviles.</li>
-  </ul>
+    <h3>Controles del mapa</h3>
+    <ul>
+      <li>Botones de zoom</li>
+      <li>Atribución</li>
+      <li>Selector de capas</li>
+      <li>Escala gráfica</li>
+    </ul>
 
-  <h4>6. Controles del mapa (Map Controls)</h4>
-  <p>Leaflet incluye controles listos para usar:</p>
-  <ul>
-    <li><strong>Botones de zoom:</strong> + y - para acercar y alejar.</li>
-    <li><strong>Atribución:</strong> Muestra quién provee los datos del mapa.</li>
-    <li><strong>Selector de capas:</strong> Permite cambiar entre diferentes fondos (ej: mapa, satélite).</li>
-    <li><strong>Escala:</strong> Muestra una barra de escala en el mapa.</li>
-  </ul>
+    <h3>Compatibilidad</h3>
+    <p><strong>Escritorio:</strong> Chrome, Firefox, Safari 5+, Opera 12+, IE 9–11, Edge.<br>
+    <strong>Móviles:</strong> Safari iOS 7+, Chrome, Firefox, IE10+ en Win8.</p>
 
-  <h4>7. Compatibilidad (Browser Support)</h4>
-  <p>Funciona en todos los navegadores modernos:</p>
-  <strong>Escritorio:</strong> Chrome, Firefox, Safari 5+, Opera 12+, IE 9–11, Edge.<br>
-  <strong>Móviles:</strong> Safari iOS 7+, Chrome para móvil, Firefox para móvil, IE10+ en Windows 8.
+    <h3>Misceláneos</h3>
+    <ul>
+      <li>Extremadamente ligero (~42 KB)</li>
+      <li>Sin dependencias externas</li>
+    </ul>
 
-  <h4>8. Misceláneos</h4>
-  <ul>
-    <li><strong>Extremadamente ligero:</strong> ~42 KB en su versión comprimida.</li>
-    <li><strong>Sin dependencias externas:</strong> No necesita jQuery ni otras librerías.</li>
-  </ul>
-
-  <h3>¿Qué hacer si falta una función?</h3>
-  <p>Si necesitas una función que no está en Leaflet:</p>
-  <ol>
-    <li>Busca un <strong>plugin</strong> en <a href="https://leafletjs.com/plugins.html" target="_blank">Leaflet Plugins</a>.</li>
-    <li>Consulta el <strong>FAQ</strong> o los <strong>issues de GitHub</strong>.</li>
-    <li>Si no existe, puedes <strong>contribuir</strong> creando un plugin o proponiendo una mejora.</li>
-  </ol>
-
-  <h3>¿Cómo contribuir a Leaflet?</h3>
-  <p>Leaflet es un proyecto comunitario. Puedes ayudar de muchas formas:</p>
-  <ul>
-    <li>Reportar errores (bugs).</li>
-    <li>Mejorar la documentación.</li>
-    <li>Ayudar a otros en <strong>Stack Overflow</strong> o <strong>GitHub</strong>.</li>
-    <li>Compartir Leaflet en redes sociales.</li>
-    <li>Hacer pull requests con mejoras.</li>
-  </ul>
-  <p>Consulta la <a href="https://github.com/Leaflet/Leaflet/blob/main/CONTRIBUTING.md" target="_blank">guía de contribución</a> para más detalles.</p>
-</section>
+    <h3>Contribuir a Leaflet</h3>
+    <p>Leaflet es un proyecto comunitario. Puedes ayudar:</p>
+    <ul>
+      <li>Reportando errores</li>
+      <li>Mejorando la documentación</li>
+      <li>Ayudando en Stack Overflow o GitHub</li>
+      <li>Compartiendo en redes</li>
+      <li>Haciendo pull requests</li>
+    </ul>
+    <p>Consulta la <a href="https://github.com/Leaflet/Leaflet/blob/main/CONTRIBUTING.md" target="_blank">guía de contribución</a>.</p>
+  </section>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- Turf.js para operaciones geoespaciales -->
+  <!-- Turf.js -->
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 
   <!-- Tu JS -->

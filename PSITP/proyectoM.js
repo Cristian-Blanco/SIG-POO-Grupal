@@ -74,6 +74,7 @@ function cargarYFiltrarParaderos(barrioPolygon) {
           const [lng, lat] = feature.geometry.coordinates;
           const punto = [lng, lat];
 
+          // Verificar si está dentro del barrio
           if (turf.booleanPointInPolygon(punto, barrioPolygon)) {
             const props = feature.properties;
             const nombre = props.nombre || 'Sin nombre';
@@ -81,6 +82,7 @@ function cargarYFiltrarParaderos(barrioPolygon) {
             const cenefa = props.cenefa || 'No especificada';
             const localidad = props.localidad || 'Desconocida';
 
+            // Contenido del popup
             const popupContent = `
               <b>📍 ${nombre}</b><br>
               <strong>Dirección bandera:</strong> ${direccion}<br>
@@ -88,6 +90,7 @@ function cargarYFiltrarParaderos(barrioPolygon) {
               <strong>Localidad:</strong> ${localidad}
             `;
 
+            // Agregar marcador
             L.marker([lat, lng], { icon: iconoParadero })
               .addTo(map)
               .bindPopup(popupContent);
