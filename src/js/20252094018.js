@@ -68,25 +68,24 @@ map.fitBounds(line.getBounds());`,
   },
   {
     title: "Controles: capas y escala",
-    bullets: ["Base alternativa (Stamen Toner).","Control de capas y escala cartográfica."],
-    code: `// 5) Controles
-const toner = L.tileLayer('https://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-  maxZoom: 20,
-  attribution: 'Map tiles by Stamen · Data by OSM'
+    bullets: ["Base alternativa (Carto Light).","Control de capas y escala cartográfica."],
+    code: `// 5) Controles con Carto
+const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+  maxZoom: 20, attribution: '&copy; OpenStreetMap &copy; CARTO'
 });
 L.control.layers(
-  { 'OSM': osm, 'Stamen Toner': toner },
+  { 'OSM': osm, 'Carto Light': carto },
   { 'Círculo': circle, 'Ruta': line }
 ).addTo(map);
 L.control.scale().addTo(map);`,
     img: "img/paso5-controles.svg",
-    caption: "Intercambia bases y muestra la escala",
+    caption: "Intercambia bases (OSM/Carto) y muestra la escala",
     apply: () => {
-      const toner = L.tileLayer(
-        'https://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png',
-        { maxZoom:20, attribution:'Map tiles by Stamen · Data by OSM' }
+      const carto = L.tileLayer(
+        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        { maxZoom:20, attribution:'&copy; OpenStreetMap &copy; CARTO' }
       );
-      baseLayers['Stamen Toner'] = toner;
+      baseLayers['Carto Light'] = carto;
 
       const overlays = {};
       if (shapes.circle) overlays['Círculo'] = shapes.circle;
@@ -163,7 +162,6 @@ function updateSlide(index){
     const li = document.createElement('li'); li.textContent = b; ul.appendChild(li);
   });
 
-  // imagen
   const stepImage = document.getElementById('stepImage');
   const imgCaption = document.getElementById('imgCaption');
   if(step.img){
