@@ -90,4 +90,153 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function safeFitToLayer(lyr, fallbackCenter = initialCenter, fallbackZoom = 13) {
     try {
-      const b = lyr.get
+      const b = lyr.getBounds();
+      if (b?.isValid()) {
+        const sw = b.getSouthWest(), ne = b.getNorthEast();
+        const okLon = Math.abs(sw.lng) <= 180 && Math.abs(ne.lng) <= 180;
+        const okLat = Math.abs(sw.lat) <= 90  && Math.abs(ne.lat) <= 90;
+        if (okLon && okLat) return map.fitBounds(b.pad(0.1));
+      }
+    } catch {}
+    map.setView(fallbackCenter, fallbackZoom);
+  }
+
+  // ===== Recorte de parques al límite del barrio con Turf =====
+  function clipToBarrio(parquesFC, barrioFC) {
+    if (!window.turf) {
+      console.error('Turf.js no está disponible.');
+      return { type:'FeatureCollection', features: [] };
+    }
+    // Disolver barrio a una sola geometría
+    let barrioGeom = null;
+    try {
+      const feats = (barrioFC.features || []).filter(f => f && f.geometry);
+      if (!feats.length) return { type:'FeatureCollection', features: [] };
+      barrioGeom = feats[0];
+      for (let i = 1; i < feats.length; i++) {
+        const u = turf.union(barrioGeom, feats[i]);
+        if (u) barrioGeom = u;
+      }
+    } catch (e) {
+      try { barrioGeom = turf.combine(barrioFC).features[0]; }
+      catch { return { type:'FeatureCollection', features: [] }; }
+    }
+    // Intersectar cada polígono de parques
+    const out = [];
+    for (const f of (parquesFC.features || [])) {
+      if (!f || !f.geometry) continue;
+      try {
+        const inter = turf.intersect(f, barrioGeom);
+        if (inter && inter.geometry) { inter.properties = { ...f.properties }; out.push(inter); }
+      } catch (e) {
+        try { if (turf.booleanWithin(f, barrioGeom)) out.push(f); } catch {}
+      }
+    }
+    return { type:'FeatureCollection', features: out };
+  }
+
+  // ===== Pane + capa para LÍMITE DEL BARRIO (solo borde, morado) =====
+  map.createPane('barrioPane');
+  const barrioPane = map.getPane('barrioPane');
+  barrioPane.style.zIndex = 610;
+  barrioPane.style.pointerEvents = 'none';
+
+  const barrioLayer = L.geoJSON(null, {
+    pane: 'barrioPane',
+    style: () => ({
+      color: '#7c3aed',        // morado 600
+      weight: 6,               // más gruesa
+      dashArray: '12 6 3 6',   // patrón “disruptivo”
+      lineCap: 'round',
+      lineJoin: 'round',
+      fill: false,
+      fillOpacity: 0
+    })
+  }).addTo(map);
+
+  // ===== Capa de PARQUES (recortados, morado) =====
+  const parquesLayer = L.geoJSON(null, {
+    style: () => ({
+      color: '#5b21b6',     // borde morado 800
+      weight: 2,
+      fillColor: '#c4b5fd', // relleno morado 300
+      fillOpacity: 0.45
+    }),
+    onEachFeature: (feature, layer) => {
+      const p      = feature.properties || {};
+      const nombre = getTitulo(p);          // NOMBRE_PAR
+      const tipo   = getTipo(p);            // TIPOPARQUE
+      const m2     = getAreaM2(p);          // SHAPE_AREA
+      const extTxt = fmtArea(m2);
+
+      // IMAGEN por NOMBRE_PAR (exacto -> slug -> placeholder)
+      const imgExact = 'img/parques/' + encodeURIComponent(nombre) + '.jpg';
+      const imgSlug  = 'img/parques/' + toNameSlug(nombre) + '.jpg';
+
+      // Tooltip (hover)
+      const tooltipHTML = `
+        <div class="tt-attrs">
+          <div><strong>Parque:</strong> ${escapeHtml(nombre)}</div>
+          <div><strong>Tipo de parque:</strong> ${escapeHtml(tipo)}</div>
+          <div><strong>Extensión:</strong> ${extTxt}</div>
+        </div>
+      `;
+      layer.bindTooltip(tooltipHTML, {
+        sticky: true,
+        direction: 'top',
+        className: 'info-tooltip'
+      });
+
+      // Popup (clic): imagen + atributos
+      const popupHTML = `
+        <div style="max-width:360px">
+          <img src="${imgExact}"
+               alt="${escapeHtml(nombre)}"
+               style="width:100%;height:auto;border-radius:10px;margin-bottom:.6rem;box-shadow:0 8px 20px rgba(76,29,149,.18);"
+               onerror="if(!this.dataset.trySlug){this.dataset.trySlug=1;this.src='${imgSlug}';}else{this.onerror=null;this.src='img/placeholder.jpg';}">
+          <div class="tt-attrs">
+            <div><strong>Parque:</strong> ${escapeHtml(nombre)}</div>
+            <div><strong>Tipo de parque:</strong> ${escapeHtml(tipo)}</div>
+            <div><strong>Extensión:</strong> ${extTxt}</div>
+          </div>
+        </div>
+      `;
+      layer.bindPopup(popupHTML);
+
+      // Resaltado hover
+      layer.on({
+        mouseover: (e) => e.target.setStyle({ weight: 3, fillOpacity: 0.60 }),
+        mouseout:  (e) => parquesLayer.resetStyle(e.target)
+      });
+    }
+  }).addTo(map);
+
+  // ===== Cargar barrio y parques, recortar y encuadrar =====
+  const barrioPromise = fetch('arbalta_barrio_4326.geojson')
+    .then(r => { if (!r.ok) throw new Error(HTTP ${r.status}); return r.json(); })
+    .then(raw => maybeFlipGeoJSON(raw));
+
+  const parquesPromise = fetch('arbalta_parques_4326.geojson')
+    .then(r => { if (!r.ok) throw new Error(HTTP ${r.status}); return r.json(); })
+    .then(raw => maybeFlipGeoJSON(raw));
+
+  Promise.all([barrioPromise, parquesPromise])
+    .then(([barrioFC, parquesFC]) => {
+      // Delimitación del barrio
+      barrioLayer.addData(barrioFC);
+      // Recorte de parques al barrio
+      const clipped = clipToBarrio(parquesFC, barrioFC);
+      parquesLayer.clearLayers();
+      parquesLayer.addData(clipped);
+      // Encuadre a ambas capas
+      const group = L.featureGroup([barrioLayer, parquesLayer]);
+      safeFitToLayer(group);
+    })
+    .catch(err => {
+      console.error('Error cargando/recortando capas:', err);
+      // Fallback: mostrar parques sin recorte
+      parquesPromise
+        .then(p => { parquesLayer.addData(p); safeFitToLayer(parquesLayer); })
+        .catch(e => console.error('Error cargando parques:', e));
+    });
+});

@@ -13,7 +13,7 @@
 }
 
 html, body { height: 100%; margin: 0; }
-#map { height: 100vh; width: 100vw; }
+#map { height: 100vh; width: 100vw; } /* IMPRESCINDIBLE para que se vea el mapa */
 
 /* Tinte morado a las teselas del mapa base (solo a esta capa) */
 .purple-tiles .leaflet-tile{
