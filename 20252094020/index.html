@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Cesium - Barrio María Cano</title>
+  <title>Cesium - Barrio Arborizadora Alta</title>
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.132/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.132/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
   <style>
@@ -28,7 +28,7 @@
     });
     viewer.scene.globe.depthTestAgainstTerrain = true;
 
-    // 1) Capa del barrio: SOLO para ubicar/recortar (sin extrusión)
+    // 1) Barrio (solo referencia)
     const barrio = await Cesium.GeoJsonDataSource.load("arbalta_construcciones_4326.geojson", {
       clampToGround: true
     });
@@ -41,40 +41,33 @@
     }
     await viewer.flyTo(barrio);
 
-    // 2) PREDIOS: extrusión (usa 'altura' o 'pisos'; fallback 6 m)
-    // Exporta desde QGIS como EPSG:4326
-    const predios = await Cesium.GeoJsonDataSource.load("arbalta_construcciones_4326.geojson", {
-      // importante: SIN clampToGround si vas a extruir
+    // 2) Construcciones con extrusión según CONNPISOS
+    const construcciones = await Cesium.GeoJsonDataSource.load("arbalta_construcciones_4326.geojson", {
+      // no usar clampToGround si se van a extruir
     });
-    viewer.dataSources.add(predios);
+    viewer.dataSources.add(construcciones);
 
-    for (const e of predios.entities.values) {
+    for (const e of construcciones.entities.values) {
       const pol = e.polygon;
       if (!pol) continue;
 
       const props = e.properties || {};
-      const hasAltura = props.altura && !isNaN(+props.altura.getValue?.());
-      const hasPisos  = props.pisos  && !isNaN(+props.pisos.getValue?.());
-      const altura = hasAltura ? +props.altura.getValue()
-                    : hasPisos  ? +props.pisos.getValue() * 3   // 3 m por piso
-                                : 6;
+      const hasPisos = props.CONNPISOS && !isNaN(+props.CONNPISOS.getValue?.());
+      const altura = hasPisos ? (+props.CONNPISOS.getValue() * 3) : 6; // 3 m por piso
 
       pol.material = Cesium.Color.fromCssColorString("#7a8a50").withAlpha(0.95);
       pol.outline = true;
       pol.outlineColor = Cesium.Color.BLACK;
 
       pol.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-      pol.extrudedHeight = altura; // en metros
+      pol.extrudedHeight = altura; 
       pol.extrudedHeightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
     }
 
-    // 3) (Opcional) Edificios OSM recortados a la zona del barrio
-    // Útil si en OSM hay huellas/alturas; si no, quizá veas pocos.
+    // 3) Edificios OSM (opcional, recortados al barrio)
     const osm = await Cesium.createOsmBuildingsAsync();
     viewer.scene.primitives.add(osm);
 
-    // Recorta OSM a la envolvente del polígono del barrio
-    // (calculamos bbox a partir del primer polígono del barrio)
     const poly = barrio.entities.values.find(e => e.polygon)?.polygon;
     if (poly) {
       const positions = poly.hierarchy.getValue().positions;
@@ -96,7 +89,7 @@
       });
     }
 
-    // 4) Cámara inicial manual (por si lo prefieres)
+    // 4) Cámara inicial
     viewer.camera.flyTo({
       destination: Cesium.Cartesian3.fromDegrees(-74.17653, 4.59027, 2600),
       orientation: { heading: 0, pitch: Cesium.Math.toRadians(-25) }
