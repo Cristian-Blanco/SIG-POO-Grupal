@@ -1,8 +1,10 @@
 require([
     "esri/Map",
     "esri/views/MapView",
-    "esri/layers/FeatureLayer"
-], function(Map, MapView, FeatureLayer) {
+    "esri/layers/FeatureLayer",
+    "esri/symbols/SimpleMarkerSymbol",
+    "esri/Graphic"
+], function(Map, MapView, FeatureLayer, SimpleMarkerSymbol, Graphic) {
 
     // Crear el mapa base
     const map = new Map({
@@ -30,24 +32,42 @@ require([
     // Crear la capa de características desde el servicio REST de Bogotá
     const featureLayer = new FeatureLayer({
         url: "https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/mujeres/derechovidalibredeviolencias/MapServer/1",
-        outFields: ["LOCALIDAD", "ANIO_HECHO", "TIPO_VIOLENCIA_GENERO", "OBJECTID"],
-        popupTemplate: popupTemplate,
-        // Configurar un renderizador para mostrar los puntos como marcadores
-        renderer: {
-            type: "simple",
-            symbol: {
-                type: "simple-marker",
-                style: "circle",
-                color: [255, 0, 0, 0.8], // Color rojo semi-transparente
-                size: "8px",
-                outline: {
-                    color: [255, 255, 255, 0.8],
-                    width: 1
-                }
-            }
-        }
+        outFields: ["LOCALIDAD", "ANIO_HECHO", "TIPO_VIOLENCIA_GENERO", "OBJECTID", "SHAPE"],
+        popupTemplate: popupTemplate
     });
 
-    // Añadir la capa al mapa
+    // Añadir la capa de características al mapa
     map.add(featureLayer);
+
+    // Cuando se carguen los datos del FeatureLayer, recorrer los puntos y agregar los marcadores
+    featureLayer.when(function() {
+        featureLayer.queryFeatures().then(function(response) {
+            const features = response.features;
+            features.forEach(function(feature) {
+                // Obtener la geometría del punto (suponiendo que 'SHAPE' es punto)
+                const point = feature.geometry;
+
+                // Crear un símbolo para el marcador
+                const markerSymbol = new SimpleMarkerSymbol({
+                    color: [255, 0, 0],  // Color rojo
+                    size: 10,  // Tamaño del marcador
+                    outline: {
+                        color: [255, 255, 255],  // Borde blanco
+                        width: 1
+                    }
+                });
+
+                // Crear un gráfico con el punto y el símbolo
+                const pointGraphic = new Graphic({
+                    geometry: point,
+                    symbol: markerSymbol,
+                    attributes: feature.attributes,
+                    popupTemplate: popupTemplate
+                });
+
+                // Agregar el gráfico al mapa
+                view.graphics.add(pointGraphic);
+            });
+        });
+    });
 });
