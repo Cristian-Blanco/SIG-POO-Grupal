@@ -5,92 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Guía WFS + CQL — Documentación bonita</title>
   <meta name="description" content="Qué es WFS, qué es CQL, operaciones, parámetros, ejemplos y buenas prácticas. Página tipo documentación con diseño moderno." />
-  <style>
-    /* ====== Diseño base ====== */
-    :root{
-      --bg: #0b0c0f;         /* fondo en modo oscuro */
-      --panel: #12141a;      /* paneles */
-      --text: #eaeef7;       /* texto */
-      --muted: #a1a8b3;      /* texto suave */
-      --brand: #5f0a12;      /* color de marca (preferencia del usuario) */
-      --ok: #1b9e5a;
-      --warn: #e6a700;
-      --err: #d64545;
-      --border: #252a33;
-      --code: #0f1117;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 14px;
-    }
-    @media (prefers-color-scheme: light){
-      :root{ --bg:#fafafa; --panel:#ffffff; --text:#111827; --muted:#6b7280; --border:#e5e7eb; --code:#0b1220; }
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif; color:var(--text); background:linear-gradient(180deg, var(--bg), #0d0f14 20%, var(--bg) 100%);}
-    a{color:var(--brand); text-decoration:none}
-    a:hover{text-decoration:underline}
-
-    /* ====== Layout ====== */
-    .shell{display:grid; grid-template-columns: 280px 1fr; min-height:100dvh}
-    @media (max-width: 980px){ .shell{grid-template-columns: 1fr} }
-
-    /* ====== Sidebar ====== */
-    .sidebar{position:sticky; top:0; height:100dvh; padding:22px; border-right:1px solid var(--border); background:linear-gradient(180deg, rgba(95,10,18,.12), transparent 40%), var(--panel)}
-    @media (max-width: 980px){ .sidebar{position:relative; height:auto; border-right:none; border-bottom:1px solid var(--border)} }
-    .brand{display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.2px}
-    .brand .logo{width:36px; height:36px; border-radius:10px; background:radial-gradient(circle at 30% 20%, #ffb4b4, transparent 40%), linear-gradient(135deg, var(--brand), #b01729); box-shadow:var(--shadow)}
-    .brand small{display:block; color:var(--muted); font-weight:600}
-    .toc{margin-top:22px; display:flex; flex-direction:column; gap:12px}
-    .toc h4{margin:14px 0 6px; color:var(--muted); font-size:.9rem; text-transform:uppercase; letter-spacing:.08em}
-    .toc a{display:block; padding:10px 12px; border-radius:10px; color:var(--text); background:transparent; border:1px solid transparent}
-    .toc a.active{border-color:var(--brand); background:linear-gradient(180deg, rgba(95,10,18,.16), rgba(95,10,18,.06))}
-
-    /* ====== Main ====== */
-    .main{padding:32px 40px 80px; max-width:1100px}
-    @media (max-width: 980px){ .main{padding:24px 18px 56px} }
-
-    /* ====== Hero ====== */
-    .hero{display:grid; gap:16px; margin:8px 0 28px}
-    .eyebrow{color:var(--brand); font-weight:700; font-size:.9rem; letter-spacing:.12em; text-transform:uppercase}
-    h1{font-size: clamp(28px, 5vw, 48px); line-height:1.05; margin:0}
-    .lead{font-size: clamp(15px, 2.4vw, 18px); color:var(--muted); max-width:68ch}
-    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px}
-    .btn{appearance:none; border:none; cursor:pointer; padding:12px 14px; border-radius:12px; font-weight:700; background:var(--brand); color:#fff; box-shadow:var(--shadow)}
-    .btn.secondary{background:transparent; border:1px solid var(--border); color:var(--text)}
-
-    /* ====== Cards ====== */
-    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:18px}
-    .card{grid-column: span 12; background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:18px 18px 16px; box-shadow:var(--shadow)}
-    @media (min-width: 860px){ .card.span-6{grid-column: span 6} .card.span-4{grid-column: span 4} }
-    .card h2, .card h3{margin:.2rem 0 .6rem}
-    .card h2{font-size:1.4rem}
-    .card h3{font-size:1.05rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em}
-    .kpi{display:flex; gap:10px; align-items:center; margin:.4rem 0}
-    .kpi .dot{width:9px; height:9px; border-radius:99px; background:var(--brand)}
-    .tag{display:inline-flex; align-items:center; gap:6px; font-size:.82rem; border:1px solid var(--border); color:var(--muted); padding:6px 8px; border-radius:999px}
-
-    /* ====== Code & Examples ====== */
-    pre{margin:10px 0 0; background:linear-gradient(180deg, rgba(16,18,28,.8), rgba(16,18,28,.6)), var(--code); color:#e6edf3; border-radius:12px; border:1px solid var(--border); padding:14px; overflow:auto}
-    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:.92rem}
-    .codebar{display:flex; justify-content:space-between; align-items:center; gap:12px}
-    .copy{border:1px solid var(--border); background:transparent; color:var(--muted); border-radius:9px; padding:6px 10px; cursor:pointer}
-    .label{font-size:.85rem; color:var(--muted)}
-
-    /* ====== Tabs ====== */
-    .tabs{display:flex; gap:8px; flex-wrap:wrap}
-    .tab{padding:8px 10px; border:1px solid var(--border); border-radius:10px; cursor:pointer; background:transparent; color:var(--muted)}
-    .tab.active{color:var(--text); border-color:var(--brand); background:linear-gradient(180deg, rgba(95,10,18,.18), rgba(95,10,18,.08))}
-
-    /* ====== Callouts ====== */
-    .callout{display:flex; gap:12px; align-items:flex-start; padding:14px; border-radius:12px; border:1px solid var(--border); background:linear-gradient(180deg, rgba(95,10,18,.08), transparent)}
-    .callout .icon{flex:0 0 22px; height:22px; border-radius:6px; background:var(--brand)}
-
-    /* ====== Playground ====== */
-    .play{display:grid; gap:12px}
-    .field{display:grid; gap:8px}
-    .field label{font-size:.9rem; color:var(--muted)}
-    .field input, .field textarea, .field select{width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:transparent; color:var(--text)}
-    .mutetxt{color:var(--muted); font-size:.92rem}
-  </style>
+  <link rel="stylesheet" href="src/css/20182020155.css">
 </head>
 <body>
   <div class="shell">
@@ -100,7 +15,7 @@
         <div class="logo" aria-hidden="true"></div>
         <div>
           Guía WFS + CQL
-          <small>por William • demo</small>
+          <small>por Cristian • demo</small>
         </div>
       </div>
       <nav class="toc" aria-label="Tabla de contenidos">
@@ -360,77 +275,6 @@
     </main>
   </div>
 
-  <script>
-    // ====== Tabla de contenidos activa ======
-    const links = [...document.querySelectorAll('.toc-link')]
-    const sections = links.map(a => document.querySelector(a.getAttribute('href')))
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e => {
-        if(e.isIntersecting){
-          links.forEach(l => l.classList.remove('active'))
-          const idx = sections.indexOf(e.target)
-          if(idx>=0) links[idx].classList.add('active')
-        }
-      })
-    }, {rootMargin: '-40% 0px -50% 0px', threshold: .01})
-    sections.forEach(s => s && io.observe(s))
-
-    // ====== Copiar snippets ======
-    function copyText(txt){
-      navigator.clipboard.writeText(txt).then(()=>{
-        const note = document.createElement('div')
-        note.textContent = 'Copiado ✅'
-        Object.assign(note.style, {position:'fixed', bottom:'20px', right:'20px', background:'var(--panel)', color:'var(--text)', padding:'10px 12px', borderRadius:'10px', border:'1px solid var(--border)', boxShadow:'var(--shadow)'} )
-        document.body.appendChild(note)
-        setTimeout(()=> note.remove(), 1400)
-      })
-    }
-    document.querySelectorAll('.copy').forEach(btn =>{
-      btn.addEventListener('click', ()=> copyText(btn.dataset.copy || document.getElementById('out').innerText))
-    })
-
-    // ====== Tabs versiones ======
-    const tabs = [...document.querySelectorAll('.tab')]
-    const panes = {
-      v10: document.getElementById('v10'),
-      v11: document.getElementById('v11'),
-      v20: document.getElementById('v20')
-    }
-    tabs.forEach(t => t.addEventListener('click', ()=>{
-      tabs.forEach(x=>x.classList.remove('active'))
-      t.classList.add('active')
-      const id = t.dataset.tab
-      Object.entries(panes).forEach(([k,el])=> el.hidden = (k!==id))
-    }))
-
-    // ====== Playground ======
-    const qs = sel => document.querySelector(sel)
-    function buildURL(){
-      const base = qs('#base').value.trim().replace(/\/$/, '')
-      const ver = qs('#ver').value
-      const layer = qs('#layer').value.trim()
-      const props = qs('#props').value.trim()
-      const cql = qs('#cql').value.trim()
-      const fmt = qs('#fmt').value
-      const count = qs('#count').value
-      const typeKey = ver === '2.0.0' ? 'typeNames' : 'typeName'
-      const params = new URLSearchParams()
-      params.set('service','WFS')
-      params.set('version',ver)
-      params.set('request','GetFeature')
-      params.set(typeKey, layer)
-      params.set('outputFormat', fmt)
-      if(props) params.set('propertyName', props)
-      if(cql) params.set('CQL_FILTER', cql)
-      if(count) params.set('count', count)
-      const url = `${base}?${params.toString()}`
-      qs('#out').innerHTML = `<code>${url}</code>`
-      return url
-    }
-    qs('#build').addEventListener('click', buildURL)
-    qs('#copy-url').addEventListener('click', ()=> copyText(buildURL()))
-    // Primer render
-    buildURL()
-  </script>
+  <script src="src/js/20182020155.js"></script>
 </body>
 </html>
