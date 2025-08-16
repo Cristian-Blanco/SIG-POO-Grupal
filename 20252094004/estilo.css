@@ -1,17 +1,45 @@
 body {
     font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
     margin: 0;
     padding: 0;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
-    background: #333;
-    color: white;
-    padding: 10px;
+    margin: 20px 0;
 }
 
 #map {
-    width: 100%;
-    height: 90vh;
+    height: 500px;
+    margin: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#pasos {
+    padding: 20px;
+    background: #222;
+    border-top: 2px solid #00FFFF;
+}
+
+.pasos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.paso {
+    background: #333;
+    padding: 15px;
+    border-radius: 10px;
+    width: 250px;
+    box-shadow: 0 0 10px rgba(0,255,255,0.4);
+    transition: transform 0.2s ease;
+}
+
+.paso:hover {
+    transform: scale(1.05);
 }

@@ -2,17 +2,45 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distancia a Bogotá</title>
+    <title>Mapa y Paso a Paso</title>
     <link rel="stylesheet" href="estilo.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 </head>
 <body>
-    <h1>Distancia a Bogotá (km)</h1>
+    <h1>Distancias desde Bogotá</h1>
+
+    <!-- Contenedor del mapa -->
     <div id="map"></div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <!-- Paso a paso -->
+    <section id="pasos">
+        <h2>Cómo funciona este mapa</h2>
+        <div class="pasos-container">
+            <div class="paso">
+                <h3>1. Cargar mapa base</h3>
+                <p>Se utiliza Leaflet con un fondo oscuro de Carto para una visualización elegante.</p>
+            </div>
+            <div class="paso">
+                <h3>2. Marcar Bogotá</h3>
+                <p>Se coloca un marcador fijo en las coordenadas de Bogotá (Colombia).</p>
+            </div>
+            <div class="paso">
+                <h3>3. Cargar países</h3>
+                <p>Se carga un archivo GeoJSON con las fronteras de todos los países.</p>
+            </div>
+            <div class="paso">
+                <h3>4. Calcular distancia</h3>
+                <p>Usamos Turf.js para calcular la distancia desde Bogotá al centroide de cada país.</p>
+            </div>
+            <div class="paso">
+                <h3>5. Mostrar resultados</h3>
+                <p>Se muestra un popup con la distancia exacta desde Bogotá a cada país.</p>
+            </div>
+        </div>
+    </section>
+
     <script src="programa.js"></script>
 </body>
 </html>
