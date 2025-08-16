@@ -17,83 +17,54 @@ require([
         zoom: 11
     });
 
-    // Definir el Pop-up Template para los puntos de la capa
-    const popupTemplate = {
-        title: "Registro de Incidente",
-        content: "<b>Localidad:</b> {LOCALIDAD}<br><b>Año:</b> {ANIO_HECHO}<br><b>Descripción:</b> {TIPO_VIOLENCIA_GENERO}"
-    };
+    // Ocultar la barra de atribución y los controles de zoom
+    view.ui.remove("attribution");
+    view.ui.empty("top-left");
 
-    // Crear la capa de características desde el servicio REST
-    const featureLayer = new FeatureLayer({
+    // 1. Capa de feminicidios (la capa de puntos que ya tienes)
+    const feminicidiosLayer = new FeatureLayer({
         url: "https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/mujeres/derechovidalibredeviolencias/MapServer/1",
-        outFields: ["LOCALIDAD", "ANIO_HECHO", "TIPO_VIOLENCIA_GENERO", "OBJECTID"],
-        popupTemplate: popupTemplate
+        outFields: ["LOCALIDAD", "ANIO_HECHO", "TIPO_VIOLENCIA_GENERO"],
+        visible: false // Hacemos esta capa invisible para que no se superponga
     });
 
-    // Añadir la capa de feminicidios al mapa
-    map.add(featureLayer);
+    // 2. Capa de polígonos de localidades
+    const localidadesLayer = new FeatureLayer({
+        url: "https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/Limites_Catastrales/MapServer/1", // URL del servicio de localidades
+        outFields: ["Nombre_Localidad"], // Solo se necesitan los campos de nombre
+        popupTemplate: {
+            title: "Localidad de Bogotá",
+            content: async function(event) {
+                // Obtener el nombre de la localidad
+                const nombreLocalidad = event.graphic.attributes.Nombre_Localidad;
 
-    // --- ANÁLISIS ESTADÍSTICO ---
-    
-    // Definir el rango de fechas de análisis
-    const startDate = new Date('2024-01-01');
-    const endDate = new Date('2024-12-31');
-    
-    // Construir la cláusula de consulta de fecha (WHERE)
-    // El campo de la fecha en el servicio REST es "FECHA_HECHO"
-    // Los servicios REST de ArcGIS usan milisegundos desde la época UNIX para las fechas
-    const whereClause = `FECHA_HECHO >= ${startDate.getTime()} AND FECHA_HECHO <= ${endDate.getTime()}`;
+                // Consulta a la capa de feminicidios para contar los casos en la geometría de la localidad
+                const query = feminicidiosLayer.createQuery();
+                query.geometry = event.graphic.geometry; // Usar la geometría del polígono de la localidad como filtro
+                query.outStatistics = [{
+                    statisticType: "count",
+                    onStatisticField: "OBJECTID",
+                    outStatisticFieldName: "total_feminicidios"
+                }];
 
-    // Esperar a que la vista de la capa esté lista para ejecutar la consulta
-    view.whenLayerView(featureLayer).then(function(layerView) {
-        
-        // Consultar el total de incidentes
-        const queryTotal = featureLayer.createQuery();
-        queryTotal.where = whereClause; // Aplicar el filtro de fecha
-        queryTotal.outStatistics = [{
-            statisticType: "count",
-            onStatisticField: "OBJECTID",
-            outStatisticFieldName: "total"
-        }];
-
-        featureLayer.queryFeatures(queryTotal).then(function(results) {
-            const totalIncidentes = results.features[0].attributes.total;
-            document.getElementById("total-stats").innerHTML = `<p><strong>Total de incidentes registrados (2024):</strong> ${totalIncidentes}</p>`;
-        }).catch(function(error) {
-            console.error("Error al obtener el conteo total:", error);
-        });
-
-        // Consultar el conteo de incidentes por localidad
-        const queryLocalidades = featureLayer.createQuery();
-        queryLocalidades.where = whereClause; // Aplicar el filtro de fecha
-        queryLocalidades.groupByFieldsForStatistics = ["LOCALIDAD"];
-        queryLocalidades.outStatistics = [{
-            statisticType: "count",
-            onStatisticField: "OBJECTID",
-            outStatisticFieldName: "conteo"
-        }];
-
-        featureLayer.queryFeatures(queryLocalidades).then(function(results) {
-            const statsElement = document.getElementById("localidad-stats");
-            let statsList = "<h3>Incidentes por Localidad (2024):</h3><ul>";
-            
-            // Organizar los resultados de mayor a menor
-            const sortedResults = results.features.sort((a, b) => b.attributes.conteo - a.attributes.conteo);
-
-            sortedResults.forEach(function(feature) {
-                const localidad = feature.attributes.LOCALIDAD || "Sin Localidad";
-                const conteo = feature.attributes.conteo;
-                
-                statsList += `<li><span>${localidad}</span><span>${conteo}</span></li>`;
-            });
-
-            statsList += "</ul>";
-            statsElement.innerHTML = statsList;
-        }).catch(function(error) {
-            console.error("Error al obtener las estadísticas por localidad:", error);
-        });
+                try {
+                    const results = await feminicidiosLayer.queryFeatures(query);
+                    const totalAsesinatos = results.features[0].attributes.total_feminicidios || 0;
+                    
+                    return `
+                        <b>Localidad:</b> ${nombreLocalidad}
+                        <br>
+                        <b>Total de asesinatos:</b> ${totalAsesinatos}
+                    `;
+                } catch (error) {
+                    console.error("Error al consultar los feminicidios:", error);
+                    return "No se pudieron obtener los datos de asesinatos.";
+                }
+            }
+        }
     });
 
-    // Opcional: Agregar controles de la interfaz de usuario (UI)
-    view.ui.add("zoom", "top-left");
+    // Añadir ambas capas al mapa
+    map.add(localidadesLayer);
+    map.add(feminicidiosLayer); // Se agrega para poder consultarla
 });
