@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const barrioLayer = L.geoJSON(null, {
     pane: 'barrioPane',
     style: () => ({
-      color: '#0f766e',        // verde azulado que combina
+      color: '#260947ff',        // Morado oscuro
       weight: 5,               // más gruesa
       dashArray: '12 6 3 6',   // patrón “disruptivo”
       lineCap: 'round',
@@ -184,9 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Capa de PARQUES (se dibujarán ya recortados) =====
   const parquesLayer = L.geoJSON(null, {
     style: () => ({
-      color: '#14532d',     // borde
+      color: '#260947ff',     // borde
       weight: 2,
-      fillColor: '#34d399', // relleno
+      fillColor: '#8b65bbff', // Morado más claro
       fillOpacity: 0.45
     }),
     onEachFeature: (feature, layer) => {
