@@ -1,9 +1,9 @@
 // --- Inicialización del mapa ---
-const mapa = L.map('mapa').setView([4.518426196790787, -74.11697088763084], 15); // Bogotá
+const mapa = L.map('mapa').setView([4.5182789301826265, -74.11642401003672], 15); // Bogotá
 
 // Capa base
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 30,
+  maxZoom: 19,
 }).addTo(mapa);
 
 // Marcador de subestación (ejemplo en Bogotá)
@@ -28,13 +28,20 @@ fetch("./historico_estaciones.geojson")
     const o3 = [];
 
     data.features.forEach(f => {
-      const props = f.properties;
-      fechas.push(props.fecha);
-      co.push(props.CO);
-      o3.push(props.O3);
+      const { fecha, contaminante, valor } = f.properties;
+
+      if (!fechas.includes(fecha)) {
+        fechas.push(fecha);
+      }
+
+      if (contaminante === "CO") {
+        co.push(valor);
+      } else if (contaminante === "O3") {
+        o3.push(valor);
+      }
     });
 
-    // Graficar CO
+    // --- Graficar CO ---
     new Chart(document.getElementById("graficoCO"), {
       type: 'line',
       data: {
@@ -48,7 +55,7 @@ fetch("./historico_estaciones.geojson")
       }
     });
 
-    // Graficar O3
+    // --- Graficar O3 ---
     new Chart(document.getElementById("graficoO3"), {
       type: 'line',
       data: {
