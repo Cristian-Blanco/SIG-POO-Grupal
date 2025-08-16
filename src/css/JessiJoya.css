@@ -1,0 +1,84 @@
+/* Estilo general de la página */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0; /* gris claro */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Top Banner */
+#topBanner {
+  width: 100%;
+  height: 60px;
+  background-color: #7d7d7d; /* gris ratón */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Contenedor principal dividido */
+#mainContainer {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 60px); /* altura total menos el banner */
+}
+
+/* Mapa a la izquierda */
+#mapContainer {
+  width: 50%;
+  height: 100%;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Explicación a la derecha */
+#infoContainer {
+  width: 50%;
+  padding: 30px 25px;
+  background-color: #e0e0e0; /* gris ligeramente más claro */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  line-height: 1.7em;
+  text-align: justify; /* JUSTIFICADO */
+  color: #333;
+}
+
+#infoContainer h2 {
+  margin-top: 0;
+  color: #222;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#infoContainer p {
+  margin-bottom: 18px;
+}
+
+/* Resaltar palabras clave */
+#infoContainer strong {
+  color: #0b3d91;
+}
+
+#infoContainer em {
+  font-style: italic;
+  color: #0b66c3;
+}
+
+/* Scroll suave */
+#infoContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+#infoContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 4px;
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mapa de Bogotá - Localidades y Rutas TransMilenio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    /* Estilo general de la página */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0; /* gris claro */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Top Banner */
+    #topBanner {
+      width: 100%;
+      height: 60px;
+      background-color: #7d7d7d; /* gris ratón */
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    /* Contenedor principal dividido */
+    #mainContainer {
+      display: flex;
+      width: 100%;
+      height: calc(100vh - 60px); /* altura total menos el banner */
+    }
+
+    /* Mapa a la izquierda */
+    #mapContainer {
+      width: 50%;
+      height: 100%;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Explicación a la derecha */
+    #infoContainer {
+      width: 50%;
+      padding: 30px 25px;
+      background-color: #e0e0e0; /* gris ligeramente más claro */
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      line-height: 1.7em;
+      text-align: justify; /* JUSTIFICADO */
+      color: #333;
+    }
+
+    #infoContainer h2 {
+      margin-top: 0;
+      color: #222;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #infoContainer p {
+      margin-bottom: 18px;
+    }
+
+    /* Resaltar palabras clave */
+    #infoContainer strong {
+      color: #0b3d91;
+    }
+
+    #infoContainer em {
+      font-style: italic;
+      color: #0b66c3;
+    }
+
+    /* Scroll suave */
+    #infoContainer::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #infoContainer::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,0.2);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div id="topBanner">
+    Mapa de Bogotá
+  </div>
+
+  <!-- Contenedor principal -->
+  <div id="mainContainer">
+    <!-- Mapa -->
+    <div id="mapContainer">
+      <div id="map"></div>
+    </div>
+
+    <!-- Explicación -->
+    <div id="infoContainer">
+      <h2>Cómo se hizo esta página</h2>
+      <p>
+        Esta página fue creada usando <strong>HTML, CSS y JavaScript</strong> junto con la librería <strong>Leaflet.js</strong> para mostrar mapas interactivos. 
+        Los datos de <em>localidades</em> y <em>rutas troncales de TransMilenio</em> se obtuvieron mediante <strong>GeoJSON</strong> desde servicios públicos de ArcGIS y del portal de TransMilenio.
+      </p>
+      <p>
+        El mapa está centrado en Bogotá y utiliza un estilo de mapa base <strong>CartoDB Positron</strong> para un diseño limpio y moderno. 
+        Las localidades se muestran en azul claro y las rutas troncales en azul intenso. Al pasar el mouse sobre un polígono o línea, se muestra un <em>tooltip</em> con el nombre correspondiente.
+      </p>
+      <p>
+        La página está diseñada con un <strong>Top Banner</strong> gris ratón y un <strong>layout de dos columnas</strong> usando Flexbox: la mitad izquierda muestra el mapa y la mitad derecha la explicación del proyecto.
+      </p>
+      
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Crear mapa centrado en Bogotá
+    var map = L.map('map').setView([4.7110, -74.0721], 11);
+
+    // Capa base CartoDB Positron
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
+    }).addTo(map);
+
+    // URLs de datos GeoJSON
+    var localidades_url = "https://services2.arcgis.com/NEwhEo9GGSHXcRXV/arcgis/rest/services/Mapa_localidades_bogota_jrm_WFL1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson";
+    var rutas_troncales_url = "https://gis.transmilenio.gov.co/arcgis/rest/services/Troncal/consulta_rutas_troncales/MapServer/0/query?where=1%3D1&outFields=*&f=geojson";
+
+    // Función estilo para localidades
+    function styleLocalidad(feature) {
+      return {
+        fillColor: "#ADD8E6",
+        color: "#0b3d91",
+        weight: 1,
+        fillOpacity: 0.45
+      };
+    }
+
+    // Función estilo para rutas
+    function styleRuta(feature) {
+      return {
+        color: "#0b66c3",
+        weight: 3,
+        opacity: 0.9
+      };
+    }
+
+    // Cargar localidades
+    fetch(localidades_url)
+      .then(res => res.json())
+      .then(data => {
+        L.geoJson(data, {
+          style: styleLocalidad,
+          onEachFeature: function (feature, layer) {
+            let nombre = feature.properties.NOM_LOC || feature.properties.NOMBRE || "Localidad";
+            layer.bindTooltip("Localidad: " + nombre);
+          }
+        }).addTo(map);
+      });
+
+    // Cargar rutas
+    fetch(rutas_troncales_url)
+      .then(res => res.json())
+      .then(data => {
+        L.geoJson(data, {
+          style: styleRuta,
+          onEachFeature: function (feature, layer) {
+            let nombre = feature.properties.ruta || feature.properties.NAME || "Ruta";
+            layer.bindTooltip("Ruta: " + nombre);
+          }
+        }).addTo(map);
+      });
+  </script>
+</body>
+</html>
