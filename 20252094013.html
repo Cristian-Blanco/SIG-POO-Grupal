@@ -2,123 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Guía: Descargar GeoJSON desde geojson.io</title>
+  <title>GeoJson en Google Colab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="guia-geojson.css" rel="stylesheet" />
+  <style>
+    :root { --bg:#0f172a; --text:#e5e7eb; --muted:#94a3b8; --card:#111827; --border:#1f2937; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+    .wrap{width:100%;max-width:900px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.35);}
+    h1{font-size:clamp(22px,3.2vw,36px);line-height:1.2;text-align:center;margin-bottom:16px;}
+    p.sub{text-align:center;color:var(--muted);margin-bottom:18px;font-size:14px;}
+    .img-box{overflow:hidden;border-radius:12px;border:1px solid var(--border);}
+    .img-box img{display:block;width:100%;height:auto;}
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <h1>Guía rápida: cómo descargar GeoJSON desde <span>geojson.io</span></h1>
-  </header>
+  <main class="wrap">
+    <h1>Como crear GeoJson desde geojson.io</h1>
+    <p class="sub">Guía visual</p>
+    <div class="img-box">
+      <!-- Opción A (HTML dentro de /src): -->
+      <!-- <img src="img/visron_geojson_io.png" alt="Vista de geojson.io"> -->
 
-  <main class="container">
-    <section class="intro card">
-      <p>En esta guía aprenderás a crear o cargar datos en <strong>geojson.io</strong> y a
-      <strong>descargarlos en formato GeoJSON</strong> para usarlos en tu proyecto (Leaflet, Cesium, QGIS, etc.).</p>
-      <a class="btn" href="https://geojson.io/#map=2/0/20" target="_blank" rel="noopener noreferrer">
-        Abrir geojson.io
-      </a>
-    </section>
-
-    <section class="steps card">
-      <h2>Pasos</h2>
-
-      <ol class="steps-list">
-        <li class="step" data-step="1">
-          <h3>1) Abrir geojson.io</h3>
-          <p>Entra a <code>https://geojson.io</code>. Verás un mapa y un panel izquierdo con el contenido GeoJSON.</p>
-          <button class="toggle" data-target="#tip-1">Ver tips</button>
-          <div id="tip-1" class="tip">
-            <ul>
-              <li>Puedes hacer zoom con la rueda del mouse y arrastrar para moverte.</li>
-              <li>El panel izquierdo mostrará el objeto <code>FeatureCollection</code> con tus geometrías.</li>
-            </ul>
-          </div>
-        </li>
-
-        <li class="step" data-step="2">
-          <h3>2) Crear o cargar datos</h3>
-          <p>Tienes dos opciones:</p>
-          <ul>
-            <li><strong>Dibujar:</strong> usa las herramientas del menú (línea/polígono/punto) y haz clic en el mapa.</li>
-            <li><strong>Cargar archivo:</strong> arrastra un <em>.geojson</em>, <em>.kml</em>, <em>.gpx</em> o <em>.csv</em> al mapa, o usa el menú <em>Open → File</em>.</li>
-          </ul>
-          <button class="toggle" data-target="#tip-2">Ver tips</button>
-          <div id="tip-2" class="tip">
-            <ul>
-              <li>Para shapefile (<code>.shp</code>) conviértelo antes a GeoJSON (por ejemplo con <em>mapshaper.org</em> o <em>ogr2ogr</em>).</li>
-              <li>Para editar atributos, selecciona la geometría y en el panel izquierdo ajusta las propiedades.</li>
-            </ul>
-          </div>
-        </li>
-
-        <li class="step" data-step="3">
-          <h3>3) Revisar atributos y geometrías</h3>
-          <p>Selecciona cada entidad para verificar su tipo (<code>Point</code>, <code>LineString</code>, <code>Polygon</code>) y sus propiedades.
-             Asegúrate de que los nombres de campos sean claros (ej. <code>nombre</code>, <code>categoria</code>).</p>
-        </li>
-
-        <li class="step" data-step="4">
-          <h3>4) Descargar el archivo GeoJSON</h3>
-          <p>Haz clic en <strong>Save</strong> (parte superior) y elige <strong>GeoJSON</strong>. Se descargará un archivo <code>.geojson</code>.</p>
-          <button class="toggle" data-target="#tip-4">Si no ves “Save”</button>
-          <div id="tip-4" class="tip">
-            <ul>
-              <li>En algunas pantallas pequeñas, el menú puede aparecer como icono. Amplía la ventana o busca el menú de guardado.</li>
-              <li>También puedes copiar el contenido del panel izquierdo y pegarlo en un archivo <code>.geojson</code> con un editor de texto (UTF-8).</li>
-            </ul>
-          </div>
-        </li>
-
-        <li class="step" data-step="5">
-          <h3>5) Validar (opcional pero recomendado)</h3>
-          <p>Abre el archivo descargado en un visor (Leaflet, QGIS o tu propia app). Verifica proyección (<code>WGS84 / EPSG:4326</code>), geometrías y atributos.</p>
-          <button class="toggle" data-target="#tip-5">Buenas prácticas</button>
-          <div id="tip-5" class="tip">
-            <ul>
-              <li>Mantén coordenadas en <code>lon, lat</code> (WGS84).</li>
-              <li>Evita propiedades con caracteres extraños en los nombres de campos.</li>
-              <li>Si pesa mucho, simplifica las geometrías (por ejemplo en <em>mapshaper.org</em>) antes de publicarlo en la web.</li>
-            </ul>
-          </div>
-        </li>
-      </ol>
-    </section>
-
-    <section class="extras card">
-      <h2>Atajos útiles</h2>
-      <ul class="kbd-list">
-        <li><kbd>Ctrl</kbd> + <kbd>C</kbd>: Copiar JSON del panel (tras seleccionarlo).</li>
-        <li><kbd>Ctrl</kbd> + <kbd>Z</kbd>: Deshacer cambios de dibujo.</li>
-      </ul>
-
-      <h2>Errores comunes</h2>
-      <ul class="errors">
-        <li><strong>Descargué KML por error:</strong> Vuelve a <em>Save</em> y elige <strong>GeoJSON</strong>.</li>
-        <li><strong>No veo mis atributos:</strong> Abre el panel izquierdo y revisa la sección <code>properties</code> de cada <code>Feature</code>.</li>
-        <li><strong>No acepta mi SHP:</strong> Convierte el shapefile a GeoJSON antes de arrastrarlo.</li>
-      </ul>
-    </section>
-
-    <section class="cta card">
-      <h2>Usar el GeoJSON en tu proyecto</h2>
-      <p>Pon tu archivo en <code>docs/capas/</code> (o la carpeta que uses) y cárgalo así:</p>
-      <pre class="code">
-fetch('docs/capas/mi_capa.geojson')
-  .then(r => r.json())
-  .then(data => {
-    // Ejemplo Leaflet:
-    // L.geoJSON(data).addTo(map);
-  });
-      </pre>
-      <button id="copy-snippet" class="btn btn-secondary">Copiar snippet</button>
-    </section>
+      <!-- Opción B (HTML en la raíz del repo): -->
+      <img src="src/img/visron_geojson_io.png" alt="Vista de geojson.io">
+    </div>
   </main>
-
-  <footer class="footer">
-    <small>Hecho para tu proyecto – Puedes personalizar textos, estilos y rutas.</small>
-  </footer>
-
-  <script src="guia-geojson.js"></script>
 </body>
 </html>
