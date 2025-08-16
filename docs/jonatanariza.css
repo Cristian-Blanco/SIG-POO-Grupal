@@ -1,0 +1,33 @@
+/* Estilos generales de la página */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #000000; /* Fondo negro */
+    color: #ffffff; /* Texto blanco para legibilidad */
+    font-family: Arial, sans-serif;
+}
+
+#viewDiv {
+    height: 90vh; /* Ocupa casi toda la pantalla */
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: #ff0000; /* Título en color rojo */
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 1.2em;
+    color: #cccccc;
+}

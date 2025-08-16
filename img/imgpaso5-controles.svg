@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#0b1428"></rect>
+  <rect x="60" y="40" width="680" height="320" rx="16" fill="#142a4a" stroke="#2a3d62"></rect>
+  <rect x="80" y="60" width="160" height="70" rx="8" fill="#0f1f3a" stroke="#2a3d62"></rect>
+  <text x="160" y="90" fill="#7bb7ff" font-size="14" font-family="Inter, Arial" text-anchor="middle">Capas</text>
+  <rect x="550" y="300" width="150" height="30" rx="6" fill="#0f1f3a" stroke="#2a3d62"></rect>
+  <text x="625" y="320" fill="#a4f3a4" font-size="12" font-family="Inter, Arial" text-anchor="middle">Escala 200 m</text>
+</svg>

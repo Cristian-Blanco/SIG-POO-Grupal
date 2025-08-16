@@ -1,0 +1,60 @@
+/* Tamaño completo de la vista */
+html, body { height: 100%; margin: 0; }
+
+/* Layout dividido: izquierda (texto), derecha (mapa) */
+.layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Panel de texto a la izquierda */
+.panel {
+  width: 32%;
+  min-width: 280px;
+  box-sizing: border-box;
+  padding: 20px;
+  background: #f8f9fb;
+  border-right: 1px solid #e5e7eb;
+  overflow: auto;
+  font-family: system-ui, -apple-system, Arial, sans-serif;
+}
+
+.panel h1 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.panel h2 {
+  margin: 16px 0 8px;
+  font-size: 16px;
+}
+
+/* Contenedor del mapa a la derecha */
+#map {
+  flex: 1;
+  min-width: 320px;
+}
+
+/* Estilo de leyenda Leaflet */
+.legend {
+  background: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font: 12px/1.2 Arial, sans-serif;
+}
+.legend .swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* Responsive: apilar en pantallas angostas */
+@media (max-width: 900px) {
+  .layout { flex-direction: column; }
+  .panel { width: 100%; border-right: none; border-bottom: 1px solid #e5e7eb; }
+  #map { height: calc(100vh - 240px); } /* altura estimada cuando el panel ocupa arriba */
+}

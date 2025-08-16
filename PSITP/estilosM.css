@@ -1,0 +1,129 @@
+/* Reset básico con fuente y color únicos */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #000; /* Negro */
+  background-color: #f8f9fa;
+}
+
+/* Estilo de la sección principal */
+.seccion-movilidad {
+  width: 85%;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.seccion-movilidad h2 {
+  text-align: center;
+  color: #000;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+/* Contenedor del mapa */
+.map-container {
+  width: 100%;
+  height: 600px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Estilo para el ícono de autobús (emoji) */
+.paradero-icon {
+  font-size: 24px;
+  line-height: 1;
+  text-align: center;
+  color: #e74c3c;
+}
+
+/* Estilo para el tutorial */
+.seccion-tutorial,
+.seccion-definiciones {
+  width: 85%;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 25px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #000;
+}
+
+.seccion-tutorial h2,
+.seccion-definiciones h2,
+.seccion-tutorial h3,
+.seccion-definiciones h3,
+.seccion-tutorial h4,
+.seccion-definiciones h4 {
+  color: #000;
+  font-weight: bold;
+}
+
+.seccion-tutorial h2,
+.seccion-definiciones h2 {
+  border-bottom: 2px solid #000;
+  padding-bottom: 5px;
+}
+
+.seccion-tutorial ul,
+.seccion-tutorial ol,
+.seccion-definiciones ul,
+.seccion-definiciones ol {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.seccion-tutorial li,
+.seccion-definiciones li {
+  margin: 5px 0;
+}
+
+.seccion-tutorial a,
+.seccion-definiciones a {
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.seccion-tutorial a:hover,
+.seccion-definiciones a:hover {
+  text-decoration: underline;
+}
+
+/* Bloques de código */
+.seccion-tutorial code,
+.seccion-definiciones code {
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.seccion-tutorial pre,
+.seccion-definiciones pre {
+  background-color: #f8f8f8;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  overflow-x: auto;
+  margin: 15px 0;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  white-space: pre-wrap;
+}

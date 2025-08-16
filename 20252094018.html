@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Leaflet: Presentación Paso a Paso</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ✅ Favicon embebido (evita 404) -->
+  <link rel="icon"
+        href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="24" fill="%23122a4a"/><circle cx="64" cy="64" r="38" fill="%2322c55e"/><text x="64" y="74" font-size="54" text-anchor="middle" fill="white" font-family="Arial, sans-serif">L</text></svg>' />
+
+  <!-- Fuente opcional -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="anonymous"
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#0b1020" />
+</head>
+<body>
+  <div class="stage" id="app">
+    <section class="deck" aria-live="polite">
+      <h1>Leaflet: paso a paso</h1>
+      <p class="subtitle">Explicación + imagen de referencia + mapa en vivo</p>
+
+      <div class="slide" id="slide">
+        <span class="chip">Paso <span id="chipStep">1</span> de <span id="chipTotal">7</span></span>
+        <h2 id="slideTitle">Crear el mapa (L.map)</h2>
+        <ul id="slideBullets"></ul>
+
+        <!-- Imagen de referencia -->
+        <figure class="illustration">
+          <img id="stepImage" src="img/paso1-mapa.svg" alt="Referencia visual del paso 1" />
+          <figcaption id="imgCaption">Referencia visual del paso actual</figcaption>
+        </figure>
+
+        <details class="codebox" id="codeBox" open>
+          <summary>Ver fragmento de código</summary>
+          <pre><code id="codeSnippet" class="mono"></code></pre>
+        </details>
+      </div>
+
+      <div class="controlbar" role="toolbar" aria-label="Controles de presentación">
+        <div class="pager">
+          <button id="prevBtn" class="btn secondary" disabled aria-label="Paso anterior">⟵ Anterior</button>
+          <button id="nextBtn" class="btn" aria-label="Siguiente paso">Siguiente ⟶</button>
+          <span class="counter" id="counter" aria-live="polite">1 / 7</span>
+        </div>
+        <div class="keys">
+          Atajos:
+          <kbd>←</kbd><kbd>→</kbd> <kbd>Space</kbd>/<kbd>Enter</kbd>,
+          <kbd>F</kbd> pantalla completa, <kbd>C</kbd> código
+        </div>
+        <div class="progress" aria-hidden="true"><div id="progressBar" class="bar"></div></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="map-banner" id="mapBanner" role="status" aria-live="polite">Paso 1: Crear el mapa</div>
+      <div class="help">En el paso 6, haz clic en el mapa para añadir marcadores.</div>
+      <div id="map" aria-label="Mapa Leaflet"></div>
+    </section>
+  </div>
+
+  <!-- Leaflet JS (usa jsDelivr para mayor compatibilidad) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="anonymous"
+  ></script>
+
+  <!-- Tu lógica -->
+  <script defer src="app.js"></script>
+</body>
+</html>

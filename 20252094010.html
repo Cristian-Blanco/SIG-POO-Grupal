@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Troncales TransMilenio en SUBA – 20252094010</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <!-- MarkerCluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="src/css/20252094010.css" />
+</head>
+<body>
+  <!-- Encabezado + métricas -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="title">SUBA – Troncales TransMilenio (clip dentro de la localidad)</div>
+      <div class="subtitle">Proyecto 20252094010 · Leaflet + Turf.js</div>
+    </div>
+    <div class="metrics">
+      <div><strong>Troncales que tocan SUBA:</strong> <span id="m_lines_touch">–</span></div>
+      <div><strong>Tramos dentro de SUBA:</strong> <span id="m_tramos_clip">–</span></div>
+      <div><strong>Longitud total (km):</strong> <span id="m_km_total">–</span></div>
+      <div><strong>Estaciones troncales:</strong> <span id="m_pts">–</span></div>
+    </div>
+  </header>
+
+  <!-- Info de propósito -->
+  <section class="info-row">
+    <h1>Mapa de troncales TransMilenio en SUBA</h1>
+    <p>Fuente directa desde APIs oficiales (GeoJSON). El sistema prueba varias URLs y usa la primera disponible.</p>
+  </section>
+
+  <!-- Mapa + log lateral -->
+  <main class="layout">
+    <div id="map"></div>
+    <aside class="log">
+      <h3>Registro</h3>
+      <pre id="logbox">(iniciando…)</pre>
+      <details>
+        <summary>Ayuda</summary>
+        <ul>
+          <li>Abra este archivo con un servidor local (VS Code → Live Server) para evitar CORS.</li>
+          <li>Si una URL no responde, se intenta con la siguiente.</li>
+          <li>Revise la consola del navegador para ver errores de red.</li>
+        </ul>
+      </details>
+    </aside>
+  </main>
+
+  <!-- Librerías -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VMUNs7CqjzCtm0h+50="
+    crossorigin=""
+  ></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+
+  <!-- App -->
+  <script src="src/js/20252094010.js"></script>
+</body>
+</html>
