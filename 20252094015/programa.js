@@ -1,53 +1,38 @@
-// Inicializar el mapa centrado en Engativá (Bogotá)
-var map = L.map('map').setView([4.72, -74.12], 13); // Ajusta coordenadas si lo deseas
+// Inicializar mapa en Bogotá
+var map = L.map('map').setView([4.711, -74.072], 11);
 
-// Capa base (OpenStreetMap)
+// Capa base de OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '&copy; OpenStreetMap contributors'
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors'
 }).addTo(map);
 
-// Cargar el archivo GeoJSON completo (asegúrate de tenerlo en la carpeta del proyecto)
-fetch('arboladourbano.geojson')
-  .then(res => res.json())
-  .then(data => {
-    // Filtrar solo árboles en Engativá, usando el campo "NOM_LOCALIDAD"
-    const engativa = data.features.filter(feat =>
-      feat.properties.NOM_LOCALIDAD === 'ENGATIVÁ'
-    );
+// Estaciones climatológicas ficticias en Bogotá
+let estaciones = [
+    { nombre: "Estación Suba", lat: 4.75, lon: -74.08 },
+    { nombre: "Estación Engativá", lat: 4.72, lon: -74.12 },
+    { nombre: "Estación Kennedy", lat: 4.63, lon: -74.15 }
+];
 
-    // Crear una nueva GeoJSON con los puntos filtrados
-    const geoEngativa = { type: 'FeatureCollection', features: engativa };
+// Consultar datos de clima en Open-Meteo
+estaciones.forEach(estacion => {
+    let url = `https://api.open-meteo.com/v1/forecast?latitude=${estacion.lat}&longitude=${estacion.lon}&daily=precipitation_sum,temperature_2m_max,temperature_2m_min&timezone=auto`;
 
-    L.geoJSON(geoEngativa, {
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 5,
-          fillColor: "#27ae60",
-          color: "#145a32",
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 0.8
-        });
-      },
-      onEachFeature: function (feature, layer) {
-        const p = feature.properties;
-        layer.bindPopup(
-          `<b>Especie:</b> ${p.Nombre_Esp || '—'}<br>` +
-          `<b>Altura:</b> ${p.Altura_Total ? p.Altura_Total + ' m' : '—'}<br>` +
-          `<b>Localidad:</b> ${p.NOM_LOCALIDAD}`
-        );
-      }
-    }).addTo(map);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            let lluvia = data.daily.precipitation_sum[0]; // lluvia de hoy
+            let tempMax = data.daily.temperature_2m_max[0];
+            let tempMin = data.daily.temperature_2m_min[0];
 
-    if (engativa.length) {
-      const layer = L.geoJSON(geoEngativa);
-      map.fitBounds(layer.getBounds(), { padding: [20, 20] });
-    } else {
-      alert('No se encontraron árboles en Engativá.');
-    }
-  })
-  .catch(err => {
-    console.error('Error cargando el GeoJSON completo:', err);
-    alert('No fue posible cargar los datos.');
-  });
+            // Agregar marcador en el mapa
+            L.marker([estacion.lat, estacion.lon]).addTo(map)
+                .bindPopup(`
+                    <b>${estacion.nombre}</b><br>
+                    🌧️ Lluvia hoy: ${lluvia} mm<br>
+                    🌡️ Temp. Máx: ${tempMax} °C<br>
+                    🌡️ Temp. Mín: ${tempMin} °C
+                `);
+        })
+        .catch(error => console.error("Error al consultar API:", error));
+});
