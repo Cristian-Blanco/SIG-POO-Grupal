@@ -51,6 +51,14 @@
             box-shadow: 0 2px 8px #e1e4e8;
             min-width: 220px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .asociados {
+            font-size: 0.98em;
+            color: #7f8c8d;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -60,13 +68,28 @@
         <h2>Áreas de especialización:</h2>
         <div class="subramas-container">
             <div class="fila">
-                <div class="subrama">Representación de datos</div>
-                <div class="subrama">Analítica de Geodatos espaciales</div>
-                <div class="subrama">Estadística descriptiva</div>
+                <div class="subrama">
+                    Representación de datos
+                    <div class="asociados">Series, 3D, 2D, 4D, 5D</div>
+                </div>
+                <div class="subrama">
+                    Analítica de Geodatos espaciales
+                    <div class="asociados">Requerimientos, Arquitectura, Desarrollo</div>
+                </div>
+                <div class="subrama">
+                    Estadística descriptiva
+                    <div class="asociados">Numpy, Pandas</div>
+                </div>
             </div>
             <div class="fila">
-                <div class="subrama">Estadística analítica o proyectiva</div>
-                <div class="subrama">Inteligencia artificial geoespacial</div>
+                <div class="subrama">
+                    Estadística analítica o proyectiva
+                    <div class="asociados">Regresión lineal, Scikit-Learn, Predicción</div>
+                </div>
+                <div class="subrama">
+                    Inteligencia artificial geoespacial
+                    <div class="asociados">Pytorch, Clustering, Pronóstico, Clasificación</div>
+                </div>
             </div>
         </div>
     </div>
