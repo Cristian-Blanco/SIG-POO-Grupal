@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marichuela — Tutorial paso a paso</title>
+  <link rel="stylesheet" href="estilos.css"/>
+</head>
+<body>
+
+  <!-- Encabezado con logo y nombre -->
+  <header id="seccion-encabezado" class="contenedor">
+    <div class="logo">
+      <!-- Reemplaza logo.png por tu archivo -->
+      <img src="logo.png" alt="Logo de Marichuela"/>
+    </div>
+    <h1>Marichuela</h1>
+  </header>
+
+  <!-- Navegación (con botón para móviles) -->
+  <nav id="seccion-menu" class="contenedor">
+    <button id="btnMenu" class="btn-menu" aria-expanded="false" aria-controls="menuPrincipal">☰ Menú</button>
+    <ul id="menuPrincipal" class="menu" role="menubar">
+      <li class="menu-item" id="equipamientos" role="none">
+        <span class="menu-titulo" role="menuitem" aria-haspopup="true">Equipamientos</span>
+        <ul class="submenu" role="menu">
+          <li><a href="ubicacion.html">Ubicación</a></li>
+          <li><a href="movilidad.html">Movilidad</a></li>
+          <li><a href="parques.html">Parques</a></li>
+          <li><a href="catastro3d.html">Catastro 3D</a></li>
+          <li><a href="recorrido_virtual.html">Recorrido Virtual</a></li>
+          <li><a href="vias.html">Vías</a></li>
+        </ul>
+      </li>
+
+      <li class="menu-item" id="problematicas" role="none">
+        <span class="menu-titulo" role="menuitem" aria-haspopup="true">Problemáticas</span>
+        <ul class="submenu" role="menu">
+          <li><a href="1.html">1</a></li>
+        </ul>
+      </li>
+
+      <li class="menu-item" id="acerca_de" role="none">
+        <span class="menu-titulo" role="menuitem" aria-haspopup="true">Acerca de</span>
+        <ul class="submenu" role="menu">
+          <li><a href="2.html">2</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Imagen principal (Hero) -->
+  <section id="seccion-hero" class="hero">
+    <div class="overlay">
+      <h2>MARICHUELA</h2>
+    </div>
+  </section>
+
+  <!-- =========================
+       Tutorial paso a paso
+       ========================= -->
+  <main class="tutorial contenedor">
+    <h2>Cómo se construyó esta página (paso a paso)</h2>
+    <p>Haz clic en <strong>“Ver en la página”</strong> para resaltar dónde aplica cada paso.</p>
+
+    <ol class="pasos">
+      <li class="paso">
+        <header>Paso 1: Estructura base de HTML</header>
+        <p>Arrancamos con <code>DOCTYPE</code>, idioma, metaetiquetas y el enlace a <code>estilos.css</code> y <code>programa.js</code>.</p>
+        <button class="ver-btn" data-target="html">Ver en la página</button>
+        <details>
+          <summary>Ver código</summary>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;link rel="stylesheet" href="estilos.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    ...
+    &lt;script src="programa.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </details>
+      </li>
+
+      <li class="paso">
+        <header>Paso 2: Encabezado con logo y título</header>
+        <p>Un <code>&lt;header&gt;</code> con el logo a la izquierda y el nombre del sitio.</p>
+        <button class="ver-btn" data-target="#seccion-encabezado">Ver en la página</button>
+        <details>
+          <summary>Ver código</summary>
+<pre><code>&lt;header id="seccion-encabezado"&gt;
+  &lt;div class="logo"&gt;
+    &lt;img src="logo.png" alt="Logo"&gt;
+  &lt;/div&gt;
+  &lt;h1&gt;Marichuela&lt;/h1&gt;
+&lt;/header&gt;</code></pre>
+        </details>
+      </li>
+
+      <li class="paso">
+        <header>Paso 3: Menú con submenús</header>
+        <p>La barra de navegación usa listas anidadas. En desktop se abre con <em>hover</em>; en móvil, con botón.</p>
+        <button class="ver-btn" data-target="#seccion-menu">Ver en la página</button>
+        <details>
+          <summary>Ver código (HTML)</summary>
+<pre><code>&lt;nav id="seccion-menu"&gt;
+  &lt;button id="btnMenu"&gt;☰ Menú&lt;/button&gt;
+  &lt;ul class="menu"&gt;
+    &lt;li class="menu-item"&gt;
+      &lt;span class="menu-titulo"&gt;Equipamientos&lt;/span&gt;
+      &lt;ul class="submenu"&gt;...&lt;/ul&gt;
+    &lt;/li&gt;
+    ...
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+        </details>
+      </li>
+
+      <li class="paso">
+        <header>Paso 4: Sección “Hero” con overlay</header>
+        <p>Una imagen de fondo con un filtro oscuro y un título centrado.</p>
+        <button class="ver-btn" data-target="#seccion-hero">Ver en la página</button>
+        <details>
+          <summary>Ver código (HTML)</summary>
+<pre><code>&lt;section id="seccion-hero" class="hero"&gt;
+  &lt;div class="overlay"&gt;
+    &lt;h2&gt;MARICHUELA&lt;/h2&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+        </details>
+      </li>
+
+      <li class="paso">
+        <header>Paso 5: Pie de página fijo</header>
+        <p>Barra fija al fondo con los créditos.</p>
+        <button class="ver-btn" data-target="#seccion-footer">Ver en la página</button>
+        <details>
+          <summary>Ver código (HTML)</summary>
+<pre><code>&lt;div id="seccion-footer" class="footer-fixed"&gt;
+  © &lt;span id="anio"&gt;&lt;/span&gt; Barrio Marichuela - Todos los derechos reservados.&lt;br&gt;
+  Diseño y desarrollo por AKA
+&lt;/div&gt;</code></pre>
+        </details>
+      </li>
+
+      <li class="paso">
+        <header>Paso 6: Interactividad con JavaScript</header>
+        <p>JS resalta secciones al pulsar “Ver en la página” y maneja el menú móvil.</p>
+        <details>
+          <summary>Qué hace el JS</summary>
+          <ul>
+            <li><strong>Resaltar</strong> una sección por unos segundos y hacer <em>scroll suave</em>.</li>
+            <li><strong>Menú móvil</strong>: abre/cierra el menú y submenús.</li>
+            <li><strong>Año automático</strong> en el pie.</li>
+          </ul>
+        </details>
+      </li>
+    </ol>
+  </main>
+
+  <!-- Footer fijo -->
+  <div id="seccion-footer" class="footer-fixed">
+    © <span id="anio"></span> Barrio Marichuela - Todos los derechos reservados. <br/>
+    Diseño y desarrollo por AKA
+  </div>
+
+  <script src="programa.js"></script>
+</body>
+</html>
