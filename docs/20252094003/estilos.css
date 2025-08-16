@@ -1,0 +1,21 @@
+html, body, #map {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.legend {
+  background: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font: 12px/1.2 Arial, sans-serif;
+}
+
+.legend .swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
