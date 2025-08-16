@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parques - Arborizadora Alta</title>
+
+    <link rel="stylesheet" href="estilos.css">
+    <script src="program.js" defer></script> <!-- Deja solo ESTA referencia -->
+
+    <style>
+        /* ===== Paleta morada ===== */
+        :root{
+            --morado-50:  #f5f3ff;
+            --morado-100: #ede9fe;
+            --morado-200: #ddd6fe;
+            --morado-300: #c4b5fd;
+            --morado-400: #a78bfa;
+            --morado-500: #8b5cf6;
+            --morado-600: #7c3aed;
+            --morado-700: #6d28d9;
+            --morado-800: #5b21b6;
+            --morado-900: #4c1d95;
+            --texto: #0f172a;
+        }
+
+        /* Estilo para la sección dividida (sin cambios de layout) */
+        .contenedor-parques {
+            display: flex;
+            flex-wrap: wrap; /* En pantallas pequeñas se apilan */
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Visor: mismo tamaño, look morado */
+        .mapa {
+            flex: 1;
+            min-width: 400px;
+            height: 820px; /* igual que tu versión */
+            background-color: var(--morado-100); /* antes gris, ahora lila muy claro */
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--morado-200);
+            box-shadow: 0 10px 28px rgba(76,29,149,.10);
+        }
+
+        .descripcion {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        /* Encabezados en morado */
+        header h1, .descripcion h3 {
+            color: var(--morado-800);
+            margin: 0 0 .5rem 0;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        /* Texto base */
+        body { color: var(--texto); margin: 0; }
+
+        /* ===== Tinte morado al mapa base (no toca tu JS) =====
+           Aplica a las teselas de Leaflet dentro del visor */
+        #map .leaflet-tile{
+            filter: hue-rotate(265deg) saturate(0.9) brightness(0.96) contrast(1.02);
+        }
+
+        /* Tooltips/Popups con borde lila sutil (por si los usas en programa.js) */
+        .leaflet-tooltip{
+            background: rgba(255,255,255,0.97);
+            border: 1px solid var(--morado-200);
+            color: var(--texto);
+            border-radius: 10px;
+            padding: .5rem .6rem;
+            box-shadow: 0 10px 28px rgba(76,29,149,.12);
+            white-space: normal;
+            font-size: .95rem;
+        }
+        .leaflet-popup-content{
+            margin: 10px 12px;
+        }
+        .leaflet-container a{
+            color: var(--morado-700);
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado-->
+    <header>
+            <h1>BARRIO ARBORIZADORA ALTA</h1>
+        </div>
+    </header>
+
+    <!-- Sección con mapa y descripción -->
+    <section class="contenedor-parques">
+        <!-- Columna izquierda: mapa -->
+        <div id="map" class="mapa">
+            <!-- Aquí se cargará el mapa con GeoJSON -->
+        </div>
+
+        <!-- Columna derecha: descripción -->
+        <div class="descripcion">
+            <h3>Explicación del código</h3>
+            <p>En Arborizadora Alta contamos con diversos parques que ofrecen espacios de recreación, deporte y contacto con la naturaleza.</p>
+            <ul>
+                <li>a</li>
+                <li>a</li>
+                <li>a</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Librería Leaflet para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+</body>
+</html>
