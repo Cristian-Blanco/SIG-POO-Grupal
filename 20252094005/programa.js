@@ -1,64 +1,43 @@
-// ===== Utilidad: quitar resaltados previos
-function limpiarResaltados(){
-  document.querySelectorAll('.resaltado').forEach(el => el.classList.remove('resaltado'));
-}
+fetch('Parques-Marichuela.geojson')
+    .then(res => res.json())
+    .then(data => {
+        const geojsonLayer = L.geoJSON(data, {
+            onEachFeature: (feature, layer) => {
+                // Ajusta la propiedad según tu GeoJSON (ej: "nombre", "Name", etc.)
+                const nombre = feature.properties?.Nombre || feature.properties?.name || "Parque sin nombre";
+                layer.bindPopup(nombre);
+                
+                layer.on('click', () => {
+                    infoDiv.style.display = 'block';
+                    mapaDiv.style.flex = '1';
+                    
+                    if (infoParques[nombre]) {
+                        infoDiv.innerHTML = `
+                            <button class="btn-cerrar" onclick="cerrarPanel()">Cerrar</button>
+                            <h2>Descripción general</h2>
+                            <h3>${nombre}</h3>
+                            <img src="${infoParques[nombre].img}" alt="${nombre}">
+                            <p>${infoParques[nombre].desc}</p>
+                        `;
+                    } else {
+                        infoDiv.innerHTML = `
+                            <button class="btn-cerrar" onclick="cerrarPanel()">Cerrar</button>
+                            <h2>Descripción general</h2>
+                            <h3>${nombre}</h3>
+                            <p>No hay descripción disponible para este parque.</p>
+                        `;
+                    }
+                });
+            },
+            style: {
+                color: "green",
+                weight: 2,
+                fillOpacity: 0.4
+            }
+        }).addTo(mapa);
 
-// ===== Resaltar una sección y hacer scroll suave
-function resaltar(selector){
-  const objetivo = selector === 'html' ? document.documentElement : document.querySelector(selector);
-  if(!objetivo) return;
+        // Ajustar zoom automáticamente
+        mapa.fitBounds(geojsonLayer.getBounds());
+    })
+    .catch(err => console.error("Error cargando GeoJSON:", err));
 
-  limpiarResaltados();
-  objetivo.classList.add('resaltado');
-  objetivo.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  // Quitar resaltado después de 2.5s
-  setTimeout(() => objetivo.classList.remove('resaltado'), 2500);
-}
-
-// ===== Menú móvil (abrir/cerrar)
-function configurarMenuMovil(){
-  const btn = document.getElementById('btnMenu');
-  const menu = document.getElementById('menuPrincipal');
-  if(!btn || !menu) return;
-
-  btn.addEventListener('click', () => {
-    const abierto = menu.classList.toggle('abierto');
-    btn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
-  });
-
-  // Abrir/cerrar submenús tocando el título en móvil
-  const items = document.querySelectorAll('.menu-item');
-  items.forEach(item => {
-    const titulo = item.querySelector('.menu-titulo');
-    if(!titulo) return;
-
-    titulo.addEventListener('click', (e) => {
-      // Solo en pantallas pequeñas aplicamos comportamiento de acordeón
-      if(window.matchMedia('(max-width: 800px)').matches){
-        e.preventDefault();
-        item.classList.toggle('abierto');
-      }
-    });
-  });
-}
-
-// ===== Botones "Ver en la página"
-function configurarBotonesTutorial(){
-  document.querySelectorAll('.ver-btn').forEach(btn => {
-    btn.addEventListener('click', () => resaltar(btn.dataset.target));
-  });
-}
-
-// ===== Año dinámico en el footer
-function ponerAnio(){
-  const span = document.getElementById('anio');
-  if(span) span.textContent = new Date().getFullYear();
-}
-
-// ===== Inicializar cuando cargue el DOM
-document.addEventListener('DOMContentLoaded', () => {
-  configurarMenuMovil();
-  configurarBotonesTutorial();
-  ponerAnio();
-});

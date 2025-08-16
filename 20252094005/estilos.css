@@ -1,20 +1,42 @@
+/* ======= Paleta Astronauta ======= */
 :root{
-  --fondo:#0a0a0a;
-  --texto:#f4f4f4;
-  --card:#15161a;
-  --borde:#2a2c31;
-  --acento:#5cc6ff;
-  --acento-oscuro:#2d9ad1;
+  --espacio1:#060915;
+  --espacio2:#0b0e22;
+  --texto:#f5fbff;
+  --muted:#b7c7d9;
+  --card:#0f1430;
+  --borde:#1f2b4d;
+  --cian:#00e5ff;
+  --magenta:#ff5cf4;
+  --naranja:#ff8a3d;
 }
 
+/* Reset básico */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: var(--fondo);
+  font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--texto);
-  line-height:1.5;
+  background: radial-gradient(1000px 600px at 10% -10%, #10153a 0%, transparent 60%),
+              radial-gradient(700px 500px at 120% 10%, #1b1f4a 0%, transparent 60%),
+              linear-gradient(180deg, var(--espacio1), var(--espacio2));
+  overflow-x:hidden;
+}
+
+/* Estrellas (tres capas parpadeando) */
+.stars{
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+  background-repeat:repeat;
+  background-size: contain;
+  opacity:.8;
+}
+.stars-1{ background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 3px 3px; animation: twinkle 6s infinite }
+.stars-2{ background-image: radial-gradient(#a0f0ff 1px, transparent 1px); background-size: 4px 4px; animation: twinkle 8s infinite reverse }
+.stars-3{ background-image: radial-gradient(#ff99f8 1px, transparent 1px); background-size: 5px 5px; animation: twinkle 10s infinite }
+@keyframes twinkle{
+  0%,100%{opacity:.5; transform: translateY(0)}
+  50%{opacity:1; transform: translateY(-1px)}
 }
 
 /* Contenedor ancho */
@@ -22,89 +44,143 @@ body{
 
 /* ===== Header ===== */
 header{
-  display:flex; align-items:center; gap:14px;
-  padding:14px 0; border-bottom:1px solid var(--borde);
+  display:flex; align-items:center; gap:16px;
+  padding:18px 0; border-bottom:1px dashed var(--borde);
 }
-.logo img{height:48px; width:auto; display:block}
-header h1{margin:0; font-size:clamp(20px, 3vw, 28px)}
+.logo img{height:52px; width:auto; display:block; filter: drop-shadow(0 0 6px rgba(0,0,0,.6));}
+header h1{
+  margin:0; font-family: "Orbitron", sans-serif; letter-spacing:.04em;
+  font-size: clamp(22px, 3vw, 32px);
+  background: linear-gradient(90deg, var(--cian), var(--magenta));
+  -webkit-background-clip: text; background-clip:text; color: transparent;
+}
+.tagline{color:var(--muted); font-size:14px}
 
 /* ===== Nav ===== */
-nav{position:relative; border-bottom:1px solid var(--borde); padding:8px 0 12px}
+nav{position:relative; border-bottom:1px dashed var(--borde); padding:8px 0 14px}
 .btn-menu{
-  display:none;
-  background:var(--card); border:1px solid var(--borde);
-  padding:8px 12px; border-radius:10px; color:var(--texto); cursor:pointer;
+  display:none; background:linear-gradient(90deg, var(--magenta), var(--cian));
+  border:0; padding:8px 14px; border-radius:12px; color:#04101a; cursor:pointer; font-weight:800;
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
 }
 .menu{
-  list-style:none; margin:8px 0 0; padding:0;
-  display:flex; gap:18px; flex-wrap:wrap;
+  list-style:none; margin:10px 0 0; padding:0;
+  display:flex; gap:20px; flex-wrap:wrap;
 }
 .menu-item{position:relative}
 .menu-titulo{
-  display:inline-block; padding:8px 10px; border-radius:10px; cursor:pointer;
-  background:transparent; border:1px solid transparent;
+  display:inline-block; padding:8px 12px; border-radius:10px; cursor:pointer;
+  transition: all .2s; color:#e9f8ff; text-decoration:none;
+  border:1px solid transparent;
 }
-.menu-item:hover .menu-titulo{border-color:var(--borde); background:#101216}
+.menu-titulo:hover{border-color: var(--cian); box-shadow: 0 0 0 4px rgba(0,229,255,.15)}
+.menu .link{color:#e9f8ff; text-decoration:none}
 
 .submenu{
   position:absolute; left:0; top:100%; min-width:220px; z-index:10;
   background:var(--card); border:1px solid var(--borde); border-radius:12px;
   list-style:none; margin:6px 0 0; padding:8px; display:none;
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  box-shadow: 0 12px 26px rgba(0,0,0,.5);
 }
 .menu-item:hover .submenu{display:block}
 .submenu li a{
   display:block; padding:8px 10px; border-radius:8px; color:var(--texto); text-decoration:none;
 }
-.submenu li a:hover{background:#1b1d22}
+.submenu li a:hover{background:rgba(0,229,255,.12)}
 
 /* ===== Hero ===== */
 .hero{
-  position:relative; min-height:48vh;
-  background: url('hero.jpg') center/cover no-repeat, radial-gradient(1200px 600px at 60% -10%, #1a1c20, #0b0c0f);
-  border-block:1px solid var(--borde);
+  position:relative; min-height:54vh;
+  border-block:1px dashed var(--borde);
 }
 .hero .overlay{
   position:absolute; inset:0; display:grid; place-items:center;
-  background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.65));
+  text-align:center; padding: 28px 16px;
+  background: radial-gradient(600px 300px at 70% 0%, rgba(0,229,255,.08), transparent 70%),
+              radial-gradient(900px 400px at 20% 100%, rgba(255,92,244,.08), transparent 70%);
 }
 .hero h2{
-  font-size: clamp(28px, 6vw, 68px);
-  letter-spacing:.1em; text-align:center; margin:0;
-  text-shadow: 0 8px 30px rgba(0,0,0,.6);
+  margin:0;
+  font-family:"Orbitron",sans-serif; font-weight:700;
+  font-size:clamp(32px, 7vw, 86px);
+  letter-spacing:.14em;
+  text-shadow:0 8px 30px rgba(0,0,0,.7);
+  background: linear-gradient(90deg, var(--cian), var(--magenta));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero .sub{margin:8px 0 0; color:#dfefff}
+
+/* Planeta y órbita decorativa */
+.planeta{
+  position:absolute; width:120px; height:120px; border-radius:50%;
+  right:8%; bottom:14%;
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #a0f7ff 25%, #2b88a9 60%, #051a22 100%);
+  box-shadow: inset -12px -18px 30px rgba(0,0,0,.5), 0 0 40px rgba(0,229,255,.2);
+}
+.orbita{
+  position:absolute; width:220px; height:80px; border-radius:50%;
+  right:6.3%; bottom:18%;
+  border:1px dashed rgba(255,255,255,.3);
+  transform: rotate(-12deg);
 }
 
-/* ===== Tutorial ===== */
+/* ===== Tutorial corto ===== */
 .tutorial{padding:28px 0 120px}
-.tutorial h2{margin:0 0 8px}
-.pasos{margin:18px 0 0; padding:0 0 0 20px}
-.paso{
-  background:var(--card); border:1px solid var(--borde); border-radius:16px;
-  padding:14px 14px 10px; margin:14px 0;
-}
-.paso > header{font-weight:700; margin-bottom:6px}
+.tutorial h2{margin:0 0 10px}
+.botonera{display:flex; flex-wrap:wrap; gap:10px}
 .ver-btn{
-  background:var(--acento); color:#001018; border:0; padding:8px 12px; border-radius:10px;
-  cursor:pointer; font-weight:600; margin:6px 0 10px;
+  background: linear-gradient(90deg, var(--magenta), var(--cian));
+  color:#04101a; border:0; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:800;
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
 }
-.ver-btn:hover{background:var(--acento-oscuro)}
-details{margin-top:8px}
+.ver-btn:hover{filter:brightness(1.05)}
+
+/* ===== Code Lab ===== */
+.code-lab h2{margin:0 0 10px}
+.tabs{display:flex; gap:8px; margin:10px 0 14px}
+.tab-btn{
+  background:#0c122b; color:#d9edff; border:1px solid var(--borde);
+  padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700;
+}
+.tab-btn.activo{border-color: var(--cian); box-shadow: 0 0 0 4px rgba(0,229,255,.12)}
+.tab-contenido{display:block}
+.panel{display:grid; grid-template-columns: 1fr 1fr; gap:14px}
+.panel.oculto{display:none}
+.panel-col{
+  background:#0c122b; border:1px solid var(--borde); border-radius:16px; overflow:hidden;
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+}
+.panel-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px; background:#0b1130; border-bottom:1px solid var(--borde);
+  color:#cfeaff; font-weight:700;
+}
+.copy{
+  background:var(--naranja); color:#1a0a03; border:0; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:800;
+}
 pre{
-  background:#0f1115; color:#e6e6e6; padding:12px; border-radius:12px; overflow:auto;
-  border:1px solid #23242a;
+  margin:0; padding:12px; overflow:auto; color:#f1f5ff;
+  background: conic-gradient(from 180deg at 50% 50%, #0b1130, #0c1436, #0b1130);
 }
+code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size:13px; line-height:1.5}
+.explicaciones{
+  list-style: decimal-leading-zero; margin:0; padding:12px 18px; color:#e9f8ff;
+}
+.explicaciones li{padding:6px 0; border-bottom:1px dashed #1d2b4d}
+.explicaciones li:last-child{border-bottom:0}
 
 /* ===== Footer fijo ===== */
 .footer-fixed{
   position:fixed; left:0; right:0; bottom:0;
-  background:#0e1014; border-top:1px solid var(--borde);
+  background:#0b1130; border-top:1px dashed var(--borde);
   padding:10px 18px; text-align:center; font-size:14px; z-index:50;
+  color:#cfeaff;
 }
 
 /* ===== Resaltado (para el tutorial) ===== */
 .resaltado{
-  outline:3px solid var(--acento);
-  box-shadow: 0 0 0 6px rgba(92,198,255,.15), 0 0 30px rgba(92,198,255,.35);
+  outline:3px solid var(--cian);
+  box-shadow: 0 0 0 6px rgba(0,229,255,.15), 0 0 36px rgba(0,229,255,.35);
   transition: outline .2s ease;
   animation: parpadeo 1.2s ease-in-out 2;
 }
@@ -113,15 +189,30 @@ pre{
   50%{filter:brightness(1.2)}
 }
 
+/* ===== Modal ===== */
+.modal{position:fixed; inset:0; display:grid; place-items:center; background:rgba(4,10,20,.55); z-index:200}
+.modal.oculto{display:none}
+.modal-content{
+  width:min(820px, 94vw); background:#0c122b; border:1px solid var(--borde); border-radius:18px; padding:18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.modal-content h3{
+  margin:0 0 8px; font-family:"Orbitron",sans-serif;
+  background: linear-gradient(90deg, var(--magenta), var(--cian));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.modal-actions{display:flex; justify-content:space-between; align-items:center; margin-top:12px}
+.check{display:flex; align-items:center; gap:8px; color:#dfefff}
+
 /* ===== Responsive ===== */
+@media (max-width: 900px){
+  .panel{grid-template-columns: 1fr}
+}
 @media (max-width: 800px){
   .btn-menu{display:inline-block}
-  .menu{display:none; flex-direction:column; gap:6px; margin-top:10px}
+  .menu{display:none; flex-direction:column; gap:8px; margin-top:10px}
   .menu.abierto{display:flex}
-
-  .menu-item:hover .submenu{display:none} /* Hover no confiable en táctiles */
-  .menu-item .submenu{
-    position:static; margin:6px 0 0; display:none; border-radius:10px;
-  }
+  .menu-item:hover .submenu{display:none}
+  .menu-item .submenu{position:static; margin:6px 0 0; display:none}
   .menu-item.abierto .submenu{display:block}
 }
