@@ -3,7 +3,10 @@ body {
   font-family: Arial, sans-serif;
   margin: 20px;
 }
+
 #map {
+  height: 800px;   /* Aumenta la altura */
+  width: 100%;     /* Ocupa todo el ancho disponible */
   margin-bottom: 20px;
   border: 1px solid #ccc;
 }
