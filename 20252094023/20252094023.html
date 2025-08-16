@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Visor Leaflet - Ejemplo GeoJSON</title>
+  <!-- Estilos de Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    #map {
+      height: 600px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>Visor de mapas con Leaflet</h2>
+  <p>En este visor podrás cargar y visualizar el archivo <b>CONST_PALERMO_SUR.geojson</b>.</p>
+  
+  <!-- Contenedor del mapa -->
+  <div id="map"></div>
+
+  <!-- Scripts de Leaflet -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Script para cargar GeoJSON -->
+  <script>
+    // Inicializar el mapa centrado en Bogotá
+    var map = L.map('map').setView([4.6097, -74.0817], 13);
+
+    // Capa base
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // Cargar el archivo GeoJSON desde la carpeta Insumos
+    fetch('Insumos/CONST_PALERMO_SUR.geojson')
+      .then(response => response.json())
+      .then(data => {
+        // Agregar GeoJSON al mapa
+        var capaGeojson = L.geoJSON(data, {
+          style: {
+            color: "blue",
+            weight: 2,
+            fillColor: "lightblue",
+            fillOpacity: 0.5
+          },
+          onEachFeature: function (feature, layer) {
+            if (feature.properties) {
+              let contenido = "<b>Propiedades:</b><br>";
+              for (let key in feature.properties) {
+                contenido += key + ": " + feature.properties[key] + "<br>";
+              }
+              layer.bindPopup(contenido);
+            }
+          }
+        }).addTo(map);
+
+        // Ajustar zoom a la capa cargada
+        map.fitBounds(capaGeojson.getBounds());
+      })
+      .catch(error => console.error('Error cargando el GeoJSON:', error));
+  </script>
+</body>
+</html>
