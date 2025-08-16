@@ -1,7 +1,8 @@
 document.getElementById('cargarDatosBtn').addEventListener('click', async () => {
   try {
-    const response = await fetch('historico_estaciones.json');
-    if (!response.ok) throw new Error("No se pudo cargar el archivo JSON local");
+    // Cambia aquí si tu archivo es .geojson
+    const response = await fetch('historico_estaciones.geojson');
+    if (!response.ok) throw new Error("No se pudo cargar el archivo GeoJSON local");
     const data = await response.json();
 
     // Extraer las features del GeoJSON
@@ -12,7 +13,7 @@ document.getElementById('cargarDatosBtn').addEventListener('click', async () => 
     const valores = pm10.map(f => f.properties.valor).filter(v => typeof v === 'number' && !isNaN(v));
 
     if (valores.length === 0) {
-      document.getElementById('estadisticas').textContent = "No se encontraron datos PM10 en el archivo JSON.";
+      document.getElementById('estadisticas').textContent = "No se encontraron datos PM10 en el archivo GeoJSON.";
       return;
     }
 
