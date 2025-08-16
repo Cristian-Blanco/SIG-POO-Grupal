@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (t === 'Polygon' || t === 'MultiLineString') sample = c[0][0];
         else if (t === 'MultiPolygon') sample = c[0][0][0];
         else if (t === 'GeometryCollection' && g.geometries?.length) take(g.geometries[0]);
-      };
+      };a
       take(f.geometry);
       if (!sample || sample.length < 2) return gj;
       if (isLatLon(sample) && !isLonLat(sample)) {
