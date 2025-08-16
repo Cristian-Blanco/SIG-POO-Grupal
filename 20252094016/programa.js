@@ -1,9 +1,9 @@
 // --- Inicialización del mapa ---
-const mapa = L.map('mapa').setView([4.711, -74.0721], 12); // Bogotá
+const mapa = L.map('mapa').setView([4.518426196790787, -74.11697088763084], 12); // Bogotá
 
 // Capa base
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
+  maxZoom: 30,
 }).addTo(mapa);
 
 // Marcador de subestación (ejemplo en Bogotá)
@@ -20,7 +20,7 @@ fetch("Barrio.geojson")
   });
 
 // --- Cargar datos históricos ---
-fetch("Históricos.geojson")
+fetch("./historico_estaciones.geojson")
   .then(res => res.json())
   .then(data => {
     const fechas = [];
