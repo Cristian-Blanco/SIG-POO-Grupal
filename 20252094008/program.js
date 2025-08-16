@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function getTitulo(p){ return p?.NOMBRE_PAR ?? p?.nombre ?? p?.name ?? p?.titulo ?? 'Parque'; }
   function getTipo(p){   return p?.TIPOPARQUE ?? p?.tipo_parque ?? p?.tipo ?? p?.categoria ?? '—'; }
 
-  function parseNumber(val){
+  function parseNumber(val){c
     if (val == null) return null;
     if (typeof val === 'number') return isFinite(val) ? val : null;
     let s = String(val).trim().replace(/[^\d.,-]/g, '');
