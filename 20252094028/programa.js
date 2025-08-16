@@ -45,12 +45,14 @@ fetch('./paraderos_marichuela.geojson')
                pointToLayer: function (feature, latlng) {
                 let titulo = 'Paradero SITP';
                 let nombre = feature.properties.cenefa_par ;
-                let rutas = feature.properties.cenefa_par || 'Paradero SITP';
+                let rutas = feature.properties.rutas 
+                    ? `Rutas: ${feature.properties.rutas}` 
+                        : '';
                 let foto = feature.properties.foto 
                            ? `<br><img src="${feature.properties.foto}" alt="${nombre}" width="200px">`
                            : '';
                 return L.marker(latlng)
-                    .bindPopup(`<b>${titulo}</br>${nombre}</br>${foto}`);
+                    .bindPopup(`<b>${titulo}</br>${nombre}</br>${foto}</br>${rutas}`);
             }
         }).addTo(map);
     })
