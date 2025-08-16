@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function getTitulo(p){ return p?.NOMBRE_PAR ?? p?.nombre ?? p?.name ?? p?.titulo ?? 'Parque'; }
   function getTipo(p){   return p?.TIPOPARQUE ?? p?.tipo_parque ?? p?.tipo ?? p?.categoria ?? '—'; }
 
-  function parseNumber(val){c
+  function parseNumber(val){
     if (val == null) return null;
     if (typeof val === 'number') return isFinite(val) ? val : null;
     let s = String(val).trim().replace(/[^\d.,-]/g, '');
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const barrioLayer = L.geoJSON(null, {
     pane: 'barrioPane',
     style: () => ({
-      color: '#260947ff',        // Morado oscuro
+      color: '#7e41ceff',        // Morado oscuro
       weight: 5,               // más gruesa
       dashArray: '12 6 3 6',   // patrón “disruptivo”
       lineCap: 'round',
@@ -184,9 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Capa de PARQUES (se dibujarán ya recortados) =====
   const parquesLayer = L.geoJSON(null, {
     style: () => ({
-      color: '#260947ff',     // borde
+      color: '#552891ff',     // borde
       weight: 2,
-      fillColor: '#8b65bbff', // Morado más claro
+      fillColor: '#b63cdbff', // relleno
       fillOpacity: 0.45
     }),
     onEachFeature: (feature, layer) => {
