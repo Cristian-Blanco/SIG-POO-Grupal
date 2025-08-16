@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa Barrio Potosí</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="estilos/estilos.css" />
+</head>
+<body>
+  <section class="seccion-mapa">
+    <h2>Ubicación del Barrio Potosí</h2>
+
+    <p class="descripcion-mapa">
+      Este mapa muestra la ubicación aproximada del Barrio Potosí y su localidad.  
+      Se incluye un zoom progresivo primero a la localidad y luego al barrio, con opción de mostrar información adicional.
+    </p>
+
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+
+    <button id="btn-abrir-info" class="btn-info">
+      Mostrar información
+    </button>
+  </section>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  
+  <!-- Script del proyecto -->
+  <script src="js/proyecto.js"></script>
+</body>
+</html>
