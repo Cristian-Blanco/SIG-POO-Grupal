@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movilidad en el Barrio Potosí</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="estilosM.css" />
+</head>
+<body>
+  <!-- Sección del mapa -->
+  <section class="seccion-movilidad">
+    <h2>Movilidad en el Barrio Potosí, Suba</h2>
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </section>
+
+  <!-- Sección del tutorial -->
+  <section class="seccion-tutorial">
+    <h2>¿Cómo se hizo este mapa?</h2>
+    <p>Este mapa fue construido paso a paso usando tecnologías web abiertas. A continuación, te explicamos cómo se hizo:</p>
+
+    <ol class="tutorial-list">
+      <li>
+        <strong>Descargar los archivos GeoJSON</strong>
+        <p>Primero, se descargaron dos archivos en formato GeoJSON:</p>
+        <ul>
+          <li><strong>Polígono del barrio Potosí</strong>: Define los límites del barrio. Se guardó como <code>potosi.geojson</code>.</li>
+          <li><strong>Paraderos del SITP</strong>: Contiene la ubicación de los paraderos zonales. Se descargó desde <a href="https://datosabiertos-transmilenio.hub.arcgis.com/datasets/paraderos-zonales-del-sitp/explore" target="_blank">ArcGIS Open Data</a> y se guardó como <code>Paraderos_Zonales_del_SITP.geojson</code>.</li>
+        </ul>
+        <p>✅ Ambos archivos están en <strong>WGS 84 (EPSG:4326)</strong>, el sistema de coordenadas estándar para mapas web.</p>
+      </li>
+
+      <li>
+        <strong>Cargar el mapa base con OpenStreetMap</strong>
+        <p>Se usó <a href="https://leafletjs.com" target="_blank">Leaflet</a>, una librería JavaScript ligera y poderosa, para crear el mapa interactivo. Se cargó la capa base de OpenStreetMap para mostrar el fondo del mapa.</p>
+      </li>
+
+      <li>
+        <strong>Dibujar el polígono del barrio</strong>
+        <p>Con <code>fetch()</code>, se cargó el archivo <code>potosi.geojson</code> y se dibujó sobre el mapa usando <code>L.geoJSON()</code>. Se le aplicó un estilo naranja para destacarlo.</p>
+      </li>
+
+      <li>
+        <strong>Filtrar paraderos dentro del barrio</strong>
+        <p>Usando <a href="https://turfjs.org" target="_blank">Turf.js</a>, se verificó cuáles paraderos estaban <strong>dentro del polígono del barrio</strong> con <code>turf.booleanPointInPolygon()</code>. Esto asegura que solo se muestren los paraderos relevantes.</p>
+      </li>
+
+      <li>
+        <strong>Agregar marcadores interactivos</strong>
+        <p>Cada paradero se mostró con un marcador usando el emoji 🚌. Al hacer clic, aparece un popup con información clave:</p>
+        <ul>
+          <li>Nombre del paradero</li>
+          <li>Dirección bandera</li>
+          <li>Código cenefa</li>
+          <li>Localidad</li>
+        </ul>
+      </li>
+
+      <li>
+        <strong>Estilos y diseño</strong>
+        <p>Se usó CSS para dar estilo al contenedor del mapa, los popups y los marcadores. El diseño es limpio, responsive y funciona bien en móviles.</p>
+      </li>
+
+      <li>
+        <strong>Ejecutar con un servidor local</strong>
+        <p>Para que el <code>fetch()</code> funcione, se usó un servidor local (como <strong>Live Server</strong> en VS Code). Esto evita errores de acceso a archivos.</p>
+      </li>
+    </ol>
+
+    <p><strong>Resultado:</strong> Un mapa interactivo, preciso y útil para entender la movilidad en el barrio Potosí.</p>
+    <p>Este proyecto es <strong>reutilizable</strong>: cambia los archivos GeoJSON y funciona en cualquier otro barrio de Bogotá.</p>
+  </section>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Turf.js para operaciones geoespaciales -->
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
+  <!-- Tu JS -->
+  <script src="proyectoM.js"></script>
+</body>
+</html>
